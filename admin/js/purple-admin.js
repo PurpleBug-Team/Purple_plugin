@@ -1,0 +1,705 @@
+jQuery(document).ready(function( $ ) {
+
+   setTimeout(function () {
+     jQuery('div#wpcontent').css('visibility','visible');
+   },500);  
+
+	 $( window ).load(function() {
+	 	 update_or_delte();
+	 $('.user-role').change(function() {
+	    var val= jQuery(this).val();
+	  
+		     jQuery.ajax({
+		         type : "GET",
+		         url : my_ajax_object.ajax_url,
+		         data : {action: "my_user_role", role : val},
+		         success: function(response) {
+		            $('.form-managment').html(response);
+
+		             update_role();
+		         
+		         }
+		      })
+
+		     
+
+		});
+
+			update_role();
+			// setup("my-awesome-dropzone");
+		
+		 
+			
+
+	   });
+	 
+});
+
+
+
+jQuery(document).ready(function($){
+	//lib_details();
+
+	//wp_medi_loader();
+	//create_folder();
+	view_switcher();
+	lib_detail_list();
+
+ jQuery('.search-field .open-drop').click(function () {
+    jQuery('#drop-down').css('display','block');
+     var availableTags = [
+			      "All",
+			      "Campaigns",
+			      "Events",
+			      "Tasks",
+			      "Library",
+			      "Work Requests",
+			      "Pitch Requests",
+			    
+			    ];
+			  
+				jQuery( "#tags" ).autocomplete({
+			      source: availableTags,
+			      minLength: 0
+			    }).focus(function(){
+			        $(this).autocomplete("search", "");
+			    });
+			      jQuery("#tags ").focus();
+				  jQuery('.search2 input.ndl-Input-input').css('width','500px');
+    			  jQuery('.search2 input.ndl-Input-input').attr('placeholder','Search Campaigns, Events, Tasks, Library, Work Requests and Pitch Requests');
+		});	
+
+
+   jQuery("#tags ").on('blur',function(){
+		jQuery("#drop-down").hide();
+		jQuery('.search2 input.ndl-Input-input').css('width','232px');
+		jQuery('.search2 input.ndl-Input-input').attr('placeholder','');
+	});
+	jQuery('.search2 input.ndl-Input-input').on('blur',function(){
+		jQuery('.search2 input.ndl-Input-input').css('width','232px');
+		jQuery(this).attr('placeholder','');
+	});
+
+	jQuery('.search2 input.ndl-Input-input').click(function () {
+		jQuery(this).css('width','500px');
+		jQuery(this).attr('placeholder','Search Campaigns, Events, Tasks, Library, Work Requests and Pitch Requests');
+	});
+
+	jQuery(".panel .close-container button").on('click',function(){ 
+	    jQuery('.lib-drawer').css('right',-900);
+	    jQuery('div#wpbody-content').css({'width':'100%','transition':'1s'}).removeClass('active');
+	});
+
+	jQuery("button#wk-button").on('click',function(){  
+    	jQuery('button#menu-item-upload').trigger('click');
+	});
+  
+});
+
+function view_switcher() {
+	jQuery('.view-switcher span svg').click(function () {
+
+        var data = jQuery(this).attr('data');
+           
+             jQuery.ajax({
+                 type : "GET",
+                 url : ajaxurl,
+                 data : {action: "lib_view_switch", switch : data},
+                 beforeSend: function( response ) {
+
+                    jQuery('body.wp-admin').css('opacity','0.5');
+                   
+                 },
+                 success: function(response) {
+                   jQuery('body.wp-admin').css('opacity','1');
+	               jQuery('div#wpbody-content').html(response);
+		       
+		                jQuery('.lib-drawer').css('right',-900);
+					    jQuery('div#wpbody-content').css({'width':'100%','transition':'1s'}).removeClass('active');
+                    	jQuery(".panel .close-container button").on('click',function(){ 
+					    jQuery('.lib-drawer').css('right',-900);
+						    jQuery('div#wpbody-content').css({'width':'100%','transition':'1s'}).removeClass('active');
+						    				
+						});
+						update_or_delte();
+
+                 }
+              });
+    }); 
+
+}
+
+function wp_medi_loader() {
+	 
+		var wkMedia;
+		jQuery('#wk-button').click(function(e) {
+
+			    e.preventDefault();
+			    // If the upload object has already been created, reopen the dialog
+			    if (wkMedia) {
+			      wkMedia.open();
+			      return;
+			    }
+			   
+			   		setTimeout(function (){
+			   			 jQuery('#menu-item-upload').trigger('click');
+			   		},500);
+
+			    // Extend the wp.media object
+			    wkMedia = wp.media.frames.file_frame = wp.media({
+			      title: 'Upload Content',
+			      button: {
+			      text: 'Update'
+			    }, multiple: true });
+
+			   
+
+			    // When a file is selected, grab the URL and set it as the text field's value
+			    wkMedia.on('select', function() {
+
+			      var attachment = wkMedia.state().get('selection').first().toJSON();
+
+			      
+			      //jQuery('#wk-media-url').val(attachment.id);
+			      var content_format= jQuery('tr#content_format td.acf-input input[type="hidden"]').val();
+			      var jurney_stage= jQuery('tr#journey_stage td.acf-input input[type="hidden"]').val();
+			      var Project_Stage= jQuery('tr#Project_Stage td.acf-input input[type="hidden"]').val();
+			      var Target_Audience= jQuery('tr#Target_Audience td.acf-input input[type="hidden"]').val();
+			      
+			      
+
+			      			 jQuery.ajax({
+						        url : ajaxurl, // Here goes our WordPress AJAX endpoint.
+						        type : 'GET',
+						        
+						        data : {action:'lib_add', 
+						        	attachment_id: attachment.id,
+						        	content_format:content_format,
+						        	jurney_stage:jurney_stage,
+						        	Project_Stage:Project_Stage,
+						        	Target_Audience:Target_Audience,
+						        	width: attachment.width,
+						        	height: attachment.height,
+						        	authorName: attachment.authorName,
+						        	
+						        },
+						         beforeSend: function( response ) {
+						         	console.log(attachment.width);
+
+				                    jQuery('body.wp-admin').css('opacity','0.5');
+				                   
+				                 },
+						        success : function( response ) {
+						     	  jQuery('body.wp-admin').css('opacity','1');
+						          jQuery('.media-library.grid .wrapper').html(response);
+						          jQuery('.media-library.list .wrapper').html(response);
+						          jQuery('button.media-modal-close').trigger('click');
+						          
+						           lib_details();
+						           lib_detail_list();
+			 
+						        },
+						        fail : function( err ) {
+						            // You can craft something here to handle an error if something goes wrong when doing the AJAX request.
+						            alert( "There was an error: " + err );
+						        }
+						    });	
+
+			   
+				 
+			    });
+			    wkMedia.on('ready', function() {
+			    	setTimeout(function () {
+			    		jQuery('button#menu-item-upload').trigger('click');
+			    	},500);
+			    	   
+
+			    });	
+
+			       wp.Uploader.queue.on('reset', function() { 
+			   	    	//drop_down_content();
+			   	    	 for_lib_script('tr#content_format');
+			             for_lib_script('tr#journey_stage');
+			             for_lib_script('tr#Project_Stage');
+			             for_lib_script('tr#Target_Audience');
+
+			             var attachment2 = wkMedia.state().get('selection').toJSON();
+
+			             	//console.log(attachment2);
+
+			             
+			              var attachment = wkMedia.state().get('selection').first().toJSON();
+			      			 jQuery.ajax({
+						        url : ajaxurl, // Here goes our WordPress AJAX endpoint.
+						        type : 'GET',
+						        
+						        data : {action:'lib_add', 
+						        	attachment_id: attachment.id,
+						        	 
+						        	width: attachment.width,
+						        	height: attachment.height,
+						        	 
+						        	
+						        },
+						        success : function( response ) {
+						     
+						         // jQuery('.media-library.grid .wrapper').html(response);
+						           lib_details();
+						          lib_detail_list();
+						          update_or_delte() ;
+			 
+						        },
+						        fail : function( err ) {
+						            // You can craft something here to handle an error if something goes wrong when doing the AJAX request.
+						            alert( "There was an error: " + err );
+						        }
+						    });	
+			            
+
+
+
+					});
+				 
+					 
+			 		setTimeout(function () {
+			    		jQuery('button#menu-item-upload').trigger('click');
+			    	},500);
+			    
+			    // Open the upload dialog
+			    wkMedia.open();
+			  });
+ 
+
+}
+
+function update_role(){
+	jQuery( '#roles-form' ).on( 'submit', function(e) {
+			    var form_data = jQuery( this ).serializeArray();
+
+			 e.preventDefault();
+			  
+			    // Here is the ajax petition.
+			    jQuery.ajax({
+			        url : my_ajax_object.ajax_url, // Here goes our WordPress AJAX endpoint.
+			        type : 'POST',
+			        dataType: 'json',
+			        data : {action:'update_role', from: form_data},
+			        success : function( response ) {
+			            // You can craft something here to handle the message return
+			     		 
+			           
+			        },
+			        fail : function( err ) {
+			            // You can craft something here to handle an error if something goes wrong when doing the AJAX request.
+			            alert( "There was an error: " + err );
+			        }
+			    });
+
+			     
+			   
+			});
+}
+
+
+
+
+/*********************/
+
+
+
+function drop_down_content(){
+	jQuery('.compat-field-content_format .input-data').click(function () {
+    	jQuery('.compat-field-content_format .input-data').css('display','none');
+		 	// jQuery('.content-format-list').css('display','block');
+		    jQuery('.content-format-list label').click(function () {
+
+		        var label = [];
+		        var val2 = [];
+		        jQuery('.content-format-list label').each(function () {
+		            if( jQuery(this).children('input').is(':checked') ){
+		                var test = '<div class="ats"><span class="tags">'+jQuery(this).children('input').parent('label').text()+'<span class="nc-icon ndl-Icon   ndl-RemoveTag-icon "><i class="nc-icon-wrapper"><svg viewBox="0 0 7 7" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Design-v2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Text-Input-2" transform="translate(-920.000000, -1182.000000)" fill="#707070" fill-rule="nonzero"><g id="simple-remove-copy-2" transform="translate(920.000000, 1182.000000)"><path d="M6.85,0.15 C6.65,-0.05 6.35,-0.05 6.15,0.15 L3.5,2.8 L0.85,0.15 C0.65,-0.05 0.35,-0.05 0.15,0.15 C-0.05,0.35 -0.05,0.65 0.15,0.85 L2.8,3.5 L0.15,6.15 C-0.05,6.35 -0.05,6.65 0.15,6.85 C0.25,6.95 0.35,7 0.5,7 C0.65,7 0.75,6.95 0.85,6.85 L3.5,4.2 L6.15,6.85 C6.25,6.95 6.4,7 6.5,7 C6.6,7 6.75,6.95 6.85,6.85 C7.05,6.65 7.05,6.35 6.85,6.15 L4.2,3.5 L6.85,0.85 C7.05,0.65 7.05,0.35 6.85,0.15 Z" id="pill-cross"></path></g></g></g></svg></i></span></span></div>';
+		                    label.push(test);
+		                var val3 = jQuery(this).children('input').val();
+
+		                  val2.push(val3);
+		                  
+		            }
+		        });
+		        jQuery('tr.compat-field-content_format .text').val(val2.join(','));
+		       
+		        
+		        
+		        jQuery('.help').html(label.join(''));
+
+		    });
+ 
+
+
+			      jQuery('.close-hidden').click(function () {
+					jQuery('.content-format-list').css('display','none');
+					 if(jQuery('tr.compat-field-content_format .text').val() == ''){
+				        	 
+				        	jQuery('p.help').html('<input class="input-data">');
+				        } 
+
+				});
+
+
+			});
+
+
+}
+
+
+
+function create_folder(){
+	jQuery('.library-button-parents .open-folder').click(function () {
+		 
+	    jQuery('.lib-drawer').css('right',0);
+		jQuery('div#wpbody-content').css({'width':'60%','transition':'1s'}).addClass('active');
+
+		jQuery('.drawer-content .inner-content').html(' ');
+		jQuery('.library-preview-top-panel .panel-button').html('<button class="upload-pics ndl-Button ndl-Button--primary ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Upload</span></button><button class="move-pics ndl-Button ndl-Button--default ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Move</span></button>');
+	 
+			jQuery.ajax({
+			        url : ajaxurl , // Here goes our WordPress AJAX endpoint.
+			        type : 'GET',
+			        data : {action:'create_folder',name:'New Folder'},
+			        success : function( response ) {
+			            // You can craft something here to handle the message return
+			     		 jQuery('.drawer-content .inner-content').html(response);
+
+			     		 console.log(response);
+
+			     		// jQuery('input#create-folder').focus();
+
+
+			     		update_or_delte();
+			     		update_data_folder ();
+			           
+			        },
+			        fail : function( err ) {
+			            // You can craft something here to handle an error if something goes wrong when doing the AJAX request.
+			            alert( "There was an error: " + err );
+			        }
+			    });
+
+
+	});
+}
+
+function update_data_folder () {
+	jQuery('.panel-button .upload-pics').click(function (e){
+	    var wkMedia;
+	         e.preventDefault();
+			if (wkMedia) {
+				 wkMedia.open();
+			     return;
+			 }
+
+	     wkMedia = wp.media.frames.file_frame = wp.media({
+			title: 'Upload Content',
+			button: {
+			text: 'Done'}, multiple: true 
+	      });
+
+
+	       wkMedia.on('select', function() {
+	           var attachment2 = wkMedia.state().get('selection').toJSON();
+	             var data =[];
+	             for (var i = 0; i < attachment2.length; i++) {
+					  data.push(attachment2[i].id)
+				 }
+	            var ids = data.join(',');
+
+	            var cat_id = jQuery('.form-data').attr('data');
+	            jQuery.ajax({
+	                url : ajaxurl, // Here goes our WordPress AJAX endpoint.
+	                type : 'GET',		        
+	                data : {action:'set_post_cat', ids:ids,cat_id:cat_id },
+	                success : function( response ) {
+
+	                   jQuery('.folder-datas').html(response);
+
+	                }
+	            });
+	    
+	       });
+	        wp.Uploader.queue.on('reset', function() { 
+			   	    	//drop_down_content();
+			   	for_lib_script('tr#content_format');
+			    for_lib_script('tr#journey_stage');
+			    for_lib_script('tr#Project_Stage');
+			    for_lib_script('tr#Target_Audience');
+
+
+
+			});
+
+	     wkMedia.open();
+	});
+}
+
+
+
+function lib_details(){
+	jQuery('.media-library .grid-view-item .grid-view-card-top').click(function(){
+	var attach_id=jQuery(this).attr('id');
+	var lib_url = jQuery('#'+attach_id+' input#lib-details-').val();
+
+		jQuery('.grid-view-item label.grid-view-checkbox ').css('visibility','hidden');
+		jQuery('.grid-view-item label.grid-view-checkbox input.ndl-Checkbox-input').attr('checked',false);
+	    jQuery('.lib-drawer').css('right',0);
+	    jQuery('div#wpbody-content').css({'width':'60%','transition':'1s'}).addClass('active');
+	    jQuery('.'+attach_id+' label.grid-view-checkbox ').css('visibility','visible');
+	    jQuery('.'+attach_id+' label.grid-view-checkbox input.ndl-Checkbox-input').attr('checked',true);
+
+	  
+	  	var height = jQuery('.lib-drawer ').height();
+
+	  	jQuery('.lib-drawer .inner-content').css({'overflow-y':'scroll','height':(height-100)+'px'});
+
+	  	create_task(attach_id.replace(/[^0-9.]/g, ""));
+
+	  	//console.log('Hello');
+	 
+	if(jQuery(this).attr('data') == 'taxonomy'){
+		jQuery('.library-preview-top-panel .panel-button').html('<button class="upload-pics ndl-Button ndl-Button--primary ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Upload</span></button><button class="move-pics ndl-Button ndl-Button--default ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Move</span></button>');
+
+		jQuery.ajax({
+			        url : ajaxurl , // Here goes our WordPress AJAX endpoint.
+			        type : 'GET',
+			        data : {action:'create_folder',tax_id:attach_id.replace(/[^0-9.]/g, "")},
+			        success : function( response ) {
+			            // You can craft something here to handle the message return
+			     		 jQuery('.drawer-content .inner-content').html(response);
+
+			 			update_data_folder();
+			           
+			        },
+			        fail : function( err ) {
+			            // You can craft something here to handle an error if something goes wrong when doing the AJAX request.
+			            alert( "There was an error: " + err );
+			        }
+			    });
+			    update_or_delte();
+		
+
+	}else if(jQuery(this).attr('data') == 'article'){
+		jQuery('.library-preview-top-panel .panel-button').html('<div class="panel-button"><button class="creat-task ndl-Button ndl-Button--primary ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Create Task</span></button></div>');
+		jQuery('.drawer-content .inner-content').html('');
+		jQuery('.grid-view-item label.grid-view-checkbox ').css('visibility','hidden');
+		jQuery('.grid-view-item label.grid-view-checkbox input.ndl-Checkbox-input').attr('checked',false);
+	    jQuery('.lib-drawer').css('right',0);
+	    jQuery('div#wpbody-content').css({'width':'60%','transition':'1s'}).addClass('active');
+	    jQuery('.'+attach_id+' label.grid-view-checkbox ').css('visibility','visible');
+	    jQuery('.'+attach_id+' label.grid-view-checkbox input.ndl-Checkbox-input').attr('checked',true);
+
+	  	var height = jQuery('.lib-drawer ').height();
+
+	  	jQuery('.lib-drawer .inner-content').css({'overflow-y':'scroll','height':(height-100)+'px'});
+	    
+	   		  jQuery.ajax({
+			        url : ajaxurl, // Here goes our WordPress AJAX endpoint.
+			        type : 'GET',
+			        data : {action:'article_details',attach_id:attach_id.replace(/[^0-9.]/g, "")},
+			        success : function( response ) {
+			            // You can craft something here to handle the message return
+			     			jQuery('.drawer-content .inner-content').html(response);	
+			     			update_or_delte();		           
+			        },
+			        fail : function( err ) {
+			            // You can craft something here to handle an error if something goes wrong when doing the AJAX request.
+			            alert( "There was an error: " + err );
+			        }
+			    });  
+
+	}else{
+		jQuery('.library-preview-top-panel .panel-button').html('<div class="panel-button"><button class="creat-task ndl-Button ndl-Button--primary ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Create Task</span></button> </div>');
+		
+		jQuery('.grid-view-item label.grid-view-checkbox ').css('visibility','hidden');
+		jQuery('.grid-view-item label.grid-view-checkbox input.ndl-Checkbox-input').attr('checked',false);
+	    jQuery('.lib-drawer').css('right',0);
+	    jQuery('div#wpbody-content').css({'width':'60%','transition':'1s'}).addClass('active');
+	    jQuery('.'+attach_id+' label.grid-view-checkbox ').css('visibility','visible');
+	    jQuery('.'+attach_id+' label.grid-view-checkbox input.ndl-Checkbox-input').attr('checked',true);
+
+	  
+	  	var height = jQuery('.lib-drawer ').height();
+
+	  	jQuery('.lib-drawer .inner-content').css({'overflow-y':'scroll','height':(height-100)+'px'});
+
+	   		  jQuery.ajax({
+			        url : ajaxurl, // Here goes our WordPress AJAX endpoint.
+			        type : 'GET',
+			        data : {action:'lib_details',attach_id:attach_id.replace(/[^0-9.]/g, "")},
+			        success : function( response ) {
+			            // You can craft something here to handle the message return
+			     			jQuery('.drawer-content .inner-content').html(response);	
+			     			update_or_delte();		           
+			        },
+			        fail : function( err ) {
+			            // You can craft something here to handle an error if something goes wrong when doing the AJAX request.
+			            alert( "There was an error: " + err );
+			        }
+			    });   
+
+	}	
+
+	 
+});
+
+	
+}
+
+function create_task(attach_id){
+	 setTimeout(function() {
+		jQuery('.creat-task').click(function (){
+		     
+	 			jQuery.ajax({
+			        url : ajaxurl, // Here goes our WordPress AJAX endpoint.
+			        type : 'GET',
+			        data : {action:'create_task',attach_id:attach_id},
+			        success : function( response ) {
+			            // You can craft something here to handle the message return
+			     			jQuery('div#create-task-modal').html(response);	
+
+			     			setTimeout(function() {   
+							 jQuery("#create-task-modal").modal({
+						     	escapeClose: true,
+							    clickClose: false,
+							    showClose: false,
+							    fadeDuration: 200,
+						  		fadeDelay: 0.50
+
+						     }); 
+					     },100); 
+
+					     jQuery("#form-task").submit(function(e) {
+			                 var form = jQuery(this);
+			               e.preventDefault();
+			               
+			                 jQuery.ajax({
+			                        type: "POST",
+			                        url: ajaxurl, 
+			                       // contentType: 'application/x-www-form-urlencoded',
+			                        data : { action:'create_task_event', task:form.serializeArray() }, // serializes the form's elements.
+			                        success: function(data) {
+			                          window.location.assign(""+data+""); 
+			                          
+			                        }
+			                    });
+			                    
+			                   
+			              });	
+
+      
+			        },
+			        fail : function( err ) {
+			            // You can craft something here to handle an error if something goes wrong when doing the AJAX request.
+			            alert( "There was an error: " + err );
+			        }
+			    });  
+			     
+
+		});			 	
+
+	 },200);
+
+}
+
+function lib_detail_list(){
+		jQuery('table#lib-list-view tbody tr').click(function (){
+	     jQuery('table#lib-list-view tbody tr').css('background','transparent');
+	     jQuery('table#lib-list-view tbody tr td input.get-details').attr('checked',false).css('visibility','hidden');
+	    
+	    jQuery(this).css('background','#f5f7fa');  
+	    jQuery(this).first('td').find('input').attr('checked',true).css('visibility','visible');     
+	    var val = jQuery(this).first('td').find('input').val();
+	    jQuery(this).first('td').find('input').css('visibility','visible'); 
+        jQuery('.lib-drawer').css('right',0);
+	    jQuery('div#wpbody-content').css({'width':'60%','transition':'1s'}).addClass('active');
+	    
+
+	  
+	  	var height = jQuery('.lib-drawer ').height();
+
+	  	jQuery('.lib-drawer .inner-content').css({'overflow-y':'scroll','height':(height-100)+'px'});
+	    
+	   		  jQuery.ajax({
+			        url : ajaxurl, // Here goes our WordPress AJAX endpoint.
+			        type : 'GET',
+			        data : {action:'lib_details',attach_id:val},
+			        success : function( response ) {
+			            // You can craft something here to handle the message return
+			     			jQuery('.drawer-content .inner-content').html(response);	
+                           // console.log(response);
+			        },
+			        fail : function( err ) {
+			            // You can craft something here to handle an error if something goes wrong when doing the AJAX request.
+			            alert( "There was an error: " + err );
+			        }
+			    });
+	    
+	   
+	});
+}
+
+function for_lib_script(id){
+    jQuery( id+' td.acf-input ul li label .acf-checkbox-toggle').click(function () { 
+    jQuery(id+' td.acf-input ul li label').children('input').attr('checked',true);
+    });
+
+    jQuery(id+' td.acf-input ul li label input').on('click',function () {
+         var content_format =[];
+        jQuery(id+' td.acf-input ul li label').each(function () {
+
+              if( jQuery(this).children('input').is(':checked') ){ 
+                if( jQuery(this).children('input').val() != '') {
+                 var val = jQuery(this).children('input').val();
+                }
+             }
+                content_format.push(val); 
+        });
+        var vi = content_format.join('-');
+        jQuery(id+' td.acf-input input[type="hidden"]').val(vi);
+
+
+    });
+ 
+}
+
+function update_or_delte() {
+	jQuery('.card-actiom button.delete').click(function () {
+    var id = jQuery(this).attr('actiondata');
+    jQuery('.card-actiom,.list-action').css('visibility','hdden');
+    jQuery('.card-actiom').attr('checked',false);
+    jQuery('.card-actiom.tax-attachment-'+id).css('visibility','visible');
+    jQuery('.card-actiom.tax-attachment-'+id+'  input.ndl-Checkbox-input' ).attr('checked',true);
+    jQuery('ul#view-list-'+id).css('visibility','visible'); 
+    var type = jQuery('div#tax-attachment-'+id).attr('data');
+	 jQuery('ul#view-list-'+id+' li a').click(function (event) {
+	            event.preventDefault();
+	              var attach_id = jQuery(this).attr('data');
+	               var uri = jQuery(this).attr('href');
+	                jQuery.ajax({
+	              url : ajaxurl , // Here goes our WordPress AJAX endpoint.
+	              type : 'GET',
+	              data : {action:'update_lib_datails',type:type,idfy:uri,tax_id:attach_id},
+	              beforeSend: function( response ) {
+	              	jQuery('.view-'+id).css('opacity','.5');
+	              },
+	              success : function( response ) {
+ 
+	                  jQuery('.view-'+id).hide();
+	              },
+	              fail : function( err ) {
+	                  // You can craft something here to handle an error if something goes wrong when doing the AJAX request.
+	                  alert( "There was an error: " + err );
+	              }
+	          });
+	    
+	    });   
+	    
+	});
+}
