@@ -207,10 +207,17 @@ jQuery('.content-article').click(function (){
     $roles = $wp_roles->roles; 
     $current_user = wp_get_current_user();
 	  $post = get_post($_GET['id']);
-  $Workflow = get_post_meta($_GET['id'],'workflow_id',true);
-  $work_data = get_post($Workflow);
+  $Workflow = get_post_meta($_GET['id'],'workflow_id');
+  $work_data = get_post($Workflow[0]);
+//   echo '<pre>';
+//   print_r($work_data);
+//   echo '</pre>';
+//   die();
 								
  $post = get_post($_GET['id']);
+//  echo '<pre>';
+//  print_r($post);
+//  echo '</pre>';
  
   $post_id = $post->ID;
   $attachment_id =get_post_meta($post_id,'attachment_id',true);
@@ -312,15 +319,17 @@ jQuery('.content-article').click(function (){
   </div>
 </div>
 <div class="right-pane">
-  <?php
     
-     if( have_rows('create_workflow', $work_data->ID) ){
+  <?php
+  
+     
+     if( have_rows('create_workflow') ){
           $progess = 0;
           $approved=array();
           $index = 1;
           $index2 = 0;
           while( have_rows('create_workflow', $work_data->ID) ) { the_row();
-              
+           
               $approved[]= get_post_meta($_GET['id'],'approve_'.$index,true) !='' ? intval(get_post_meta($_GET['id'],'approve_'.$index,true)):0;
               
              // echo $approved;

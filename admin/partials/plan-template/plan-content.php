@@ -8,41 +8,54 @@
        'posts_per_page' => -1
       );
   $plans = get_posts($args);
+//   echo '<pre>';
+//   print_r(  $plans);
+//   echo '</pre>';
+//   die();
 
   if(!empty($plans)){
       //$group = array('');
       foreach($plans as $plan){
-          $type = get_post_meta($plans->ID,'type',true);
-          $task_start_date = get_post_meta($plans->ID,'task_start_date',true);
-          $task_end_date = get_post_meta($plans->ID,'task_end_date',true);
+          $type = get_post_meta($plan->ID,'type',true);
+          $task_start_date = get_post_meta($plan->ID,'task_start_date',true);
+          $task_end_date = get_post_meta($plan->ID,'task_end_date',true);
        
-         
+        
           $stats  = $type == 'TASK' ? 'TSK':'EVT';
+          
 
-          $TSK = $stats.'-'.$plans->ID;
-          $post_modified = $plans->post_modified;
+          $TSK = $stats.'-'.$plan->ID;
+          $post_modified = $plan->post_modified;
+         
         
-          $owner = get_userdata($plans->post_author)->roles[0];
+          $owner = get_userdata($plan->post_author)->roles[0];
         
           
           
-          $categories = get_the_terms( $plans->ID, 'campaign' );
+          $categories = get_the_terms( $plan->ID, 'campaign' );
+
           $Parent_campaign = '<a href="#'.$categories[0]->term_id.'">'.$categories[0]->name.'</a>';
+          
         
           
           $task_start_date_ = date("M j, Y", strtotime($task_start_date));
           $task_end_date_ = date("M j, Y", strtotime($task_end_date));
 
-          $Campaign = get_post_meta($plans->ID,'workflow_id',true)!='' ? get_post_meta($plans->ID,'workflow_id',true):'';
 
-          $total_workflow = (get_field('create_workflow',$Campaign,true)!='')?  count(get_field('create_workflow',$Campaign,true)):'';
+        //   $Campaign = get_post_meta($plan->ID,'workflow_id');
+        //   echo '<pre>';
+        //   print_r($Campaign);
+        //   echo '</pre>';
+        //   die();
+
+        //   $total_workflow = (get_field('create_workflow',$Campaign)!='')?  count(get_field('create_workflow',$Campaign)):'';
          
-         $approve_1 =  get_post_meta($plans->ID,'approve_'.$total_workflow,true);
+        //  $approve_1 =  get_post_meta($plan->ID,'approve_'.$total_workflow);
          $stats = $approve_1 =='1'? '<span class="stats completed" >completed</span>':'<span class="stats not" >Not Yet Started</span>';
          
-         $plan_checkbox = '<input type="checkbox" value="'.$plans->ID.'" class="delete-field">';
+         $plan_checkbox = '<input type="checkbox" value="'.$plan->ID.'" class="delete-field">';
                    
-         $title = $plans->post_title.'<span class="button-action"><button type="button" class="btn delete-1" value="'.$plans->ID.'">delete</button><a href="'.get_site_url().'/wp-admin/admin.php?page=view-plan&id='.$plans->ID.'#content" target="_blank" class="btn">view</a></span>';
+         $title = $plan->post_title.'<span class="button-action"><button type="button" class="btn delete-1" value="'.$plan->ID.'">delete</button><a href="'.get_site_url().'/wp-admin/admin.php?page=view-plan&id='.$plan->ID.'#content" target="_blank" class="btn">view</a></span>';
         
          // print_r($approve_1);
          

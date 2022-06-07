@@ -81,6 +81,7 @@ jQuery(document).ready(function($){
 	});
 
 	jQuery('.search2 input.ndl-Input-input').click(function () {
+		console.log(this);
 		jQuery(this).css('width','500px');
 		jQuery(this).attr('placeholder','Search Campaigns, Events, Tasks, Library, Work Requests and Pitch Requests');
 	});
