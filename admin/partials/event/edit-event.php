@@ -1,5 +1,10 @@
 <!--script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script-->
 <script>
+  // add comments
+  jQuery('#submit-comment').on('click',function(){
+    var comment = jQuery('.wf-comments').val()
+    console.log(comment);
+  })
 function new_update (){
   jQuery(document).ready( function($) {
     $( "#accordion" ).accordion();
@@ -113,7 +118,9 @@ jQuery('.content-article').click(function (){
 });
     $( ".tabs,.content-tab-pane" ).tabs();
      jQuery('.view-detail').click(function(){
+       
         var data_id = jQuery(this).attr('data');
+        console.log(data_id);
         if(data_id == 0) return false;
         jQuery(this).toggleClass('active');
         jQuery('.steps-'+data_id).addClass('open');
@@ -418,25 +425,46 @@ jQuery('.content-article').click(function (){
           while( have_rows('create_workflow', $work_data->ID) ) { the_row();
 
             $role = get_post_meta( $_GET['id'],'Qarticle_role_'.$index.'',true);
-            
             $current_user=get_current_user_id();
             $user_data = wp_get_current_user();
-            print_r();
             if($current_user == $role){
                 $data_id= $index;
-            }else if( $user_data->roles[0] =='administrator'){
+            }else if( $user_data->roles[0] =='administrator' || $user_data->roles[0]  == 'client-admin'){
                 $data_id= $index;
             }else{
                 $data_id= 0;
             }
 
             $full_name = get_user_meta($role,'first_name',true).' '.get_user_meta($role,'last_name',true);
+            
           
             $words = explode(' ', $full_name );
             $acronym = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
             $approve = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? 'disabled':'';
             $approve_avatr = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? '<img src="https://img.icons8.com/officel/80/000000/checked--v1.png"/>':'<span class="avatar-acronym">'.$acronym.'</span>';
             
+  //Notify User for the Updates
+           if( get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
+            $assigned_email = get_userdata($role);
+            $wf = get_sub_field('workflow_title');
+                    $wf_slug = str_replace(' ', '_', $wf);
+                    $from = 'noreply@studioid.com';
+                    $email = $assigned_email->data->user_email;
+                    $to = $email;
+                    $subject = $wf." Workflow Updates";
+                    $headers = "From: ".$from. "\r\n" ."Reply-To: " . $email . "\r\n";
+                    $message .= '<p>Your Task has been updated!</p>';
+                    $message .= 'Visit our page '.get_bloginfo( 'url' ).'';
+      
+                    $email_status = get_post_meta($_GET['id'],$wf_slug );
+                    if($email_status == ''|| $email_status == null){
+                      $sent = wp_mail($to, $subject,strip_tags($message), $headers);
+                      if($sent){
+                        update_post_meta($_GET['id'],$wf_slug ,1);
+                      }
+                    }
+                  }
+    //EO Notify user
             echo '<div class="step-header steps-'.$index.'">';
               echo '<div class="step-index">'.$index.'</div>';
               echo '<div class="ndl-Avatar-wrapper ">'.$approve_avatr.'</div>';
@@ -474,7 +502,10 @@ jQuery('.content-article').click(function (){
       </div>
       <div id="Comment">
         <div class="inner-conent">
-        fffffffff
+          <form action="">
+           <textarea name="wf-comments" class="wf-comments"  id="wf-comments" cols="30" rows="10"></textarea>
+           <button class="btn-primary" id="submit-comment">submit</button>
+          </form>
         </div>
       </div>
  

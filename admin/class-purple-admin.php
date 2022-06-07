@@ -1234,6 +1234,10 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 		
 		die();
 	}
+	// add comment to the workflow
+	public function update_comments(){
+
+	}
  
     
  

@@ -290,6 +290,12 @@ span.nc-icon.ng-isolate-scope  svg.nc-icon.glyph {
     display: block !important;
 }
 /*************************/
+.wf-comments{
+    width: 100%;
+    border-color: transparent;
+    border-bottom: 1px solid;
+    background: transparent;
+}
 .header-filter {
     display: flex;
 }
@@ -301,6 +307,7 @@ span.nc-icon.ng-isolate-scope  svg.nc-icon.glyph {
 .header-filter .header-right {
     width: 50%;
     display: grid;
+    justify-content: end;
 }
 .header-right .display-flex.library-button-parents {
     text-align: right;
