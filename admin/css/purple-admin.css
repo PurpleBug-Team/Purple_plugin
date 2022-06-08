@@ -2,6 +2,13 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+ .comments{
+	margin-bottom:10px;
+	border-bottom: 1px solid;
+}
+.user-mail{
+	margin-right:20px;
+}
  #adminmenu, #adminmenu .wp-submenu, #adminmenuback, #adminmenuwrap {
     background-color: #2d2d44 !important;
     width: 97px !important;

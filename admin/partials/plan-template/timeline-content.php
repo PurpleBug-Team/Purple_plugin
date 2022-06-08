@@ -569,7 +569,7 @@ function calendar_v(start,end){
         <div class="form-group">
             <label>
                 Workflow
-                <input class="input-field" name="Workflow" placeholder="Select a workflow" id="Workflow" id=" />
+                <input class="input-field" name="Workflow" placeholder="Select a workflow" id="Workflow" id="Workflow" />
             </label>
 
             <div class="workflow_roles"></div>

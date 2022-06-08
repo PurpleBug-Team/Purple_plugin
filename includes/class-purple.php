@@ -235,6 +235,10 @@ class Purple {
 	    
 	    $this->loader->add_action( 'wp_ajax_my_delete', $plugin_admin, 'my_delete' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_my_delete', $plugin_admin, 'my_delete' );
+
+		// comments
+	    $this->loader->add_action( 'wp_ajax_update_comments', $plugin_admin, 'update_comments' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_update_comments', $plugin_admin, 'update_comments' );
 	    
 
 

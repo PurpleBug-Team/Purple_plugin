@@ -1,10 +1,5 @@
 <!--script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script-->
 <script>
-  // add comments
-  jQuery('#submit-comment').on('click',function(){
-    var comment = jQuery('.wf-comments').val()
-    console.log(comment);
-  })
 function new_update (){
   jQuery(document).ready( function($) {
     $( "#accordion" ).accordion();
@@ -443,28 +438,28 @@ jQuery('.content-article').click(function (){
             $approve = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? 'disabled':'';
             $approve_avatr = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? '<img src="https://img.icons8.com/officel/80/000000/checked--v1.png"/>':'<span class="avatar-acronym">'.$acronym.'</span>';
             
-  //Notify User for the Updates
-           if( get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
-            $assigned_email = get_userdata($role);
-            $wf = get_sub_field('workflow_title');
-                    $wf_slug = str_replace(' ', '_', $wf);
-                    $from = 'noreply@studioid.com';
-                    $email = $assigned_email->data->user_email;
-                    $to = $email;
-                    $subject = $wf." Workflow Updates";
-                    $headers = "From: ".$from. "\r\n" ."Reply-To: " . $email . "\r\n";
-                    $message .= '<p>Your Task has been updated!</p>';
-                    $message .= 'Visit our page '.get_bloginfo( 'url' ).'';
-      
-                    $email_status = get_post_meta($_GET['id'],$wf_slug );
-                    if($email_status == ''|| $email_status == null){
-                      $sent = wp_mail($to, $subject,strip_tags($message), $headers);
-                      if($sent){
-                        update_post_meta($_GET['id'],$wf_slug ,1);
-                      }
-                    }
-                  }
-    //EO Notify user
+ //Notify User for the Updates
+ $assigned_email = get_userdata($role);
+ $email = $assigned_email->data->user_email;
+        if( get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
+               $wf = get_sub_field('workflow_title');
+                 $wf_slug = str_replace(' ', '_', $wf);
+                 $from = 'noreply@studioid.com';
+                 $to = $email;
+                 $subject = $wf." Workflow Updates";
+                 $headers = "From: ".$from. "\r\n" ."Reply-To: " . $email . "\r\n";
+                 $message .= '<p>Your Task has been updated!</p>';
+                 $message .= 'Visit our page '.get_bloginfo( 'url' ).'';
+   
+                 $email_status = get_post_meta($_GET['id'],$wf_slug );
+                 if($email_status == ''|| $email_status == null){
+                   $sent = wp_mail($to, $subject,strip_tags($message), $headers);
+                   if($sent){
+                     update_post_meta($_GET['id'],$wf_slug ,1);
+                   }
+                 }
+               }
+ //EO Notify user
             echo '<div class="step-header steps-'.$index.'">';
               echo '<div class="step-index">'.$index.'</div>';
               echo '<div class="ndl-Avatar-wrapper ">'.$approve_avatr.'</div>';
@@ -498,18 +493,35 @@ jQuery('.content-article').click(function (){
         }  
 
          // print_r($work_data->ID);
+         $plan_id = $_GET['id'];
+         $user_data = get_userdata($current_user);
+         $user_email = $user_data->data->user_email;
+         
         ?> 
       </div>
       <div id="Comment">
         <div class="inner-conent">
-          <form action="">
-           <textarea name="wf-comments" class="wf-comments"  id="wf-comments" cols="30" rows="10"></textarea>
+          <form action="" method="post" id="comment-form">
+            <input type="hidden" value="<?php echo $current_user; ?>" name="commentor-id" data-plan="<?php  echo $plan_id;?>" data-email="<?php echo $user_email; ?>">
+           <textarea name="wf-comments" class="wf-comments"  id="wf-comments" cols="30" rows="1"></textarea>
            <button class="btn-primary" id="submit-comment">submit</button>
           </form>
+          <?php
+              global $wpdb;
+              $query = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE `meta_key` = 'comments'");
+              foreach($query as $key){
+                $data =$key->meta_value;
+                $comments = unserialize(unserialize($data ));
+                foreach($comments as $key => $value){
+                echo '<div class="comments"><p class="user-mail">'.$key.' </p>';
+                echo '<p class="user-comment">'.$value.'</p>';
+                echo '</div>';
+                }
+
+              }
+          ?>
         </div>
       </div>
- 
-     
     </div>
 </div>
 </div>
