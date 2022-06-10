@@ -430,6 +430,7 @@ jQuery('.content-article').click(function (){
                 $data_id= 0;
             }
 
+
             $full_name = get_user_meta($role,'first_name',true).' '.get_user_meta($role,'last_name',true);
             
           
@@ -496,30 +497,41 @@ jQuery('.content-article').click(function (){
          $plan_id = $_GET['id'];
          $user_data = get_userdata($current_user);
          $user_email = $user_data->data->user_email;
-         
+         $display_name = $user_data->data->display_name;
+
+
         ?> 
       </div>
       <div id="Comment">
         <div class="inner-conent">
-          <form action="" method="post" id="comment-form">
-            <input type="hidden" value="<?php echo $current_user; ?>" name="commentor-id" data-plan="<?php  echo $plan_id;?>" data-email="<?php echo $user_email; ?>">
-           <textarea name="wf-comments" class="wf-comments"  id="wf-comments" cols="30" rows="1"></textarea>
-           <button class="btn-primary" id="submit-comment">submit</button>
-          </form>
           <?php
               global $wpdb;
-              $query = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE `meta_key` = 'comments'");
+              $query = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE `post_id` = $plan_id AND `meta_key` = 'comments' ORDER BY `meta_id`");
               foreach($query as $key){
                 $data =$key->meta_value;
                 $comments = unserialize(unserialize($data ));
                 foreach($comments as $key => $value){
-                echo '<div class="comments"><p class="user-mail">'.$key.' </p>';
-                echo '<p class="user-comment">'.$value.'</p>';
-                echo '</div>';
+                  $user_avatar = get_avatar($key);
+                  $usr_data = get_userdata($key);
+                  if($key != $current_user){
+                    echo '<div class="comments-reverse"><p class="user-mail">'.$user_avatar.' </p>';
+                    echo '<p class="user-comment" style="background: #bdbdbd6e;"><span class="usr_email">'.$usr_data->data->user_email.'</span><br>'.$value.'</p>';
+                    echo '</div>';
+                    }
+                    else{
+                    echo '<div class="comments"><p class="user-mail">'.$user_avatar.' </p>';
+                    echo '<p class="user-comment"><span class="usr_email">'.$usr_data->data->user_email.'</span><br>'.$value.'</p>';
+                    echo '</div>';
+                    }
                 }
 
               }
           ?>
+            <form action="" method="post" id="comment-form">
+            <input type="hidden" value="<?php echo $current_user; ?>" name="commentor-id" id="commentor-id" data-plan="<?php  echo $plan_id;?>" user-data="<?php echo $current_user; ?>">
+           <textarea name="wf-comments" class="wf-comments"  id="wf-comments" cols="30" rows="5"></textarea>
+           <button class="comment-btn" id="submit-comment">submit</button>
+          </form>
         </div>
       </div>
     </div>

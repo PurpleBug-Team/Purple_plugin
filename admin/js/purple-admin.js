@@ -1,25 +1,26 @@
 jQuery(document).ready(function( $ ) {
- // add comments
- jQuery('#submit-comment').on('click',function(e){
-	e.preventDefault();
-    var comment = jQuery('#wf-comments').val()
-	var commentor_id = jQuery('#commentor-id').val()
-	var user_email = jQuery('#commentor-id').attr('data-email');
-	var plan_id = jQuery('#commentor-id').attr('data-plan');
-    console.log(commentor_id);
-	console.log(plan_id);
+	// add comments
+	 jQuery('#submit-comment').on('click',function(e){
+	   e.preventDefault();
+	   var comment = jQuery('#wf-comments').val()
+	   var commentor_id = jQuery('#commentor-id').val()
+	   var user_data = jQuery('#commentor-id').attr('user-data');
+	   var plan_id = jQuery('#commentor-id').attr('data-plan');
+       console.log(commentor_id);
+   	console.log(plan_id);
 
-	// 
-	jQuery.ajax({
-		type : "POST",
-		url : ajaxurl,
-		data : {action: "update_comments",comment:comment,commentor_id:commentor_id,plan_id:plan_id,user_email:user_email},
-		success: function(response) {	
-		location.reload();   
-		}
-	 });
-  })
-//
+	   // 
+	   jQuery.ajax({
+		   type : "POST",
+		   url : ajaxurl,
+		   data : {action: "update_comments",comment:comment,commentor_id:commentor_id,plan_id:plan_id,user_data:user_data},
+		   success: function(response) {
+		   console.log('success');
+			location.reload();
+		   }
+		});
+	 })
+   // 
    setTimeout(function () {
      jQuery('div#wpcontent').css('visibility','visible');
    },500);  

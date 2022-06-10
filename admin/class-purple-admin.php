@@ -1238,8 +1238,10 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 		$plan_id = $_POST['plan_id'];
 		$commentor_id = $_POST['commentor_id'];
 		$comment = $_POST['comment'];
-		$user_email = $_POST['user_email'];
-		$data = [$user_email => $comment];
+		$user_data = $_POST['user_data'];
+		$data = [$user_data => $comment];
+
+
 		add_post_meta($plan_id,'comments',serialize($data));
 	
 		return 'success';
