@@ -895,4 +895,96 @@ function jba_disable_editor_fullscreen_by_default() {
     wp_add_inline_script( 'wp-blocks', $script );
 }
 add_action( 'enqueue_block_editor_assets', 'jba_disable_editor_fullscreen_by_default' );
+
+function create_workflow_logs(){
+    $labels = array(
+        'name' => _x( 'Workflow Logs', 'Post Type General Name', 'textdomain' ),
+        'singular_name' => _x( 'Workflow Log', 'Post Type Singular Name', 'textdomain' ),
+        'menu_name' => _x( 'Workflow Logs', 'Admin Menu text', 'textdomain' ),
+        'name_admin_bar' => _x( 'Workflow Log', 'Add New on Toolbar', 'textdomain' ),
+        'archives' => __( 'Workflow Log Archives', 'textdomain' ),
+        'attributes' => __( 'Workflow Log Attributes', 'textdomain' ),
+        'parent_item_colon' => __( 'Parent Workflow Log:', 'textdomain' ),
+        'all_items' => __( 'Workflow Logs', 'textdomain' ),
+        'add_new_item' => __( 'Add New Workflow Log', 'textdomain' ),
+        'add_new' => __( 'Add New', 'textdomain' ),
+        'new_item' => __( 'New Workflow Log', 'textdomain' ),
+        'edit_item' => __( 'Edit Workflow Log', 'textdomain' ),
+        'update_item' => __( 'Update Workflow Log', 'textdomain' ),
+        'view_item' => __( 'View Workflow Log', 'textdomain' ),
+        'view_items' => __( 'View Workflow Logs', 'textdomain' ),
+        'search_items' => __( 'Search Workflow Log', 'textdomain' ),
+        'not_found' => __( 'Not found', 'textdomain' ),
+        'not_found_in_trash' => __( 'Not found in Trash', 'textdomain' ),
+        'featured_image' => __( 'Featured Image', 'textdomain' ),
+        'set_featured_image' => __( 'Set featured image', 'textdomain' ),
+        'remove_featured_image' => __( 'Remove featured image', 'textdomain' ),
+        'use_featured_image' => __( 'Use as featured image', 'textdomain' ),
+        'insert_into_item' => __( 'Insert into Workflow Log', 'textdomain' ),
+        'uploaded_to_this_item' => __( 'Uploaded to this Workflow Log', 'textdomain' ),
+        'items_list' => __( 'Workflow Logs list', 'textdomain' ),
+        'items_list_navigation' => __( 'Workflow Logs list navigation', 'textdomain' ),
+        'filter_items_list' => __( 'Filter Workflow Logs list', 'textdomain' ),
+    );
+    $args = array(
+        'label' => __( 'Workflow Log', 'textdomain' ),
+        'description' => __( 'Notify users when workflow is done', 'textdomain' ),
+        'labels' => $labels,
+        'menu_icon' => 'dashicons-media-document',
+        'supports' => array(),
+        'taxonomies' => array(),
+        'public' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_position' => 5,
+        'show_in_admin_bar' => true,
+        'show_in_nav_menus' => true,
+        'can_export' => true,
+        'has_archive' => true,
+        'hierarchical' => true,
+        'exclude_from_search' => false,
+        'show_in_rest' => true,
+        'publicly_queryable' => true,
+        'capability_type' => 'post',
+    );
+    register_post_type( 'workflowlog', $args );
+}
+add_action('init','create_workflow_logs',10);
+
+// Modify Workflow Logs header
+function modify_workflow_logs_header($defaults){
+    $defaults['employee'] = 'Employee';
+    $defaults['workflow_title'] = 'Workflow Title';
+    $defaults['date_emailed'] = 'Date';
+    $defaults['status'] = 'Status';
+    unset($defaults['title']);
+    unset($defaults['date']);
+    return $defaults;
+}
+add_action('manage_workflowlog_posts_columns','modify_workflow_logs_header');
+
+// Modify Workflow Logs header Content
+function modify_workflow_logs_columns($column_name, $post_ID){
+    $post_data = get_post($post_ID);
+
+    if($column_name == 'employee'){
+        echo get_post_meta($post_ID,'employee_name',true);
+    }
+    if($column_name == 'workflow_title'){
+        echo $post_data->post_title;
+    }
+    if($column_name == 'date_emailed'){
+        echo $post_data->post_date_gmt;
+    }
+    if($column_name == 'status'){
+        if($post_data->post_status == 'publish'){
+            echo 'Sent';
+        }
+        else{
+            echo 'Failed'; 
+        }
+    }
+
+}
+add_action('manage_workflowlog_posts_custom_column','modify_workflow_logs_columns',10,2);
  

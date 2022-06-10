@@ -323,30 +323,18 @@ jQuery('.content-article').click(function (){
 <div class="right-pane">
     
   <?php
-  
-     
      if( have_rows('create_workflow') ){
           $progess = 0;
           $approved=array();
           $index = 1;
           $index2 = 0;
           while( have_rows('create_workflow', $work_data->ID) ) { the_row();
-           
               $approved[]= get_post_meta($_GET['id'],'approve_'.$index,true) !='' ? intval(get_post_meta($_GET['id'],'approve_'.$index,true)):0;
-              
-             // echo $approved;
-             // echo get_post_meta($_GET['id'],'approve_'.$index,true);
-             // $progess+= $index2+1;
- 
-             // $index2++;
               $index++;
            }
            $total_approved = array_sum($approved);
            $total_workflow =  count(get_field('create_workflow', $work_data->ID));
- 
-            
-           //$total_row = ( intval($total_approved) <=1)?intval($total_approved):intval($total_approved)- ;
- 
+
          if($total_approved != 0){
            if(intval($total_approved)==$total_workflow){
               $total = '100';
@@ -354,18 +342,12 @@ jQuery('.content-article').click(function (){
               $cal = $total_approved/$total_workflow;
               $total = $cal*100;
            }
-         }
-         
-  
-              
+         }        
      }       
    ?>
   <div class="head-progress">
         <?php
-
-
           $end = get_post_meta($_GET['id'],'task_end_date',true);
-
           $list = get_post_meta($_GET['id'],'checklist_marks_1',true);
            
           if($list !=''){
@@ -373,7 +355,6 @@ jQuery('.content-article').click(function (){
           }else{
             $total_ = 0;
           }
-
           $publish = get_post_meta($_GET['id'],'publish_date_'.$total_workflow,true);
           if($publish !='' && $total_ == 100){
             echo '<span class="ndl-Badge ndl-Badge--success  workflow-state-wrapper">Completed</span>';
@@ -390,13 +371,9 @@ jQuery('.content-article').click(function (){
           }else{ 
             echo '<span class="due-date date"><strong>Due date: </strong>'.date("M d,Y", strtotime($end)).'</span>';
           }
-          
-
            
          ?>
         <progress id="file" value="<?php echo $total_;?>" max="100"> <?php echo $total_;?>% </progress>
-
-
         <?php 
           $start = get_post_meta($_GET['id'],'task_start_date',true);
           echo '<span class="start-date date"><strong>Start date: </strong>'.date("M d,Y", strtotime($start)).'</span>'; 
@@ -457,6 +434,14 @@ jQuery('.content-article').click(function (){
                    $sent = wp_mail($to, $subject,strip_tags($message), $headers);
                    if($sent){
                      update_post_meta($_GET['id'],$wf_slug ,1);
+                    //  create logs
+                    $post_data =[
+                        'post_title' => 'Workflow Update',
+                        'post_status' => 'publish',
+                        'post_type' => 'workflowlog'
+                    ];
+                    $Workflow_post_id = wp_insert_post($post_data);
+                    update_post_meta($Workflow_post_id,'employee_name',$email);
                    }
                  }
                }
@@ -492,16 +477,13 @@ jQuery('.content-article').click(function (){
             $index++;
           }
         }  
-
-         // print_r($work_data->ID);
          $plan_id = $_GET['id'];
          $user_data = get_userdata($current_user);
          $user_email = $user_data->data->user_email;
          $display_name = $user_data->data->display_name;
-
-
         ?> 
       </div>
+      <!-- Comment Section -->
       <div id="Comment">
         <div class="inner-conent">
           <?php

@@ -1240,13 +1240,16 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 		$comment = $_POST['comment'];
 		$user_data = $_POST['user_data'];
 		$data = [$user_data => $comment];
-
-
 		add_post_meta($plan_id,'comments',serialize($data));
-	
 		return 'success';
 	}
- 
+
+	public function create_workflow_email_logs(){
+		
+
+	}
+	
+
     
  
 }
