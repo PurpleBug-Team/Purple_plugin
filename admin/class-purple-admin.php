@@ -1248,6 +1248,13 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 		
 
 	}
+	public function update_progress(){
+		$percentage = $_POST['percentage'];
+		$plan_id = $_POST['plan_id'];
+
+		update_post_meta($plan_id,'total_percentage',$percentage);
+		return 'success';
+	}
 	
 
     

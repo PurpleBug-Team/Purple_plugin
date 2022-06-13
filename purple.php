@@ -946,10 +946,15 @@ function create_workflow_logs(){
         'show_in_rest' => true,
         'publicly_queryable' => true,
         'capability_type' => 'post',
+        'capabilities' => array(
+            'create_posts' => 'do_not_allow'
+        ),
+        'map_meta_cap' => false, 
     );
     register_post_type( 'workflowlog', $args );
 }
 add_action('init','create_workflow_logs',10);
+
 
 // Modify Workflow Logs header
 function modify_workflow_logs_header($defaults){

@@ -1,4 +1,28 @@
 jQuery(document).ready(function( $ ) {
+	//Update progress
+	jQuery('.progress').on('change',function(){
+		var progress = jQuery('#progress_value').val();
+		var checked = 0;
+		var total_checkbox = jQuery('.progress').length;
+		var plan_id = jQuery('.progress').attr('data-id');
+		jQuery('.progress').each(function(i,j){
+			if(jQuery(j).is(':checked')){
+				checked++;
+			}
+		})
+		var percentage = checked / total_checkbox * 100;
+		console.log(plan_id);
+		// update progress
+		jQuery.ajax({
+			type : "POST",
+			url : ajaxurl,
+			data : {action: "update_progress",percentage:percentage,plan_id:plan_id},
+			success: function(response) {
+			console.log('success');
+			}
+		 });
+		
+	})
 	// add comments
 	 jQuery('#submit-comment').on('click',function(e){
 	   e.preventDefault();

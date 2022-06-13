@@ -239,6 +239,9 @@ class Purple {
 		// comments
 	    $this->loader->add_action( 'wp_ajax_update_comments', $plugin_admin, 'update_comments' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_update_comments', $plugin_admin, 'update_comments' );
+		// comments
+	    $this->loader->add_action( 'wp_ajax_update_progress', $plugin_admin, 'update_progress' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_update_progress', $plugin_admin, 'update_progress' );
 	    
 
 

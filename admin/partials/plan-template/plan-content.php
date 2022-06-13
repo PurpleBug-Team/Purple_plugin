@@ -42,22 +42,40 @@
           $task_end_date_ = date("M j, Y", strtotime($task_end_date));
 
 
-        //   $Campaign = get_post_meta($plan->ID,'workflow_id');
-        //   echo '<pre>';
-        //   print_r($Campaign);
-        //   echo '</pre>';
-        //   die();
+          $Campaign = get_post_meta($plan->ID,'workflow_id');
+      
 
-        //   $total_workflow = (get_field('create_workflow',$Campaign)!='')?  count(get_field('create_workflow',$Campaign)):'';
+        //   $total_workflow = get_field('create_workflow',$Campaign);
+        // //   $total_workflow = (get_field('create_workflow',$Campaign)!='') ?  count(get_field('create_workflow',$Campaign)):'';
+        // //   echo '<pre>';
+        // //   print_r($Campaign);
+        // //   echo '</pre>';
          
-        //  $approve_1 =  get_post_meta($plan->ID,'approve_'.$total_workflow);
-         $stats = $approve_1 =='1'? '<span class="stats completed" >completed</span>':'<span class="stats not" >Not Yet Started</span>';
-         
+        //  $approve_1 =  get_post_meta($plan->ID,'approve_1');
+        // //  $approve_1 =  get_post_meta($plan->ID,'approve_'.$total_workflow);
+        //  $stats = $approve_1[0] ==1? '<span class="stats completed" >completed</span>':'<span class="stats not" >Not Yet Started</span>';
+         $status = get_post_meta($plan->ID,'total_percentage');
+         $stats = '';
+         $stats = '<div class="progress_border" style="width: 150px;">';
+        //  print_r($status);
+         if($status[0] > 0){
+                $stats .= "<div class='stats completed'  style='width:$status[0]%;'>";
+                $stats .= $status[0].'%';
+            }else{
+                // $stats .= "<div class='stats completed'  style='height:24px;width:0%;background:#4CAF50; color:#fff; text-align:center;'>";
+                $stats .= '<span class="stats not" >Not Yet Started</span>';
+            }
+            
+            $stats .= "</div>";
+         $stats .= "</div>";
+        //  print_r($status);
          $plan_checkbox = '<input type="checkbox" value="'.$plan->ID.'" class="delete-field">';
                    
          $title = $plan->post_title.'<span class="button-action"><button type="button" class="btn delete-1" value="'.$plan->ID.'">delete</button><a href="'.get_site_url().'/wp-admin/admin.php?page=view-plan&id='.$plan->ID.'#content" target="_blank" class="btn">view</a></span>';
         
-         // print_r($approve_1);
+        //   echo '<pre>';
+        //   print_r($approve_1);
+        //   echo '</pre>';
          
        
           $group[] = array(
@@ -65,10 +83,10 @@
               $title,
               ucfirst($type),
               $TSK,
-              $owner,
+              $total_workflow,
               ($task_start_date!='')?$task_start_date_:'No Start Date',
               ($task_end_date!='')?$task_end_date_:'No End Date',
-              $stats,
+              $stats ,
               ($Parent_campaign !='')?$Parent_campaign:'-',
               $post_modified
 
@@ -124,7 +142,7 @@ function data_function(id){
                 url: ajaxurl, 
                 data : { action:'my_delete', task_d:id}, // serializes the form's elements.
                 success: function(data) {
-                   alert(data);
+                   location.reload();
                 }
             });
          }
@@ -132,6 +150,17 @@ function data_function(id){
 }
 </script>
 <style>
+.completed{
+    text-align: center;
+    display: block;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 3px 8px;
+    color: #fff;
+    background: #07bb00 !important;
+}
 div#list-data_wrapper {
     margin-right: 20px;
 }
@@ -189,6 +218,9 @@ table#list-data tr:hover td span.button-action button.btn {
 }
 div#list-data_length {
     float: right;
+}
+.not{
+    width: 100%;
 }
 span.stats {
     text-align: center;

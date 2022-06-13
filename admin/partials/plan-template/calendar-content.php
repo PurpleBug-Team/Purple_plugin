@@ -977,7 +977,7 @@ function calendar_v(start,end){
      
         <div class="form-group">
             <div class="ui-widget">
-              <label>Workfow
+              <label>Workflow
               <select class="input-field" id="combobox" readonly>
                 <option value>Select one...</option>
                  <?php 

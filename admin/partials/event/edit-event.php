@@ -115,7 +115,7 @@ jQuery('.content-article').click(function (){
      jQuery('.view-detail').click(function(){
        
         var data_id = jQuery(this).attr('data');
-        console.log(data_id);
+        // console.log(data_id);
         if(data_id == 0) return false;
         jQuery(this).toggleClass('active');
         jQuery('.steps-'+data_id).addClass('open');
@@ -123,7 +123,7 @@ jQuery('.content-article').click(function (){
             if(jQuery(this).hasClass('active')){
                 jQuery(this).text('Hide Details');
                  jQuery('.steps-'+data_id+' .checklis').show(); 
-                    console.log(data_id);  
+                    // console.log(data_id);  
             }else{
                  jQuery(this).text('View Details');
                  jQuery('.steps-'+data_id).removeClass('open');
@@ -149,7 +149,7 @@ jQuery('.content-article').click(function (){
                         url: ajaxurl, 
                         data : { action:'ppb_creation',ID:<?php echo $_GET['id']?>,checklist:arr.join('-'),flow_id:data_id }, // serializes the form's elements.
                         success: function(data) {
-                            console.log(data);                 
+                            // console.log(data);                 
                         }
                     });
             });
@@ -390,8 +390,6 @@ jQuery('.content-article').click(function (){
       <div class="workflow-header"><header class="ndl-Header ndl-Header--subsection header-title "><h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined">Content Workflow</h1></header> </div>
 
         <?php 
-
-
         if( have_rows('create_workflow', $work_data->ID) ){
           $index = 1;
           while( have_rows('create_workflow', $work_data->ID) ) { the_row();
@@ -455,16 +453,18 @@ jQuery('.content-article').click(function (){
                
                   echo '<div class="assignee">'.$full_name.'</div>';
                   echo '<div class="tsk-DueDatePicker"><div class="due-date"><span>Step due&nbsp;</span><span class="date">'.get_post_meta( $_GET['id'],'Qarticle_due_date_'.$index.'',true).'</span></div></div>';
-                  
                   if( have_rows('create_checklist', $work_data->ID) ){
                      echo '<div class="checklis" style="display:none;"><ul class="checklist-data-'.$index.'">';
                        while( have_rows('create_checklist', $work_data->ID) ) { the_row();
 
                           $check_l = get_post_meta( $_GET['id'],'checklist_marks_'.$index.'',true) !='' ?get_post_meta( $_GET['id'],'checklist_marks_'.$index.'',true): array();
-                         // print_r($check_l);
+                        $total_checkbox[] = $index;
                           $is = in_array(get_sub_field('checklist_title'),$check_l)? 'checked':'';
-
-                       echo '<li><input '.$approve.' '.$is.' type="checkbox" value="'.get_sub_field('checklist_title').'">'.get_sub_field('checklist_title').'</li>';
+                          if($is == 'checked'){
+                            $total_done_checkbox[] = $is;
+                          }
+                          $plan_id = $_GET['id'];
+                       echo '<li><input data-id="'.$plan_id.'"  '.$approve.' '.$is.' type="checkbox" value="'.get_sub_field('checklist_title').'" class="progress">'.get_sub_field('checklist_title').'</li>';
                       }
                      echo '</ul>';
                         echo '<div class="workflowdetails">'.get_sub_field('workflow_description').'</div>';
