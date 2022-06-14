@@ -1,4 +1,51 @@
 jQuery(document).ready(function( $ ) {
+	//Edit comment edit-icon
+	jQuery('.update-btn').hide()
+	jQuery('.edit-icon').on('click',function(){
+		var comment = jQuery(this).parents().eq(3);
+		var comment_val = jQuery(comment).find('.comment-value')
+
+		jQuery('.update-btn').show()
+		jQuery('#comment-form').hide()
+		var attrs = { };
+		jQuery.each(jQuery(comment_val)[0].attributes, function(idx, attr) {
+			attrs[attr.nodeName] = attr.nodeValue;
+		});
+		$(comment_val).replaceWith(function () {
+			return jQuery("<textarea />", attrs).append(jQuery(this).contents());
+		});
+	})
+	// call update comment method
+	jQuery('.update-btn').on('click',function(){
+		var comment_obj = jQuery(this).parents().eq(1);
+		var comment = jQuery(comment_obj).find('.comment-value').val();
+		var meta_id = jQuery(this).attr('id');
+		var user_id = jQuery(this).attr('user-id');
+		jQuery.ajax({
+			type : "POST",
+			url : ajaxurl,
+			data : {action: "edit_comment",meta_id:meta_id,user_id:user_id,comment:comment},
+			success: function(response) {
+		
+			location.reload();
+			}
+		 });
+	})
+	// call delete comment method
+	jQuery('.delete-icon').on('click',function(){
+		var meta_id = jQuery(this).attr('id');
+		var result = confirm('Are you sure you want to delete the comment');
+		if(result){
+			jQuery.ajax({
+				type : "POST",
+				url : ajaxurl,
+				data : {action: "delete_comment",meta_id:meta_id},
+				success: function(response) {
+				location.reload();
+				}
+			});
+		}
+	})
 	//Update progress
 	jQuery('.progress').on('change',function(){
 		var progress = jQuery('#progress_value').val();

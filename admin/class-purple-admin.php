@@ -1255,6 +1255,40 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 		update_post_meta($plan_id,'total_percentage',$percentage);
 		return 'success';
 	}
+	public function edit_comment(){
+		include_once("wp-config.php");
+		include_once("wp-includes/wp-db.php");
+
+		global $wpdb;
+		$meta_id = $_POST['meta_id'];
+		$user_data = $_POST['user_id'];
+		$comment = $_POST['comment'];
+		$data = [$user_data => $comment];
+		$meta_val = serialize($data);
+
+		$result = $wpdb->update( $wpdb->postmeta, array( 'meta_key' => 'comments', 'meta_value' => serialize($meta_val) ), array( 'meta_id' => $meta_id ) );
+
+		if($result){
+			echo json_encode('success');
+		}else{
+			echo json_encode('failed');
+		}
+	}
+	public function delete_comment(){
+		include_once("wp-config.php");
+		include_once("wp-includes/wp-db.php");
+
+		global $wpdb;
+		$meta_id = $_POST['meta_id'];
+
+		$result = $wpdb->delete( $wpdb->postmeta, array( 'meta_id' => $meta_id ) );
+
+		if($result){
+			echo json_encode('success');
+		}else{
+			echo json_encode('failed');
+		}
+	}
 	
 
     

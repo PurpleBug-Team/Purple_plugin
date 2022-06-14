@@ -239,9 +239,16 @@ class Purple {
 		// comments
 	    $this->loader->add_action( 'wp_ajax_update_comments', $plugin_admin, 'update_comments' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_update_comments', $plugin_admin, 'update_comments' );
-		// comments
+		// progess
 	    $this->loader->add_action( 'wp_ajax_update_progress', $plugin_admin, 'update_progress' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_update_progress', $plugin_admin, 'update_progress' );
+		// edit comments
+	    $this->loader->add_action( 'wp_ajax_edit_comment', $plugin_admin, 'edit_comment' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_edit_comment', $plugin_admin, 'edit_comment' );
+	    
+		// delete comments
+	    $this->loader->add_action( 'wp_ajax_delete_comment', $plugin_admin, 'delete_comment' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_delete_comment', $plugin_admin, 'delete_comment' );
 	    
 
 

@@ -205,35 +205,34 @@ jQuery('.content-article').click(function (){
  
 
 <?php 
-  global $wp_roles;
-    $roles = $wp_roles->roles; 
-    $current_user = wp_get_current_user();
-	  $post = get_post($_GET['id']);
-  $Workflow = get_post_meta($_GET['id'],'workflow_id');
-  $work_data = get_post($Workflow[0]);
-//   echo '<pre>';
-//   print_r($work_data);
-//   echo '</pre>';
-//   die();
-								
- $post = get_post($_GET['id']);
-//  echo '<pre>';
-//  print_r($post);
-//  echo '</pre>';
+global $wp_roles;
+$roles = $wp_roles->roles; 
+$current_user = wp_get_current_user();
+$post = get_post($_GET['id']);
+$Workflow = get_post_meta($_GET['id'],'workflow_id');
+$work_data = get_post($Workflow[0]);								
+$post = get_post($_GET['id']);
  
-  $post_id = $post->ID;
-  $attachment_id =get_post_meta($post_id,'attachment_id',true);
-  $slice = explode(',',$attachment_id);
-  $activepost = get_post($slice[0]);
-  
-  
-
-    echo '<div id="loading"><div class="sticky"></div> <img class="load-image" src="'.esc_url( plugins_url( "/images/f", __FILE__ )).'"></div>';
+$post_id = $post->ID;
+$attachment_id =get_post_meta($post_id,'attachment_id',true);
+$slice = explode(',',$attachment_id);
+$activepost = get_post($slice[0]);
+  echo '<div id="loading"><div class="sticky"></div> <img class="load-image" src="'.esc_url( plugins_url( "/images/f", __FILE__ )).'"></div>';
 ?> 
 
 <p>TSK-<?php echo $_GET['id'];?></p>
 <p class="ndl-Text ndl-Text--body ndl-InlineEditDisplayMode-text"><?php echo $post->post_title; ?></p>
+<?php
+$plan_id = $_GET['id'];
+$type = get_post_meta($plan_id,'type');
+// if($type[0] == 'EVENT'){
+//  echo '<pre>';
+//  print_r($type);
+//  echo '</pre>';
+//  die();
+// }
 
+?>
 <div class="view-plan"> 
 <div class="tabs">
   <ul>
@@ -251,6 +250,7 @@ jQuery('.content-article').click(function (){
        <div class="content-navigation-thumbnails"> 
      	 <?php 
        $user = wp_get_current_user();
+
 		if( $activepost != ''){   
         if ( in_array( 'administrator', (array) $user->roles ) || in_array( 'client-admin', (array) $user->roles ) ) {
             ?>
@@ -267,48 +267,27 @@ jQuery('.content-article').click(function (){
             </div>
         <?php  } } ?>    
             <?php 
-           
             $index = 0;
              echo '<input type="hidden" value="'.$_GET['id'].'" id="task_id">';
              echo '<input type="hidden" value="'.$attachment_id.'" id="selected-post">';
+         
          if(!empty(array_filter($slice)) ){
-
-          
               foreach($slice as $slices){
-
                 $active = $index ==0 ?'active':'';
-
                 $attachment = get_post($slices);
-
-               // $imageids = get_post_meta($attachment->ID,'upload_image',true);
                 $imageids = get_post_thumbnail_id($attachment->ID);
-
-                $imageurl = wp_get_attachment_url($imageids);
-
-                ?>
-                  <div data="<?php echo $attachment->ID;?>" class="per-thumbnail primary <?php echo $active;?> grid-cl-v3-article-fill"><img width="40" height="30"  class="thumbnail-image" src="<?php echo $imageurl;?>"></div>
+                $imageurl = wp_get_attachment_url($imageids); ?>
+                <div data="<?php echo $attachment->ID;?>" class="per-thumbnail primary <?php echo $active;?> grid-cl-v3-article-fill"><img width="40" height="30"  class="thumbnail-image" src="<?php echo $imageurl;?>"></div>
                 <?php 
-           
-                 //$imageurl = wp_get_attachment_url($slices);
-                
                 $index++;
               }
-
-
-         }          
-             
-            
-        
-
-       ?></div>
-
-       <div class="the-content-article">
-       <?php   
-       include( plugin_dir_path( __FILE__ ) . 'tabconent/conent.php' ); 
-
-       ?>
+         } ?>
+         </div>
+      <div class="the-content-article">
+        <?php   
+        include( plugin_dir_path( __FILE__ ) . 'tabconent/conent.php' ); 
+        ?>
        </div>
-        
     </div>
   </div>
   <div id="publish">
@@ -317,17 +296,18 @@ jQuery('.content-article').click(function (){
 
   </div>
   <div id="history">
-    <p></p>
+    <p>History section</p>
   </div>
 </div>
 <div class="right-pane">
-    
+
   <?php
      if( have_rows('create_workflow') ){
           $progess = 0;
           $approved=array();
           $index = 1;
           $index2 = 0;
+          
           while( have_rows('create_workflow', $work_data->ID) ) { the_row();
               $approved[]= get_post_meta($_GET['id'],'approve_'.$index,true) !='' ? intval(get_post_meta($_GET['id'],'approve_'.$index,true)):0;
               $index++;
@@ -488,9 +468,9 @@ jQuery('.content-article').click(function (){
         <div class="inner-conent">
           <?php
               global $wpdb;
-              $query = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE `post_id` = $plan_id AND `meta_key` = 'comments' ORDER BY `meta_id`");
-              foreach($query as $key){
-                $data =$key->meta_value;
+              $queries = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE `post_id` = $plan_id AND `meta_key` = 'comments' ORDER BY `meta_id`");
+              foreach($queries as $query){
+                $data =$query->meta_value;
                 $comments = unserialize(unserialize($data ));
                 foreach($comments as $key => $value){
                   $user_avatar = get_avatar($key);
@@ -502,7 +482,17 @@ jQuery('.content-article').click(function (){
                     }
                     else{
                     echo '<div class="comments"><p class="user-mail">'.$user_avatar.' </p>';
-                    echo '<p class="user-comment"><span class="usr_email">'.$usr_data->data->user_email.'</span><br>'.$value.'</p>';
+                    // echo '<p class="user-comment"><span class="usr_email">'.$usr_data->data->user_email.'</span><br>'.$value.'</p>';
+                    echo '<div class="user-comment" style="background: #bdbdbd6e;"><span class="usr_email">'.$usr_data->data->user_email.'</span>
+                    <span>
+                      <i class="nc-icon-wrapper edit-icon-wrapper">
+                        <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16"><g transform="translate(0, 0)"><path fill="#444444" d="M1,16h3c0.3,0,0.5-0.1,0.7-0.3l11-11c0.4-0.4,0.4-1,0-1.4l-3-3c-0.4-0.4-1-0.4-1.4,0l-11,11 C0.1,11.5,0,11.7,0,12v3C0,15.6,0.4,16,1,16z M2,12.4l10-10L13.6,4l-10,10H2V12.4z"></path></g></svg>
+                      </i>
+                    </span>
+                    <span>
+                      <svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  class="delete-icon" id="'.$query->meta_id.'" viewBox="0 0 16 16" width="16px" height="16px"><path d="M 6.496094 1 C 5.675781 1 5 1.675781 5 2.496094 L 5 3 L 2 3 L 2 4 L 3 4 L 3 12.5 C 3 13.328125 3.671875 14 4.5 14 L 10.5 14 C 11.328125 14 12 13.328125 12 12.5 L 12 4 L 13 4 L 13 3 L 10 3 L 10 2.496094 C 10 1.675781 9.324219 1 8.503906 1 Z M 6.496094 2 L 8.503906 2 C 8.785156 2 9 2.214844 9 2.496094 L 9 3 L 6 3 L 6 2.496094 C 6 2.214844 6.214844 2 6.496094 2 Z M 5 5 L 6 5 L 6 12 L 5 12 Z M 7 5 L 8 5 L 8 12 L 7 12 Z M 9 5 L 10 5 L 10 12 L 9 12 Z"/></svg>
+                    </span>
+                    <br><span class="comment-value wf-comments" cols="30" rows="5"  >'.$value.'</span><br><button  user-id="'.$key.'" id="'.$query->meta_id.'" class="update-btn">Update</button></div>';
                     echo '</div>';
                     }
                 }

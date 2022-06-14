@@ -2,6 +2,16 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+ .delete-icon{
+    float: right;
+ }
+ .edit-icon-wrapper {
+    float: right;
+ }
+ .nc-icon-wrapper svg{
+    height: 12px;
+    width: 12px;
+ }
  .comments-reverse{
 	display: flex;
     flex-direction: row-reverse;
@@ -14,7 +24,7 @@
     width: 100%;
     background: transparent;
 }
- .comment-btn{
+ .comment-btn,.update-btn{
     padding: 7px 20px;
     background: #87bae1;
     border-color: #87bae1;
@@ -49,6 +59,7 @@
     color: #000;
     width: 100%;
     max-width: 88%;
+    margin-bottom: 10px;
 }
  #adminmenu, #adminmenu .wp-submenu, #adminmenuback, #adminmenuwrap {
     background-color: #2d2d44 !important;
