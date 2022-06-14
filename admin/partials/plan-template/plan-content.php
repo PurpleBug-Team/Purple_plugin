@@ -8,82 +8,45 @@
        'posts_per_page' => -1
       );
   $plans = get_posts($args);
-//   echo '<pre>';
-//   print_r(  $plans);
-//   echo '</pre>';
-//   die();
 
   if(!empty($plans)){
-      //$group = array('');
       foreach($plans as $plan){
           $type = get_post_meta($plan->ID,'type',true);
           $task_start_date = get_post_meta($plan->ID,'task_start_date',true);
           $task_end_date = get_post_meta($plan->ID,'task_end_date',true);
-       
-        
           $stats  = $type == 'TASK' ? 'TSK':'EVT';
-          
-
           $TSK = $stats.'-'.$plan->ID;
           $post_modified = $plan->post_modified;
-         
-        
           $owner = get_userdata($plan->post_author)->roles[0];
-        
-          
-          
           $categories = get_the_terms( $plan->ID, 'campaign' );
-
-          $Parent_campaign = '<a href="#'.$categories[0]->term_id.'">'.$categories[0]->name.'</a>';
-          
-        
-          
+          $taxonomy_link = get_edit_term_link($categories[0]->term_id);
+          $Parent_campaign = '<a href="'.$taxonomy_link.'">'.$categories[0]->name.'</a>';
           $task_start_date_ = date("M j, Y", strtotime($task_start_date));
           $task_end_date_ = date("M j, Y", strtotime($task_end_date));
-
-
           $Campaign = get_post_meta($plan->ID,'workflow_id');
       
-
         //   $total_workflow = get_field('create_workflow',$Campaign);
         // //   $total_workflow = (get_field('create_workflow',$Campaign)!='') ?  count(get_field('create_workflow',$Campaign)):'';
-        // //   echo '<pre>';
-        // //   print_r($Campaign);
-        // //   echo '</pre>';
-         
-        //  $approve_1 =  get_post_meta($plan->ID,'approve_1');
-        // //  $approve_1 =  get_post_meta($plan->ID,'approve_'.$total_workflow);
-        //  $stats = $approve_1[0] ==1? '<span class="stats completed" >completed</span>':'<span class="stats not" >Not Yet Started</span>';
          $status = get_post_meta($plan->ID,'total_percentage');
          $stats = '';
          $stats = '<div class="progress_border" style="width: 150px;">';
-        //  print_r($status);
          if($status[0] > 0){
                 $stats .= "<div class='stats completed'  style='width:$status[0]%;'>";
                 $stats .= $status[0].'%';
             }else{
-                // $stats .= "<div class='stats completed'  style='height:24px;width:0%;background:#4CAF50; color:#fff; text-align:center;'>";
                 $stats .= '<span class="stats not" >Not Yet Started</span>';
             }
-            
             $stats .= "</div>";
          $stats .= "</div>";
-        //  print_r($status);
          $plan_checkbox = '<input type="checkbox" value="'.$plan->ID.'" class="delete-field">';
                    
          $title = $plan->post_title.'<span class="button-action"><button type="button" class="btn delete-1" value="'.$plan->ID.'">delete</button><a href="'.get_site_url().'/wp-admin/admin.php?page=view-plan&id='.$plan->ID.'#content" target="_blank" class="btn">view</a></span>';
-        
-        //   echo '<pre>';
-        //   print_r($approve_1);
-        //   echo '</pre>';
-         
-       
           $group[] = array(
               $plan_checkbox,
               $title,
               ucfirst($type),
               $TSK,
-              $total_workflow,
+              $owner,
               ($task_start_date!='')?$task_start_date_:'No Start Date',
               ($task_end_date!='')?$task_end_date_:'No End Date',
               $stats ,
@@ -91,7 +54,6 @@
               $post_modified
 
             );
-        
       }
   }
 

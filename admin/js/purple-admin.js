@@ -2,16 +2,19 @@ jQuery(document).ready(function( $ ) {
 	//Edit comment edit-icon
 	jQuery('.update-btn').hide()
 	jQuery('.edit-icon').on('click',function(){
+		jQuery('.update-btn').hide()
 		var comment = jQuery(this).parents().eq(3);
 		var comment_val = jQuery(comment).find('.comment-value')
-
-		jQuery('.update-btn').show()
-		jQuery('#comment-form').hide()
 		var attrs = { };
 		jQuery.each(jQuery(comment_val)[0].attributes, function(idx, attr) {
 			attrs[attr.nodeName] = attr.nodeValue;
 		});
-		$(comment_val).replaceWith(function () {
+
+		jQuery(comment).find('.update-btn').show()
+		jQuery('#comment-form').hide()
+
+
+		jQuery(comment_val).replaceWith(function () {
 			return jQuery("<textarea />", attrs).append(jQuery(this).contents());
 		});
 	})
