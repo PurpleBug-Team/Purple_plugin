@@ -61,12 +61,12 @@ jQuery(document).ready(function( $ ) {
 			}
 		})
 		var percentage = checked / total_checkbox * 100;
-		console.log(plan_id);
+		var total_percentage = percentage.toFixed(2)
 		// update progress
 		jQuery.ajax({
 			type : "POST",
 			url : ajaxurl,
-			data : {action: "update_progress",percentage:percentage,plan_id:plan_id},
+			data : {action: "update_progress",percentage:total_percentage,plan_id:plan_id},
 			success: function(response) {
 			console.log('success');
 			}

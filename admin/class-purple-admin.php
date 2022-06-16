@@ -153,34 +153,19 @@ class Purple_Admin {
 	public function edit_admin_menu_name() {
         global $menu;  
 	    global $submenu; 
-
 	    if(!empty($menu)){
 	    	foreach($menu as $menus){
-
 	    		$grpup_menu[] = array($menus[0],$menus[2]);
-	    		
 	    	}
 	    }
-
-
 	    update_option('admin_menu_slug',serialize($grpup_menu));  
-
-	    
-	 	
-	 	 $menu[2][0] = 'Home'; 
-	 	 $menu[2][6] = 'dashicons-admin-home'; 
-
 	 	 $menu[5][6] = 'dashicons-text-page';
-
 	 	 $menu[10][0] = 'Library';
 	 	 $menu[10][6] = 'dashicons-book-alt';
-	 	 
-	 	
 	 	$wp_capabilities = get_user_meta( get_current_user_id(), 'wp_capabilities', true );
-		   
-		    $current = array_keys($wp_capabilities);
-		    
+		$current = array_keys($wp_capabilities);
 		if(in_array( $current[0],array('administrator','IT','client-admin'))) {
+				remove_menu_page( 'edit-comments.php' ); 
 		    	add_menu_page(
         		    'Plan', 
         		    'Plan', 
@@ -221,36 +206,77 @@ class Purple_Admin {
             		    'library', 
             		    array($this,'my_library'),'dashicons-book-alt',9
             		);
-            		add_submenu_page(
+            	add_submenu_page(
             	        'library',
             	        __( 'Folder', 'textdomain' ),
             	        __( 'Folder', 'textdomain' ),
             	        'manage_options',
             	        'edit-tags.php?taxonomy=attachment_category&post_type=attachment'
                 	);
-		}else{
-		     $menu[70][0]='View Profile';
-		     remove_menu_page( 'tools.php' ); 
-		     remove_menu_page( 'options-general.php' ); 
-		     
-		     
 		}
-	 
-			
-		    	remove_menu_page( 'edit.php' ); 
-		    	remove_menu_page( 'upload.php' ); 
-		    if($current[0]!='administrator'){
-		    	remove_menu_page( 'wpcf7' );
-		    	remove_menu_page( 'edit.php?post_type=acf-field-group' );
-		    	remove_menu_page( 'admin.php?page=astra' );
-		    	
-		    	
-            }
-
-	 
-
+		$menu[70][0]='View Profile';
+		remove_menu_page( 'tools.php' ); 
+		remove_menu_page( 'options-general.php' ); 
+		remove_menu_page( 'edit.php' ); 
+		remove_menu_page( 'upload.php' );
+		remove_menu_page( 'index.php' ); 
+		remove_menu_page( 'edit-comments.php' );
 
     }
+	// edit client admin menu
+	public function client_admin_menu() {
+        global $menu;  
+	    global $submenu; 
+
+	    if(!empty($menu)){
+	    	foreach($menu as $menus){
+	    		$grpup_menu[] = array($menus[0],$menus[2]);
+	    	}
+	    }
+	 	$wp_capabilities = get_user_meta( get_current_user_id(), 'wp_capabilities', true );
+		$current = array_keys($wp_capabilities);
+		    
+		if(in_array( $current[0],array('client-admin'))) {
+					$menu[70][0]='View Profile';
+					remove_menu_page( 'tools.php' ); 
+					remove_menu_page( 'options-general.php' ); 
+					remove_menu_page( 'edit.php' ); 
+					remove_menu_page( 'upload.php' ); 
+					remove_menu_page( 'edit.php?post_type=workflowlog' ); 
+					remove_menu_page( 'edit.php?post_type=sfba_subscribe_form' ); 
+					remove_menu_page( 'index.php' ); 
+					remove_menu_page( 'edit-comments.php' ); 
+					remove_menu_page( 'edit.php?post_type=acf-field-group' ); 
+					remove_menu_page( 'users.php' ); 
+		}
+    }
+	// eo client admin menu
+	// custom dashboard page
+	public function custom_dashboard_menu() {
+        global $menu;  
+	    global $submenu; 
+
+	 	$wp_capabilities = get_user_meta( get_current_user_id(), 'wp_capabilities', true );
+		$current = array_keys($wp_capabilities);
+		    
+		if(in_array( $current[0],array('client-admin','administrator','IT'))) {
+		    	add_menu_page(
+        		    'Dashboard', 
+        		    'Dashboard', 
+        		    'manage_options', 
+        		    'index', 
+        		    array($this,'my_custom_dashboard'),
+					'dashicons-admin-home',1
+        		); 
+		}
+    }
+	// eo custom dashboard
+	public function my_custom_dashboard() {
+
+    	include( plugin_dir_path( __FILE__ ) . 'partials/admin_dashboard.php' );
+    	
+    }
+
     public function my_plan() {
 
     	include( plugin_dir_path( __FILE__ ) . 'partials/plan-content.php' );

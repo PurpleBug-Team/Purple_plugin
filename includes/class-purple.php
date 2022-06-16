@@ -160,6 +160,8 @@ class Purple {
 
 		$this->loader->add_action( 'admin_head', $plugin_admin, 'my_custom_dashboard_name' );
 	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'edit_admin_menu_name' );
+	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'client_admin_menu' );
+	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'custom_dashboard_menu' );
 	 	$this->loader->add_action( 'wp_dashboard_setup', $plugin_admin, 'remove_dashboard_widgets' );
 	 	$this->loader->add_action( 'wp_dashboard_setup', $plugin_admin, 'add_dashboard_widgets' );
 	    $this->loader->add_action( 'admin_head-index.php', $plugin_admin, 'my_custom_admin_head' );
