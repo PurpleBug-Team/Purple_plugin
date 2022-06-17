@@ -55,7 +55,7 @@ $total_media_files = $query_img->post_count;
                         <h2><?=$total_articles;?></h2>
                     </div>
                     <div class="item-icon_des">
-                        <span class="wp-menu-image dashicons-before dashicons-media-document" aria-hidden="true">No of Articles</span>
+                        <span class="wp-menu-image dashicons-before dashicons-media-document" aria-hidden="true">No. of Articles</span>
                     </div>
                 </div>
             </a>
@@ -67,7 +67,7 @@ $total_media_files = $query_img->post_count;
                         <h2><?=$total_plans;?></h2>
                     </div>
                     <div class="item-icon_des">
-                        <span class="wp-menu-image dashicons-before dashicons-editor-ul" aria-hidden="true">No of Plans</span>
+                        <span class="wp-menu-image dashicons-before dashicons-editor-ul" aria-hidden="true">No. of Plans</span>
                     </div>
                 </div>
             </a>
@@ -79,7 +79,7 @@ $total_media_files = $query_img->post_count;
                         <h2><?=$total_forms;?></h2>
                     </div>
                     <div class="item-icon_des">
-                        <span class="wp-menu-image dashicons-before dashicons-email-alt" aria-hidden="true">No of Forms</span>
+                        <span class="wp-menu-image dashicons-before dashicons-email-alt" aria-hidden="true">No. of Forms</span>
                     </div>
                 </div>
             </a>
@@ -91,18 +91,20 @@ $total_media_files = $query_img->post_count;
                         <h2><?=$total_media_files;?></h2>
                     </div>
                     <div class="item-icon_des">
-                        <span class="wp-menu-image dashicons-before dashicons-admin-users" aria-hidden="true">No of Media files on Library</span>
+                        <span class="wp-menu-image dashicons-before dashicons-book-alt" aria-hidden="true">No. of Media files on Library</span>
                     </div>
                 </div>
             </a>
         </div>
     </div>
     <!-- Include Calendar -->
-    <!-- <div class="calendar-dashboard-widget">
-        < ?php
-            include( plugin_dir_path( __FILE__ ) . 'plan-template/calendar-content.php' );
+    <div class="calendar-dashboard-widget">
+        <h1>Recent Activities</h1>
+        <?php
+            // include( plugin_dir_path( __FILE__ ) . 'plan-template/calendar-content.php' );
+            // include( plugin_dir_path( __FILE__ ) . 'plan-template/plan-content.php' );
         ?>
-    </div> -->
+    </div>
 </div>
 <style>
     .calendar-dashboard-widget{

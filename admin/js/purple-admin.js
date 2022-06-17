@@ -1,6 +1,94 @@
 jQuery(document).ready(function( $ ) {
+	//store updated userdata
+	jQuery('#update-user').on('click',function(e){
+			// get user inputs
+			e.preventDefault()
+			var new_username,new_email,new_role,new_password;
+			new_username = jQuery('#username').val();
+			user_id = jQuery('#user-hidden-id').val();
+			new_email = jQuery('#email').val();
+			new_role = jQuery('#user-role').val();
+			new_password = jQuery('#set_new_password').val();
+			update_user_data(user_id,new_username,new_email,new_role);
+	})
+	jQuery('.change-pass-switch').on('click',function(){
+		jQuery('.change-password').show()
+		jQuery('.change-pass-switch').hide()
+	})
+	//edit user data
+	jQuery('.edit-user').on('click',function(){
+		jQuery('.add-user-modal').show()
+		jQuery('.user-modal-title').text('Update User Data')
+		jQuery('.submit-user').text('Update')
+		jQuery('.submit-user').hide()
+		jQuery('#update-user').show()
+
+		var user_id = jQuery(this).attr('data-id');
+		jQuery('.password-input').hide()
+		// 
+		jQuery.ajax({
+			type : "POST",
+			url : ajaxurl,
+			data : {action: "edit_user_data",user_id:user_id},
+			success: function(response) {
+			var user_id = response.data.data.ID
+			var email = response.data.data.user_email
+			var username = response.data.data.user_login
+			jQuery('#username').val(username);
+			jQuery('#email').val(email);
+			jQuery('#user-hidden-id').val(user_id);
+			}
+		 });
+		
+	})
+	function update_user_data(user_id,new_username,new_email,new_role){
+		jQuery.ajax({
+			type : "POST",
+			url : ajaxurl,
+			data : {action: "update_user_data",user_id:user_id,new_username:new_username,new_email:new_email,new_role:new_role},
+			success: function(response) {
+			console.log(response);
+			// alert('user added successfully');
+			}
+		 });
+	}
+	// Add user 
+	jQuery('.add-user-modal').hide()
+	jQuery('#add-user').on('click',function(){
+		jQuery('.add-user-modal').show()
+		jQuery('.change-pass-switch').hide()
+		jQuery('.change-password').hide()
+		jQuery('.password-input').show()
+		jQuery('.submit-user').text('Add')
+		jQuery('#add-user-modal').find('input').val('');
+	})
+	jQuery('.cls-user-btn').on('click',function(){
+		jQuery('.add-user-modal').hide()
+		jQuery('.change-password').hide()
+		jQuery('.change-pass-switch').show()
+	})
+	jQuery('#add-user-modal').on('submit',function(e){
+		e.preventDefault();
+		var username,email,role,password;
+		username = jQuery('#username').val();
+		email = jQuery('#email').val();
+		role = jQuery('#user-role').val();
+		// password = jQuery('#new_password').val();
+
+		jQuery.ajax({
+			type : "POST",
+			url : ajaxurl,
+			data : {action: "add_new_user",username:username,email:email,role:role},
+			success: function(response) {
+			console.log(response);
+			alert('user added successfully');
+			location.reload();
+			}
+		 });
+	})
 	//Edit comment edit-icon
 	jQuery('.update-btn').hide()
+	
 	jQuery('.edit-icon').on('click',function(){
 		jQuery('.update-btn').hide()
 		var comment = jQuery(this).parents().eq(3);

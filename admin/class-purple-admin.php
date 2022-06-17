@@ -77,6 +77,7 @@ class Purple_Admin {
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/purple-admin.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name.'jQueyUI_CSS', plugin_dir_url( __FILE__ ) . 'css/jquery-ui.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name.'fontawesome', 'https://use.fontawesome.com/releases/v5.14.0/css/all.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name.'jQury_CSS_modal', plugin_dir_url( __FILE__ ) . 'css/jquery.modal.min.css', array(), $this->version, 'all' );
 
 		wp_enqueue_style( $this->plugin_name.'data_table', plugin_dir_url( __FILE__ ) . 'css/jquery.dataTables.min.css', array(), $this->version, 'all' );
@@ -255,7 +256,6 @@ class Purple_Admin {
 	public function custom_dashboard_menu() {
         global $menu;  
 	    global $submenu; 
-
 	 	$wp_capabilities = get_user_meta( get_current_user_id(), 'wp_capabilities', true );
 		$current = array_keys($wp_capabilities);
 		    
@@ -274,6 +274,30 @@ class Purple_Admin {
 	public function my_custom_dashboard() {
 
     	include( plugin_dir_path( __FILE__ ) . 'partials/admin_dashboard.php' );
+    	
+    }
+	// custom user management page
+	public function custom_user_management() {
+        global $menu;  
+	    global $submenu; 
+	 	$wp_capabilities = get_user_meta( get_current_user_id(), 'wp_capabilities', true );
+		$current = array_keys($wp_capabilities);
+		    
+		if(in_array( $current[0],array('client-admin','administrator','IT'))) {
+		    	add_menu_page(
+        		    'User Management', 
+        		    'User Management', 
+        		    'manage_options', 
+        		    'user-management', 
+        		    array($this,'my_custom_user_management'),
+					'dashicons-admin-home',2
+        		); 
+		}
+    }
+	// eo custom dashboard
+	public function my_custom_user_management() {
+
+    	include( plugin_dir_path( __FILE__ ) . 'partials/user_management.php' );
     	
     }
 
@@ -1314,6 +1338,38 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 		}else{
 			echo json_encode('failed');
 		}
+	}
+	public function add_new_user(){
+		$username = $_POST['username'];
+		$email = $_POST['email'];
+		$password = $_POST['password'];
+		$role = $_POST['role'];
+
+		$user_id = register_new_user( $username, $email );
+		$user = new WP_User( $user_id  );
+		$user->set_role( $role );
+		echo json_encode($user_id);
+	
+	}
+	public function edit_user_data(){
+		$user_id = $_POST['user_id'];
+		$u = new WP_User( $user_id  );
+		wp_send_json_success($u);
+	}
+	public function update_user_data(){
+		global $wpbd;
+		$user_id = $_POST['user_id'];
+		$new_username = $_POST['new_username'];
+		$new_email = $_POST['new_email'];
+		$new_role = $_POST['new_role'];
+
+		$result = $wpdb->update($wpdb->users, array('user_login' => $new_username,'user_email' => $new_email), array('ID' => $user_id));
+		if(!$result){
+			wp_send_json_success('failed');
+		}else{
+			wp_send_json_success('success');
+		}
+	
 	}
 	
 

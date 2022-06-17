@@ -992,6 +992,13 @@ function modify_workflow_logs_columns($column_name, $post_ID){
 
 }
 add_action('manage_workflowlog_posts_custom_column','modify_workflow_logs_columns',10,2);
-
+function test(){
+    $result = wp_update_user( array(
+        'ID' => 28,
+        'user_email' => $new_email,
+        'user_login' => 'Main Admin',
+    ) );
+}
+// add_action('admin_init','test');
 
  

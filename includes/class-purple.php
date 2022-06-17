@@ -162,6 +162,7 @@ class Purple {
 	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'edit_admin_menu_name' );
 	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'client_admin_menu' );
 	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'custom_dashboard_menu' );
+	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'custom_user_management' );
 	 	$this->loader->add_action( 'wp_dashboard_setup', $plugin_admin, 'remove_dashboard_widgets' );
 	 	$this->loader->add_action( 'wp_dashboard_setup', $plugin_admin, 'add_dashboard_widgets' );
 	    $this->loader->add_action( 'admin_head-index.php', $plugin_admin, 'my_custom_admin_head' );
@@ -251,6 +252,15 @@ class Purple {
 		// delete comments
 	    $this->loader->add_action( 'wp_ajax_delete_comment', $plugin_admin, 'delete_comment' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_delete_comment', $plugin_admin, 'delete_comment' );
+		// add new users 
+	    $this->loader->add_action( 'wp_ajax_add_new_user', $plugin_admin, 'add_new_user' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_add_new_user', $plugin_admin, 'add_new_user' );
+		// edit users 
+	    $this->loader->add_action( 'wp_ajax_edit_user_data', $plugin_admin, 'edit_user_data' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_edit_user_data', $plugin_admin, 'edit_user_data' );
+		// update user data
+	    $this->loader->add_action( 'wp_ajax_update_user_data', $plugin_admin, 'update_user_data' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_update_user_data', $plugin_admin, 'update_user_data' );
 	    
 
 
