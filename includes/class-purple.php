@@ -160,9 +160,12 @@ class Purple {
 
 		$this->loader->add_action( 'admin_head', $plugin_admin, 'my_custom_dashboard_name' );
 	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'edit_admin_menu_name' );
+		// added menus
 	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'client_admin_menu' );
 	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'custom_dashboard_menu' );
+	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'custom_email_logs' );
 	 	$this->loader->add_action( 'admin_menu', $plugin_admin, 'custom_user_management' );
+		 // eo added menus
 	 	$this->loader->add_action( 'wp_dashboard_setup', $plugin_admin, 'remove_dashboard_widgets' );
 	 	$this->loader->add_action( 'wp_dashboard_setup', $plugin_admin, 'add_dashboard_widgets' );
 	    $this->loader->add_action( 'admin_head-index.php', $plugin_admin, 'my_custom_admin_head' );
@@ -267,6 +270,9 @@ class Purple {
 		// Update sort Order
 	    $this->loader->add_action( 'wp_ajax_update_sort_order', $plugin_admin, 'update_sort_order' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_update_sort_order', $plugin_admin, 'update_sort_order' );
+		// Delete workflow Log
+	    $this->loader->add_action( 'wp_ajax_delete_workflow_log', $plugin_admin, 'delete_workflow_log' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_delete_workflow_log', $plugin_admin, 'delete_workflow_log' );
 	    
 
 

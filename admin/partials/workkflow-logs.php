@@ -1,12 +1,17 @@
 <?php
 global $wp_roles,$wpdb;
 $order = get_option('user_sort','ASC');
-$order_by  = get_option('user_sort_by','user_login');
+$order_by  = get_option('user_sort_by','');
 // pagination
-$all_users = get_users("orderby=$order_by&order=$order");
-
+$workflows_emails_total = get_posts([
+    'post_type' => 'workflowlog',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'order_by' => $order_by,
+    'order'    => $order
+  ]);
 $customPagHTML     = "";
-$total = count($all_users);
+$total = count($workflows_emails_total);
 $items_per_page = 2;
 $page             = isset( $_GET['cpage'] ) ? abs( (int) $_GET['cpage'] ) : 1;
 $offset         = ( $page * $items_per_page ) - $items_per_page;
@@ -28,7 +33,15 @@ if($totalPage > 1)
 			;
 		}
 // EO PAGINATION
-$all_users = $wpdb->get_results("SELECT * FROM $wpdb->users ORDER BY $order_by  $order LIMIT $offset, $items_per_page" );
+// $workflows_emails = $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE `post_type` = 'workflowlog' ORDER BY $order_by  $order LIMIT $offset, $items_per_page" );
+$workflows_emails = get_posts([
+    'post_type' => 'workflowlog',
+    'post_status' => 'publish',
+    'offset' => $offset ,
+    'posts_per_page' => $items_per_page,
+    'order_by' => $order_by,
+    'order'    => $order
+  ]);
 $wp_roles = new WP_Roles();
 $available_roles = $wp_roles->get_names();
 if( is_user_logged_in() ) {
@@ -41,16 +54,15 @@ if( is_user_logged_in() ) {
 <div class="user-management">
     <div class="user-management-header">
         <div class="table-header">
-            <div class="title"><h1>User Management</h1></div>
+            <div class="title"><h1>Workflow Email Logs</h1></div>
             <div class="right-side">
                 <ul class="action-list">
-                    <li><i class="fa fa-user-plus" id="add-user" aria-hidden="true"></i>Add Account</li>
                     <li>
                     <i class="fas fa-sort-amount-down-alt"></i>Sort by
                         <select name="sort-user-by" id="sort-user-by">
                             <option value="ID">ID</option>
-                            <option value="user_login">Username</option>
-                            <option value="user_email">Email</option>
+                            <option value="post_date">Date</option>
+                            <option value="post_title">Title</option>
                         </select>
                     </li>
                     <li>
@@ -72,94 +84,39 @@ if( is_user_logged_in() ) {
         <table>
   <tr class="theader-user-management">
     <th width="5%">ID</th>
-    <th>Username</th>
-    <th>User Role</th>
-    <th>Email</th>
+    <th>Workflow Title</th>
+    <th>Sent To</th>
     <th>Status</th>
+    <th>Date Sent</th>
     <th>Action</th>
   </tr>
   <?php
   $id = 1;
-  foreach ($all_users as $user) {
-   ($user->user_status == 0) ? $stat = '<i class="fas fa-circle text-active"></i>Active': $stat = '<i class="fas fa-circle text-inactive"></i>Inactive';
-   $user_meta = get_userdata($user->ID);
-   $user_roles = $user_meta->roles;
+  foreach ($workflows_emails as $email) {
+   ($email->post_status == 'publish') ? $stat = '<i class="fas fa-circle text-active"></i>Sent': $stat = '<i class="fas fa-circle text-inactive"></i>Failed';
+   $sent_to = get_post_meta($email->ID,'employee_name',true);
    $output = '';
    $output .= '<tr>';
-   $output .= '<td>'.$id.'</td>';
-   $output .= '<td>'.$user->user_login.'</td>';
+   $output .= '<td>'.$email->ID.'</td>';
+   $output .= '<td>'.$email->post_title.'</td>';
    $output .= '<td>';
-   foreach($user_roles as $role){
-       $output .= $role;
-    }
+   $output .= $sent_to;
    $output .= '</td>';
-   $output .= '<td>'.$user->user_email.'</td>';
    $output .= '<td>'.$stat.'</td>';
-   $output .= '<td><i class="fas fa-edit edit-user" data-id='.$user->ID.' current-role='.$role.' ></i><i class="far fa-trash-alt delete-user" data-id='.$user->data->ID.'></i></td>';
+   $output .= '<td>'.$email->post_date.'</td>';
+   $output .= '<td><i class="far fa-trash-alt delete-workflow-log" data-id='.$email->ID.'></i></td>';
    $output .= '</tr>';
    echo $output;
    $id++;
   }
   ?>
+
 </table>
 <div class="pagination-container">
     <?php echo $customPagHTML_count; ?>
     <?php echo $customPagHTML; ?>
 </div>
     </div>
-</div>
-<!-- Add user modal -->
-<div class="user-modal-container">
-<div class="add-new-user-modal">
-    <div class="modal add-user-modal" style="display:block;">
-    <form action="#" method="post" id="add-user-modal">
-        <div class="plan-CreateModal-title "><h1 class="user-modal-title">Add new User</h1></div>
-            <input type="hidden" name="user-id" id="user-hidden-id" value="">
-            <div class="form-group">
-                <label id="username-label">Username * </label>
-                    <input name="username" required id="username" autocomplete="off"  class="input-field show-tooltip" maxlength="80" type="text" placeholder="Enter Username" value="">
-               
-            </div>
-            <div class="form-group">
-                <label>User Email *
-                    <input name="email" required autocomplete="off" id="email" class="input-field" maxlength="80" type="email" placeholder="Enter Email" value="">
-                </label>
-            </div>
-            <div class="form-group">
-                <label>User Role *
-                    <select name="user_role" class="form-field" id="user-role">
-                        <?php
-                        foreach($available_roles as $user_role_key => $value){
-                            echo "<option value='$user_role_key'>$value</option>";
-                        }                    ?>
-                    </select>
-                </label>
-            </div>
-            <a href="#" class="change-pass-switch" ><p>Change password</p></a>
-            <div class="form-group change-password" style="display:none;">
-                <label class="validate-password" >Set New Password * </label>
-                    <input name="set_new_password" id="set_new_password"  autocomplete="off"  class="input-field" maxlength="80" type="text" placeholder="Set New Password" value="">
-               
-            </div>
-            <div class="form-group " style="display:none;">
-                <label>Password *
-                    <input name="new_password" id="new_password"  autocomplete="off"  class="input-field" maxlength="80" type="text" placeholder="Type your Password" value="">
-                </label>
-            </div>
-            <div class="close-modal-container">
-                <a href="#close-modal" rel="modal:close" class="close-modal cls-user-btn">Close</a>
-            </div>
-            <!--  -->
-            <div class="create-user-button">
-                <div class="inner-buttons">
-                    <a class="close cls-user-btn ndl-Button ndl-Button--primary ndl-Button--medium" href="#">Close</a>
-                    <button type="submit" class="submit-user">Add</button>
-                    <button id="update-user" style="display:none;">Update</button>
-                </div>
-            </div>
-    </form>
-    </div>
-</div>
 </div>
 <style>
 .quotes_entries_count{
@@ -181,7 +138,7 @@ if( is_user_logged_in() ) {
     padding: 10px;
     color: #fff;
 }
-.delete-user{
+.delete-workflow-log{
     color: red;
     font-size: 1.2em;
     padding-left: 10px;
@@ -276,6 +233,7 @@ if( is_user_logged_in() ) {
 }
 .action-list{
     display:flex;
+    align-items: center;
 }
 .action-list li{
     padding: 0px 15px;

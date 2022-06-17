@@ -215,6 +215,7 @@ class Purple_Admin {
             	        'edit-tags.php?taxonomy=attachment_category&post_type=attachment'
                 	);
 		}
+		// removed menus on admin and replaced
 		$menu[70][0]='View Profile';
 		remove_menu_page( 'tools.php' ); 
 		remove_menu_page( 'options-general.php' ); 
@@ -222,6 +223,7 @@ class Purple_Admin {
 		remove_menu_page( 'upload.php' );
 		remove_menu_page( 'index.php' ); 
 		remove_menu_page( 'edit-comments.php' );
+		remove_menu_page( 'edit.php?post_type=workflowlog' );
 
     }
 	// edit client admin menu
@@ -278,6 +280,33 @@ class Purple_Admin {
     	include( plugin_dir_path( __FILE__ ) . 'partials/admin_dashboard.php' );
     	
     }
+	//////////////////////////////////////////////////////////////////////////////////
+	// custom dashboard page
+	public function custom_email_logs() {
+        global $menu;  
+	    global $submenu; 
+	 	$wp_capabilities = get_user_meta( get_current_user_id(), 'wp_capabilities', true );
+		$current = array_keys($wp_capabilities);
+		    
+		if(in_array( $current[0],array('client-admin','administrator','IT'))) {
+		    	add_menu_page(
+        		    'Email Logs', 
+        		    'Email Logs', 
+        		    'manage_options', 
+        		    'email-logs', 
+        		    array($this,'my_custom_email_logs'),
+					'dashicons-email',3
+        		); 
+		}
+    }
+	// eo custom dashboard
+	public function my_custom_email_logs() {
+
+    	include( plugin_dir_path( __FILE__ ) . 'partials/workkflow-logs.php' );
+    	
+    }
+	//////////////////////////////////////////////////////////////////////////////////
+
 	// custom user management page
 	public function custom_user_management() {
         global $menu;  
@@ -1391,13 +1420,21 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 			wp_delete_user($user_id);
 			wp_send_json_success('User deleted Successfuly');
 		}
-		// delete user data
+		// Sort  user table data
 		public function update_sort_order(){
-			$sort_order = $_POST['sort_order'];
-			$sort_by = $_POST['sort_by'];
-			update_option('user_sort',$sort_order);
-			update_option('user_sort_by',$sort_by);
-			wp_send_json_success('Successfuly');
+			$data = $_POST['formData'];
+			foreach ($data as $key => $value) {
+				update_option($key,$value);
+			}
+			wp_send_json_success('success');
+			
+		}
+		// delete workflow log
+		public function delete_workflow_log(){
+			$id = $_POST['id'];
+			wp_delete_post($id );
+			wp_send_json_success($id);
+			
 		}
 
     

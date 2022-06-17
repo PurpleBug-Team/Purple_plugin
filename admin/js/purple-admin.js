@@ -1,16 +1,38 @@
 jQuery(document).ready(function( $ ) {
-	// delete
-	jQuery('#sort-users').on('click',function(){
-		var sort_by = jQuery('#sort-user-by').val();
-		var sort_order = jQuery('#sort-order').val();
+	// delete email log
+	jQuery('.delete-workflow-log').on('click',function(){
+		var id = jQuery(this).attr('data-id');
+		if(confirm('Are you sure you want to delete this item')){
+			jQuery.ajax({
+				type : "POST",
+				url : ajaxurl,
+				data : {action: "delete_workflow_log",id:id},
+				success: function(response) {
+					alert('Email log deleted Successfuly')
+					location.reload()
+				}
+			 });
+		}
+		return;
+	})
+	// reuse function
+	function sorting_table(action,formData){
 		jQuery.ajax({
 			type : "POST",
 			url : ajaxurl,
-			data : {action: "update_sort_order",sort_order:sort_order,sort_by:sort_by},
+			data : {action: action,formData},
 			success: function(response) {
 				location.reload()
 			}
 		 });
+	}
+	// Sort By
+	jQuery('#sort-users').on('click',function(){
+		var user_sort_by = jQuery('#sort-user-by').val();
+		var user_sort = jQuery('#sort-order').val();
+		var action = 'update_sort_order';
+		var formData = {user_sort_by:user_sort_by,user_sort:user_sort}
+		sorting_table(action,formData);
 	})
 	// delete
 	jQuery('.delete-user').on('click',function(){
