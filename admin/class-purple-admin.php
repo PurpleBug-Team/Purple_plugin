@@ -239,6 +239,7 @@ class Purple_Admin {
 		    
 		if(in_array( $current[0],array('client-admin'))) {
 					$menu[70][0]='View Profile';
+					$menu[2];
 					remove_menu_page( 'tools.php' ); 
 					remove_menu_page( 'options-general.php' ); 
 					remove_menu_page( 'edit.php' ); 
@@ -249,6 +250,7 @@ class Purple_Admin {
 					remove_menu_page( 'edit-comments.php' ); 
 					remove_menu_page( 'edit.php?post_type=acf-field-group' ); 
 					remove_menu_page( 'users.php' ); 
+					
 		}
     }
 	// eo client admin menu
@@ -283,16 +285,20 @@ class Purple_Admin {
 	 	$wp_capabilities = get_user_meta( get_current_user_id(), 'wp_capabilities', true );
 		$current = array_keys($wp_capabilities);
 		    
-		if(in_array( $current[0],array('client-admin','administrator','IT'))) {
+		if(in_array( $current[0],array('administrator','IT'))) {
+			
 		    	add_menu_page(
-        		    'User Management', 
-        		    'User Management', 
+        		    'Users', 
+        		    'Users', 
         		    'manage_options', 
         		    'user-management', 
         		    array($this,'my_custom_user_management'),
-					'dashicons-admin-home',2
+					'dashicons-admin-users',2
         		); 
 		}
+		// Add options for User table
+		add_option('user_sort_by','ID');
+		add_option('user_sort','ASC');
     }
 	// eo custom dashboard
 	public function my_custom_user_management() {
@@ -1339,6 +1345,7 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 			echo json_encode('failed');
 		}
 	}
+	// register new users
 	public function add_new_user(){
 		$username = $_POST['username'];
 		$email = $_POST['email'];
@@ -1351,27 +1358,47 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 		echo json_encode($user_id);
 	
 	}
+	// Edit user data
 	public function edit_user_data(){
 		$user_id = $_POST['user_id'];
-		$u = new WP_User( $user_id  );
-		wp_send_json_success($u);
+		$user_data = new WP_User($user_id  );
+		wp_send_json_success($user_data);
 	}
+
+	// Update User data
 	public function update_user_data(){
 		global $wpbd;
-		$user_id = $_POST['user_id'];
+		$user_id = (int)$_POST['user_id'];
 		$new_username = $_POST['new_username'];
 		$new_email = $_POST['new_email'];
 		$new_role = $_POST['new_role'];
+		$new_password = $_POST['new_password'];
 
-		$result = $wpdb->update($wpdb->users, array('user_login' => $new_username,'user_email' => $new_email), array('ID' => $user_id));
-		if(!$result){
-			wp_send_json_success('failed');
-		}else{
-			wp_send_json_success('success');
+		$result = wp_update_user( array(
+			'ID' => $user_id,
+			'user_email' => $new_email
+	   	) );
+		if($new_password != false){
+			wp_set_password($new_password,$user_id);
 		}
-	
+		$id = new WP_User($user_id);
+		$id->set_role($new_role );
+		wp_send_json_success('success');
 	}
-	
+		// delete user data
+		public function delete_user_data(){
+			$user_id = $_POST['user_id'];
+			wp_delete_user($user_id);
+			wp_send_json_success('User deleted Successfuly');
+		}
+		// delete user data
+		public function update_sort_order(){
+			$sort_order = $_POST['sort_order'];
+			$sort_by = $_POST['sort_by'];
+			update_option('user_sort',$sort_order);
+			update_option('user_sort_by',$sort_by);
+			wp_send_json_success('Successfuly');
+		}
 
     
  

@@ -1,10 +1,18 @@
 <?php
 global $wp_roles;
-$all_users = get_users();
+$order = get_option('user_sort','ASC');
+$order_by  = get_option('user_sort_by','user_login');
+
+$all_users = get_users("orderby=$order_by&order=$order");
+
 $wp_roles = new WP_Roles();
 $available_roles = $wp_roles->get_names();
-
-
+if( is_user_logged_in() ) {
+    $user = wp_get_current_user();
+        if(!in_array('administrator',$user->roles)){
+            die('you do not have permission');
+        }
+    } 
 ?>
 <div class="user-management">
     <div class="user-management-header">
@@ -13,7 +21,22 @@ $available_roles = $wp_roles->get_names();
             <div class="right-side">
                 <ul class="action-list">
                     <li><i class="fa fa-user-plus" id="add-user" aria-hidden="true"></i>Add Account</li>
-                    <li><i class="fas fa-sort-amount-down-alt"></i>Sort by</li>
+                    <li>
+                    <i class="fas fa-sort-amount-down-alt"></i>Sort by
+                        <select name="sort-user-by" id="sort-user-by">
+                            <option value="ID">ID</option>
+                            <option value="user_login">Username</option>
+                            <option value="user_email">Email</option>
+                        </select>
+                    </li>
+                    <li>
+                    <i class="fas fa-sort-amount-down-alt"></i>Order by
+                        <select name="sort-order" id="sort-order">
+                            <option value="ASC">Ascending</option>
+                            <option value="DESC">Descending</option>
+                        </select>
+                    </li>
+                    <li><button class="button" id="sort-users"><i class="fas fa-angle-double-right"></i></button></li>
                 </ul>
             </div>
         </div>
@@ -37,12 +60,12 @@ $available_roles = $wp_roles->get_names();
    $roles = $user->roles;
    $output .= '<td>';
    foreach($roles as $role){
-       $output .= $role.',';
+       $output .= $role;
     }
    $output .= '</td>';
    $output .= '<td>'.$user->data->user_email.'</td>';
    $output .= '<td>'.$stat.'</td>';
-   $output .= '<td><i class="fas fa-edit edit-user" data-id='.$user->data->ID.'></i></td>';
+   $output .= '<td><i class="fas fa-edit edit-user" data-id='.$user->data->ID.' current-role='.$role.' ></i><i class="far fa-trash-alt delete-user" data-id='.$user->data->ID.'></i></td>';
    $output .= '</tr>';
    echo $output;
    $id++;
@@ -52,19 +75,20 @@ $available_roles = $wp_roles->get_names();
     </div>
 </div>
 <!-- Add user modal -->
+<div class="user-modal-container">
 <div class="add-new-user-modal">
     <div class="modal add-user-modal" style="display:block;">
     <form action="#" method="post" id="add-user-modal">
         <div class="plan-CreateModal-title "><h1 class="user-modal-title">Add new User</h1></div>
             <input type="hidden" name="user-id" id="user-hidden-id" value="">
             <div class="form-group">
-                <label>Username *
-                    <input name="username" id="username" autocomplete="off"  class="input-field" maxlength="80" type="text" placeholder="Enter Username" value="">
-                </label>
+                <label id="username-label">Username * </label>
+                    <input name="username" required id="username" autocomplete="off"  class="input-field show-tooltip" maxlength="80" type="text" placeholder="Enter Username" value="">
+               
             </div>
             <div class="form-group">
                 <label>User Email *
-                    <input name="email" autocomplete="off" id="email" class="input-field" maxlength="80" type="text" placeholder="Enter Email" value="">
+                    <input name="email" required autocomplete="off" id="email" class="input-field" maxlength="80" type="email" placeholder="Enter Email" value="">
                 </label>
             </div>
             <div class="form-group">
@@ -77,11 +101,11 @@ $available_roles = $wp_roles->get_names();
                     </select>
                 </label>
             </div>
-            <a href="#" class="change-pass-switch" ><p>Change your password</p></a>
+            <a href="#" class="change-pass-switch" ><p>Change password</p></a>
             <div class="form-group change-password" style="display:none;">
-                <label>Set New Password *
+                <label class="validate-password" >Set New Password * </label>
                     <input name="set_new_password" id="set_new_password"  autocomplete="off"  class="input-field" maxlength="80" type="text" placeholder="Set New Password" value="">
-                </label>
+               
             </div>
             <div class="form-group " style="display:none;">
                 <label>Password *
@@ -102,7 +126,31 @@ $available_roles = $wp_roles->get_names();
     </form>
     </div>
 </div>
+</div>
 <style>
+.delete-user{
+    color: red;
+    font-size: 1.2em;
+    padding-left: 10px;
+}
+.user-modal-container{
+    background: rgba(25,25,50,.5) !important;
+    z-index: 99999!important;
+}
+.disabled{
+    color:red;
+}
+.tool-tip-username{
+    background: #0669ac;
+    color: #fff;
+    padding: 4px;
+    width: fit-content;
+    position: absolute;
+    top: 5%;
+    left: 13%;
+    transform: translate(50%,50%);
+    right: 0;
+}
 .edit-user{
     color: #28a745;  
     font-size: 1.2em; 
@@ -157,7 +205,7 @@ $available_roles = $wp_roles->get_names();
     font-weight: 600;
     line-height: 20px;
 }
-.form-group input[type="text"],.form-group select{
+.form-group input[type="text"],.form-group select,.form-group input[type="email"]{
     width: 100%;
     max-width: 100%;
     min-height: 35px !important;

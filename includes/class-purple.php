@@ -261,6 +261,12 @@ class Purple {
 		// update user data
 	    $this->loader->add_action( 'wp_ajax_update_user_data', $plugin_admin, 'update_user_data' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_update_user_data', $plugin_admin, 'update_user_data' );
+		// delete user data
+	    $this->loader->add_action( 'wp_ajax_delete_user_data', $plugin_admin, 'delete_user_data' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_delete_user_data', $plugin_admin, 'delete_user_data' );
+		// Update sort Order
+	    $this->loader->add_action( 'wp_ajax_update_sort_order', $plugin_admin, 'update_sort_order' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_update_sort_order', $plugin_admin, 'update_sort_order' );
 	    
 
 

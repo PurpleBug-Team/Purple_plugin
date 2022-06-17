@@ -898,21 +898,21 @@ add_action( 'enqueue_block_editor_assets', 'jba_disable_editor_fullscreen_by_def
 
 function create_workflow_logs(){
     $labels = array(
-        'name' => _x( 'Workflow Logs', 'Post Type General Name', 'textdomain' ),
+        'name' => _x( 'Email Logs', 'Post Type General Name', 'textdomain' ),
         'singular_name' => _x( 'Workflow Log', 'Post Type Singular Name', 'textdomain' ),
-        'menu_name' => _x( 'Workflow Logs', 'Admin Menu text', 'textdomain' ),
+        'menu_name' => _x( 'Email Logs', 'Admin Menu text', 'textdomain' ),
         'name_admin_bar' => _x( 'Workflow Log', 'Add New on Toolbar', 'textdomain' ),
         'archives' => __( 'Workflow Log Archives', 'textdomain' ),
         'attributes' => __( 'Workflow Log Attributes', 'textdomain' ),
         'parent_item_colon' => __( 'Parent Workflow Log:', 'textdomain' ),
-        'all_items' => __( 'Workflow Logs', 'textdomain' ),
+        'all_items' => __( 'Email Logs', 'textdomain' ),
         'add_new_item' => __( 'Add New Workflow Log', 'textdomain' ),
         'add_new' => __( 'Add New', 'textdomain' ),
         'new_item' => __( 'New Workflow Log', 'textdomain' ),
         'edit_item' => __( 'Edit Workflow Log', 'textdomain' ),
         'update_item' => __( 'Update Workflow Log', 'textdomain' ),
         'view_item' => __( 'View Workflow Log', 'textdomain' ),
-        'view_items' => __( 'View Workflow Logs', 'textdomain' ),
+        'view_items' => __( 'View Email Logs', 'textdomain' ),
         'search_items' => __( 'Search Workflow Log', 'textdomain' ),
         'not_found' => __( 'Not found', 'textdomain' ),
         'not_found_in_trash' => __( 'Not found in Trash', 'textdomain' ),
@@ -922,9 +922,9 @@ function create_workflow_logs(){
         'use_featured_image' => __( 'Use as featured image', 'textdomain' ),
         'insert_into_item' => __( 'Insert into Workflow Log', 'textdomain' ),
         'uploaded_to_this_item' => __( 'Uploaded to this Workflow Log', 'textdomain' ),
-        'items_list' => __( 'Workflow Logs list', 'textdomain' ),
-        'items_list_navigation' => __( 'Workflow Logs list navigation', 'textdomain' ),
-        'filter_items_list' => __( 'Filter Workflow Logs list', 'textdomain' ),
+        'items_list' => __( 'Email Logs list', 'textdomain' ),
+        'items_list_navigation' => __( 'Email Logs list navigation', 'textdomain' ),
+        'filter_items_list' => __( 'Filter Email Logs list', 'textdomain' ),
     );
     $args = array(
         'label' => __( 'Workflow Log', 'textdomain' ),
@@ -956,7 +956,7 @@ function create_workflow_logs(){
 add_action('init','create_workflow_logs',10);
 
 
-// Modify Workflow Logs header
+// Modify Email Logs header
 function modify_workflow_logs_header($defaults){
     $defaults['employee'] = 'Employee';
     $defaults['workflow_title'] = 'Workflow Title';
@@ -968,7 +968,7 @@ function modify_workflow_logs_header($defaults){
 }
 add_action('manage_workflowlog_posts_columns','modify_workflow_logs_header');
 
-// Modify Workflow Logs header Content
+// Modify Email Logs header Content
 function modify_workflow_logs_columns($column_name, $post_ID){
     $post_data = get_post($post_ID);
 
@@ -992,13 +992,6 @@ function modify_workflow_logs_columns($column_name, $post_ID){
 
 }
 add_action('manage_workflowlog_posts_custom_column','modify_workflow_logs_columns',10,2);
-function test(){
-    $result = wp_update_user( array(
-        'ID' => 28,
-        'user_email' => $new_email,
-        'user_login' => 'Main Admin',
-    ) );
-}
-// add_action('admin_init','test');
+
 
  

@@ -1,5 +1,38 @@
 jQuery(document).ready(function( $ ) {
+	// delete
+	jQuery('#sort-users').on('click',function(){
+		var sort_by = jQuery('#sort-user-by').val();
+		var sort_order = jQuery('#sort-order').val();
+		jQuery.ajax({
+			type : "POST",
+			url : ajaxurl,
+			data : {action: "update_sort_order",sort_order:sort_order,sort_by:sort_by},
+			success: function(response) {
+				location.reload()
+			}
+		 });
+	})
+	// delete
+	jQuery('.delete-user').on('click',function(){
+		var user_id = jQuery(this).attr('data-id')
+		if(confirm('Are you sure to delete the user')){
+			delete_user(user_id)
+		}
+		return;
+	})
+	function delete_user(user_id){
+		jQuery.ajax({
+			type : "POST",
+			url : ajaxurl,
+			data : {action: "delete_user_data",user_id:user_id},
+			success: function(response) {
+				alert('User deleted Successfuly')
+				location.reload()
+			}
+		 });
+	}
 	//store updated userdata
+	let change_password = false;
 	jQuery('#update-user').on('click',function(e){
 			// get user inputs
 			e.preventDefault()
@@ -9,11 +42,23 @@ jQuery(document).ready(function( $ ) {
 			new_email = jQuery('#email').val();
 			new_role = jQuery('#user-role').val();
 			new_password = jQuery('#set_new_password').val();
-			update_user_data(user_id,new_username,new_email,new_role);
+			//validate password
+			if(change_password){
+				// password must be atleast 8 characters
+				if ( new_password.length < 8 ) {
+					$('.validate-password').addClass('disabled');
+					return false;
+				} else {
+					$('.validate-password').removeClass('disabled');
+				}
+			}
+			update_user_data(user_id,new_username,new_email,new_role,new_password);
 	})
+
 	jQuery('.change-pass-switch').on('click',function(){
 		jQuery('.change-password').show()
 		jQuery('.change-pass-switch').hide()
+		change_password = true
 	})
 	//edit user data
 	jQuery('.edit-user').on('click',function(){
@@ -22,6 +67,14 @@ jQuery(document).ready(function( $ ) {
 		jQuery('.submit-user').text('Update')
 		jQuery('.submit-user').hide()
 		jQuery('#update-user').show()
+		jQuery('#update-user').show()
+		jQuery('.user-modal-container').addClass('blocker')
+		$("#username").prop('disabled', true)
+		$("#username-label").text('Usernames cannot be changed.');
+		$("#username-label").addClass('disabled');
+		// set select role value
+		var current_role = jQuery(this).attr('current-role');
+		$("#user-role").val(current_role).change();
 
 		var user_id = jQuery(this).attr('data-id');
 		jQuery('.password-input').hide()
@@ -41,14 +94,15 @@ jQuery(document).ready(function( $ ) {
 		 });
 		
 	})
-	function update_user_data(user_id,new_username,new_email,new_role){
+	function update_user_data(user_id,new_username,new_email,new_role,new_password){
 		jQuery.ajax({
 			type : "POST",
 			url : ajaxurl,
-			data : {action: "update_user_data",user_id:user_id,new_username:new_username,new_email:new_email,new_role:new_role},
+			data : {action: "update_user_data",user_id:user_id,new_username:new_username,new_email:new_email,new_role:new_role,new_password:new_password},
 			success: function(response) {
 			console.log(response);
-			// alert('user added successfully');
+			alert('User updated successfully');
+			location.reload();
 			}
 		 });
 	}
@@ -61,18 +115,24 @@ jQuery(document).ready(function( $ ) {
 		jQuery('.password-input').show()
 		jQuery('.submit-user').text('Add')
 		jQuery('#add-user-modal').find('input').val('');
+		jQuery('.user-modal-container').addClass('blocker')
+		$("#username").prop('disabled', false);
+		$("#username-label").text('Username');
+		$("#username-label").removeClass('disabled');
 	})
 	jQuery('.cls-user-btn').on('click',function(){
 		jQuery('.add-user-modal').hide()
 		jQuery('.change-password').hide()
 		jQuery('.change-pass-switch').show()
+		jQuery('.user-modal-container').removeClass('blocker')
 	})
 	jQuery('#add-user-modal').on('submit',function(e){
 		e.preventDefault();
-		var username,email,role,password;
+		var username,email,role;
 		username = jQuery('#username').val();
 		email = jQuery('#email').val();
 		role = jQuery('#user-role').val();
+		//password can be set through email of user
 		// password = jQuery('#new_password').val();
 
 		jQuery.ajax({
