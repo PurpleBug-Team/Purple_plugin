@@ -1,4 +1,11 @@
 jQuery(document).ready(function( $ ) {
+	jQuery('#post_per_table').on('change',function(){
+		var post_per_table = jQuery('#post_per_table').val();
+		var action = 'update_post_per_table';
+		var formData = {post_per_table:post_per_table};
+		sorting_table(action,formData);
+
+	})
 	// delete email log
 	jQuery('.delete-workflow-log').on('click',function(){
 		var id = jQuery(this).attr('data-id');

@@ -273,6 +273,9 @@ class Purple {
 		// Delete workflow Log
 	    $this->loader->add_action( 'wp_ajax_delete_workflow_log', $plugin_admin, 'delete_workflow_log' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_delete_workflow_log', $plugin_admin, 'delete_workflow_log' );
+		// Post per page
+	    $this->loader->add_action( 'wp_ajax_update_post_per_table', $plugin_admin, 'update_post_per_table' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_update_post_per_table', $plugin_admin, 'update_post_per_table' );
 	    
 
 

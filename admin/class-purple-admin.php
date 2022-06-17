@@ -328,6 +328,7 @@ class Purple_Admin {
 		// Add options for User table
 		add_option('user_sort_by','ID');
 		add_option('user_sort','ASC');
+		add_option('post_per_table','5');
     }
 	// eo custom dashboard
 	public function my_custom_user_management() {
@@ -1427,7 +1428,6 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 				update_option($key,$value);
 			}
 			wp_send_json_success('success');
-			
 		}
 		// delete workflow log
 		public function delete_workflow_log(){
@@ -1436,9 +1436,17 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 			wp_send_json_success($id);
 			
 		}
-
-    
- 
+		// Sort  user table data
+		public function update_post_per_table(){
+			$data = $_POST['formData'];
+			foreach ($data as $key => $value) {
+				update_option($key,$value);
+			}
+			wp_send_json_success('success');
+		}
+		
+		
+		
 }
 
  

@@ -2,6 +2,7 @@
 global $wp_roles,$wpdb;
 $order = get_option('user_sort','ASC');
 $order_by  = get_option('user_sort_by','');
+$post_per_table  = get_option('post_per_table','5');
 // pagination
 $workflows_emails_total = get_posts([
     'post_type' => 'workflowlog',
@@ -12,7 +13,7 @@ $workflows_emails_total = get_posts([
   ]);
 $customPagHTML     = "";
 $total = count($workflows_emails_total);
-$items_per_page = 2;
+$items_per_page = $post_per_table;
 $page             = isset( $_GET['cpage'] ) ? abs( (int) $_GET['cpage'] ) : 1;
 $offset         = ( $page * $items_per_page ) - $items_per_page;
 $totalPage         = ceil($total / $items_per_page);
@@ -74,9 +75,14 @@ if( is_user_logged_in() ) {
                     </li>
                     <li><button class="button" id="sort-users"><i class="fas fa-angle-double-right"></i></button></li>
                     <li>
-                        <?php
-                        echo $customPagHTML_count;
-                        ?>
+                    <i class="fas fa-sort-amount-down-alt"></i>
+                        <select name="post_per_table" id="post_per_table">
+                            <option value="5" <?=$post_per_table == 5 ? 'selected' : '';?>>5</option>
+                            <option value="10" <?=$post_per_table == 10 ? 'selected' : '';?>>10</option>
+                            <option value="15" <?=$post_per_table == 15 ? 'selected' : '';?>>15</option>
+                            <option value="20" <?=$post_per_table == 20 ? 'selected' : '';?>>20</option>
+                            <option value="25" <?=$post_per_table == 25 ? 'selected' : '';?>>25</option>
+                        </select>
                     </li>
                 </ul>
             </div>
@@ -236,7 +242,7 @@ if( is_user_logged_in() ) {
     align-items: center;
 }
 .action-list li{
-    padding: 0px 15px;
+    padding: 0px 10px;
 }
 .action-list li i{
     padding: 0px 15px;
