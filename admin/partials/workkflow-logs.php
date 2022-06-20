@@ -25,8 +25,8 @@ if($totalPage > 1)
 			.paginate_links( array(
 			'base' => add_query_arg( 'cpage', '%#%' ),
 			'format' => '',
-			'prev_text' => __('&laquo;'),
-			'next_text' => __('&raquo;'),
+            'prev_text' => '<i class="fas fa-angle-double-left"></i>',
+            'next_text' =>'<i class="fas fa-angle-double-right"></i>',
 			'total' => $totalPage,
 			'current' => $page
 			)).

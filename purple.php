@@ -993,5 +993,17 @@ function modify_workflow_logs_columns($column_name, $post_ID){
 }
 add_action('manage_workflowlog_posts_custom_column','modify_workflow_logs_columns',10,2);
 
+//function track user login
+function track_users_login($login_user,$user) {
+    update_user_meta($user->ID,'is_current_login', 1);
+}
+add_action('wp_login','track_users_login',10,2);
+//function track user last login
+function track_users_logout($user_id){
+    update_user_meta($user_id,'last_login_dnt', current_time('y-m-d h:i:s'));
+    update_user_meta($user_id,'is_current_login', 0);
+}
+add_action('wp_logout','track_users_logout');
+
 
  

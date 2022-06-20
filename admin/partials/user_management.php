@@ -20,8 +20,8 @@ if($totalPage > 1)
 			.paginate_links( array(
 			'base' => add_query_arg( 'cpage', '%#%' ),
 			'format' => '',
-			'prev_text' => __('&laquo;'),
-			'next_text' => __('&raquo;'),
+            'prev_text' => '<i class="fas fa-angle-double-left"></i>',
+            'next_text' =>'<i class="fas fa-angle-double-right"></i>',
 			'total' => $totalPage,
 			'current' => $page
 			)).
@@ -75,7 +75,7 @@ if( is_user_logged_in() ) {
                 </ul>
             </div>
         </div>
-        <table>
+<table>
   <tr class="theader-user-management">
     <th width="5%">ID</th>
     <th>Username</th>
@@ -101,7 +101,7 @@ if( is_user_logged_in() ) {
    $output .= '</td>';
    $output .= '<td>'.$user->user_email.'</td>';
    $output .= '<td>'.$stat.'</td>';
-   $output .= '<td><i class="fas fa-edit edit-user" data-id='.$user->ID.' current-role='.$role.' ></i><i class="far fa-trash-alt delete-user" data-id='.$user->data->ID.'></i></td>';
+   $output .= '<td><i class="fas fa-edit edit-user" data-id='.$user->ID.' current-role='.$role.' ></i><i class="far fa-trash-alt delete-user" data-id='.$user->ID.'></i></td>';
    $output .= '</tr>';
    echo $output;
    $id++;
