@@ -224,6 +224,7 @@ class Purple_Admin {
 		remove_menu_page( 'index.php' ); 
 		remove_menu_page( 'edit-comments.php' );
 		remove_menu_page( 'edit.php?post_type=workflowlog' );
+		remove_all_actions('admin_notices');
 
     }
 	// edit client admin menu
@@ -253,6 +254,7 @@ class Purple_Admin {
 					remove_menu_page( 'edit.php?post_type=acf-field-group' ); 
 					remove_menu_page( 'users.php' ); 
 					
+					
 		}
     }
 	// eo client admin menu
@@ -280,7 +282,6 @@ class Purple_Admin {
     	include( plugin_dir_path( __FILE__ ) . 'partials/admin_dashboard.php' );
     	
     }
-	//////////////////////////////////////////////////////////////////////////////////
 	// custom dashboard page
 	public function custom_email_logs() {
         global $menu;  
@@ -288,7 +289,7 @@ class Purple_Admin {
 	 	$wp_capabilities = get_user_meta( get_current_user_id(), 'wp_capabilities', true );
 		$current = array_keys($wp_capabilities);
 		    
-		if(in_array( $current[0],array('client-admin','administrator','IT'))) {
+		if(in_array( $current[0],array('administrator','IT'))) {
 		    	add_menu_page(
         		    'Email Logs', 
         		    'Email Logs', 
@@ -305,8 +306,6 @@ class Purple_Admin {
     	include( plugin_dir_path( __FILE__ ) . 'partials/workkflow-logs.php' );
     	
     }
-	//////////////////////////////////////////////////////////////////////////////////
-
 	// custom user management page
 	public function custom_user_management() {
         global $menu;  

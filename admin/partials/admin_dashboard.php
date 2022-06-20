@@ -174,7 +174,11 @@ $post_per_table  = get_option('post_per_table','5');
                 ($is_active[0] == 1) ? $stat = '<i class="fas fa-circle text-active"></i>Active': $stat = '<i class="fas fa-circle text-inactive"></i>Inactive';
                 if($last_login_date){
                     $time = strtotime(current_time('y-m-d h:i:s')) - strtotime($last_login_date[0]);
-                    $t = get_time_lapsed($time);
+                    if($is_active[0] == 1){
+                        $t = '';
+                    }else{
+                        $t = get_time_lapsed($time);
+                    }
                 }else{
                     $t = 'No records found';
                 }
@@ -292,7 +296,7 @@ border-bottom: 1px solid hsla(0,0%,54.9%,.9333333333333333);
 }
     .calendar-dashboard-widget{
         margin-top:50px;
-        width:60%;
+        width:100%;
     }
     .dashboard-page-links{
         text-decoration:none;
