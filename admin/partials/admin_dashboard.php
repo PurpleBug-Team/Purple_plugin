@@ -44,6 +44,9 @@ $query_img_args = array(
 ); 
 $query_img = new WP_Query( $query_img_args ); 
 $total_media_files = $query_img->post_count; 
+$order = get_option('user_sort','ASC');
+$order_by  = get_option('user_sort_by','user_login');
+$post_per_table  = get_option('post_per_table','5');
    
 ?>
 <div class="custom-dashboard">
@@ -134,9 +137,7 @@ $total_media_files = $query_img->post_count;
         <?php
         /////////////////////////////////////////////////////////////
         // pagination
-        $order = get_option('user_sort','ASC');
-        $order_by  = get_option('user_sort_by','user_login');
-        $post_per_table  = get_option('post_per_table','5');
+
         $all_users = get_users("orderby=$order_by&order=$order");
 
         $customPagHTML     = "";

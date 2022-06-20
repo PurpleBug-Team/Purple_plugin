@@ -1005,5 +1005,14 @@ function track_users_logout($user_id){
 }
 add_action('wp_logout','track_users_logout');
 
+// redirect dashboard to custom dashboard
+add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $user ) {
+
+    if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) && $user->has_cap( 'update_core' ) )
+  
+      return $redirect_to = esc_url( '/wp-admin/admin.php?page=index' );
+  
+  }, 10, 3 );
+
 
  
