@@ -1009,10 +1009,154 @@ add_action('wp_logout','track_users_logout');
 add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $user ) {
 
     // if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) && $user->has_cap( 'update_core' ) )
-  
-      return $redirect_to = esc_url( '/wp-admin/admin.php?page=index' );
+   
+    return $redirect_to = esc_url( '/wp-admin/admin.php?page=index' );
   
   }, 10, 3 );
 
+
+  /**
+   * Add meta box to Article Post type
+   */
+  function article_custom_meta_box(){
+    add_meta_box(
+        'article_attachment',
+        'Attachment',
+        'article_attachment_callback',
+        'article',
+        'advanced',
+        'default'
+    );
+  }
+  add_action('admin_init','article_custom_meta_box');
+
+  function article_attachment_callback(){
+    $target_audience = [
+        'toggle_all' => 'Toggle All',
+        'general_public' => 'General public',
+        'influencers' => 'Inlfuencers',
+        'national_contractor' => 'National Contractor',
+        'private_contractor' => 'Private Contractor',
+        'sbc' => 'SBC',
+        'spc' => 'SPC',
+        'specifiers' => 'Specifiers',
+    ];
+    $content_pillars = [
+        'toggle_all' => 'Toggle All',
+        'news_innovation' => 'News & Innovation',
+        'buhay_contractor' => 'Buhay Contractor',
+        'contruction_tips' => 'Construction Tips',
+        'health_tips' => 'Health & Tips',
+        'professional_learning' => 'Professional Learning',
+    ];
+    $content_format = [
+        'toggle_all' => 'Toggle All',
+        'article' => 'Article',
+        'buhay_contractor' => 'Infographic',
+        'contruction_tips' => 'Construction Tips',
+        'health_tips' => 'Health & Tips',
+        'professional_learning' => 'Professional Learning',
+    ];
+    $journey_stage = [
+        'toggle_all' => 'Toggle All',
+        'bottom_funnel' => 'Bottom of the Funnel',
+        'middle_funnel' => 'Middle of the Funnel',
+        'top_funnel' => 'Top of the Funnel',
+    ];
+    $project_stage = [
+        'acceptance' => 'Acceptance',
+        'bid' => 'Bid',
+        'construction' => 'Construction',
+        'design' => 'Design',
+        'groundwork' => 'Groundwork',
+        'mobilization' => 'Mobilization',
+        'planning' => 'Planning',
+        'rospecting' => 'Prospecting',
+        'punchlist' => 'Punchlist',
+        'scoping' => 'Scoping',
+        'turnover' => 'Turnover',
+    ];
+
+    $output = '';
+    $output .= '<div class="article-attachement-container">';
+        $output .= '<div id="attachment-td">';
+            // Target Audience Checkbox options
+            $output .= '<div class="attachement-group">';
+                $output .= '<p class="attachment-div-title">Target Audience</p>';
+                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                foreach($target_audience as $audience => $value){
+                    $output .= '<label>'.$value.'<input name="'.$audience.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
+                }
+                $output .= '</div>';
+            $output .= '</div>';
+            //  Content Pillar Checkbox options
+            $output .= '<div class="attachement-group">';
+                $output .= '<p class="attachment-div-title" id="content-pillars">Content Pillar</p>';
+                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                foreach($content_pillars as $content => $value){
+                    $output .= '<label>'.$value.'<input name="'.$content.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
+                }
+                $output .= '</div>';
+            $output .= '</div>';        
+            // Content Format Checkbox options
+            $output .= '<div class="attachement-group">';
+                $output .= '<p class="attachment-div-title" id="content-format">Content Format</p>';
+                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                foreach($content_format as $content => $value){
+                    $output .= '<label>'.$value.'<input name="'.$content.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
+                }
+                $output .= '</div>';
+            $output .= '</div>';        
+            // Journey Stage Checkbox options
+            $output .= '<div class="attachement-group">';
+                $output .= '<p class="attachment-div-title">Journey Stage</p>';
+                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                foreach($journey_stage as $journery => $value){
+                    $output .= '<label>'.$value.'<input name="'.$journery.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
+                }
+                $output .= '</div>';
+            $output .= '</div>';        
+            //  Project Stage Checkbox options
+            $output .= '<div class="attachement-group">';
+                $output .= '<p class="attachment-div-title" id="project-stage">Project Stage</p>';
+                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                foreach($project_stage as $project => $value){
+                    $output .= '<label>'.$value.'<input name="'.$project.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
+                }
+                $output .= '</div>';
+            $output .= '</div>';   
+            //  
+        $output .= '</div>';
+    $output .= '</div>';
+    echo $output;
+
+  }
+  add_action('save_post_article','save_attachments');
+  function save_attachments($post){
+    if(defined('DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+    global $wpdb;
+
+  }
+//remove wp-admin
+  function redirect_to_nonexistent_page()
+  {
+    $new_login =  'signin';
+    if (strpos($_SERVER['REQUEST_URI'], $new_login) === false) {
+      wp_safe_redirect(home_url('NonExistentPage'), 302);
+      exit();
+    }
+  }
+  add_action('login_head', 'redirect_to_nonexistent_page');
+  
+  function redirect_to_actual_login()
+  {
+  
+    $new_login =  'signin';
+    if (parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY) == $new_login && ($_GET['redirect'] !== false)) {
+      wp_safe_redirect(home_url("wp-login.php?$new_login&redirect=false"));
+      exit();
+    }
+  }
+  add_action('init', 'redirect_to_actual_login');
 
  

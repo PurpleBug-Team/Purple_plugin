@@ -2,6 +2,51 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+ .attachement-group::before{
+    padding: 0px;
+ }
+ .attachment-checklist{
+    width: 80%;
+    max-width: 80%;
+    border-left: 1px solid #eee;
+    padding: 10px;
+    background: #ffff;
+ }
+ .attachement-group{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-bottom: 1px solid #eee;
+    background: #f9f9f9;
+    padding-left: 10px;
+    
+ }
+ .attachment-div-title{
+    font-weight: bold;
+    width: 20%;
+    max-width: 20%;
+ }
+
+ .article-attachement-container input[type="checkbox"]{
+    margin: -2px 0px 0 5px;
+    vertical-align: middle;
+ }
+ .article-attachement-container label{
+    margin-right: 20px;
+    display: inline-block;
+    margin-top: 10px;
+ }
+ #attachment-td tr{
+    
+    /* height: 75px; */
+
+ }
+ #attachment-td .attachment-title{
+    width:215px
+ }
+ p#footer-upgrade{
+    display: none !important;
+ }
  span#footer-thankyou{
     display: none !important;
  }
