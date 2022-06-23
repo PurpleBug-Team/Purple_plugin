@@ -1027,10 +1027,75 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
         'advanced',
         'default'
     );
+    add_meta_box(
+        'Workflows',
+        'Workflow',
+        'workflow_callback',
+        'workflow',
+        'advanced',
+        'default'
+    );
   }
   add_action('admin_init','article_custom_meta_box');
+  function workflow_callback(){
+    global $post;
+    $workflow_title = (get_post_meta($post->ID,'workflow_title_1')[0] != '') ? get_post_meta($post->ID,'workflow_title_1')[0] : '';
+    $workflow_description = (get_post_meta($post->ID,'workflow_description_1')[0] != '') ? get_post_meta($post->ID,'workflow_description_1')[0] : '';
+    
+    $get_current_db_checklists = get_post_meta($post->ID,'workflow_checklists');
+    $total_checklists = unserialize($get_current_db_checklists[0]);
+    
+    
+    $output = '';
+    $output = '<i class="fa fa-plus-circle add-dynamic-workflow" aria-hidden="true" ></i>';
+    $output .= '<div id="workflow-container">';
+        $output .= '<div class="workflow-group">';
+            $output .= '<div class="workflow-title-column">Workflow Title</div>';
+            $output .= "<div class='input-column'><input name='workflow-title' type='text' placeholder='Workflow Title' value='$workflow_title'></div>";
+        $output .= '</div>';
+        $output .= '<div class="workflow-group">';
+            $output .= '<div class="workflow-title-column">Workflow Description</div>';
+            $output .= '<div class="input-column"><textarea  name="workflow-description" id="tiny-mce-editor" rows="5">'.$workflow_description.'</textarea></div>';
+        $output .= '</div>';
+        $output .= '<div class="workflow-group">';
+            $output .= '<div class="workflow-title-column">Workflow Checklist<i class="fa fa-plus-circle add-checklist" aria-hidden="true"></i></label></div>';
+            $output .= '<div class="input-column">';
+                $output .= '<div class="workflow-checklist" id="workflow-checklist">';
+                        $output .= '<input type="hidden" value="'.count( $total_checklists).'" id="checklist-total" name="total-checklist">';
+                        foreach($total_checklists as $checklist_number => $checklist_value){
+                            $name = 'checklist_'.$checklist_number;
+                            $output .= "<input type='text' name='$name' placeholder='Checklist Title' class='worflow-inputs-checklist' value='$checklist_value'>";
+                        }
+                $output .= '</div>';
+            $output .= '</div>';
+        $output .= '</div>';
+        $output .= '</div>';
+    $output .= '</div>';
+   
+    echo $output;
+  }
+  add_action('save_post_workflow','save_workflows');
+  function save_workflows(){
+    // echo '<pre>';
+    // print_r($_POST);
+    // echo '</pre>';
+    // die();
+    global $post;
+    $total_checklist = $_POST['total-checklist'];
+    $workflow_title = $_POST['workflow-title'];
+    $workflow_description = $_POST['workflow-description'];
 
+    $checklist_value = [];
+    for($checklist = 0; $checklist < $total_checklist; $checklist++){
+        $checklist_value[] = $_POST['checklist_'.$checklist];
+    }
+    // Update Post meta
+    update_post_meta($post->ID,'workflow_title_1',$workflow_title);
+    update_post_meta($post->ID,'workflow_description_1',$workflow_description);
+    update_post_meta($post->ID,'workflow_checklists',serialize($checklist_value));
+  }
   function article_attachment_callback(){
+    global $post;
     $target_audience = [
         'toggle_all' => 'Toggle All',
         'general_public' => 'General public',
@@ -1052,13 +1117,171 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
     $content_format = [
         'toggle_all' => 'Toggle All',
         'article' => 'Article',
-        'buhay_contractor' => 'Infographic',
+        'ifographic' => 'Infographic',
+        'listicle' => 'Listicle',
+        'quiz' => 'Quiz',
+        'survey' => 'Survey',
+        'video' => 'Video',
+        'webinar' => 'Webinar',
+    ];
+    $journey_stage = [
+        'toggle_all' => 'Toggle All',
+        'bottom_funnel' => 'Bottom of the Funnel',
+        'middle_funnel' => 'Middle of the Funnel',
+        'top_funnel' => 'Top of the Funnel',
+    ];
+    $project_stage = [
+        'toggle_all' => 'Toggle All',
+        'acceptance' => 'Acceptance',
+        'bid' => 'Bid',
+        'construction' => 'Construction',
+        'design' => 'Design',
+        'groundwork' => 'Groundwork',
+        'mobilization' => 'Mobilization',
+        'planning' => 'Planning',
+        'rospecting' => 'Prospecting',
+        'punchlist' => 'Punchlist',
+        'scoping' => 'Scoping',
+        'turnover' => 'Turnover',
+    ];
+    // Get value on database
+    $database_attachment_title = [
+        'target_audience',
+        'content_pillars',
+        'content_format',
+        'journey_stage',
+        'project_stage'
+    ];
+    $target_audience_isset = get_post_meta($post->ID,'target_Audience');
+    $target_audience_selected = unserialize($target_audience_isset[0]);
+    $audience_count = 0;
+    // 
+    $content_pillars_isset = get_post_meta($post->ID,'content_pillars');
+    $content_pillars_selected = unserialize($content_pillars_isset[0]);
+    $content_pillars_count = 0;
+    // 
+    $content_format_isset = get_post_meta($post->ID,'content_format');
+    $content_format_selected = unserialize($content_format_isset[0]);
+    $content_format_count = 0;
+    // 
+    $journey_stage_isset = get_post_meta($post->ID,'journey_stage');
+    $journey_stage_selected = unserialize($journey_stage_isset[0]);
+    $journey_stage_count = 0;
+    // 
+    $project_stage_isset = get_post_meta($post->ID,'project_stage');
+    $project_stage_selected = unserialize($project_stage_isset[0]);
+    $project_stage_count = 0;
+    
+
+
+    $output = '';
+    $output .= '<div class="article-attachement-container">';
+        $output .= '<div id="attachment-td">';
+            // Target Audience Checkbox options
+            $output .= '<div class="attachement-group">';
+                $output .= '<p class="attachment-div-title">Target Audience</p>';
+                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                foreach($target_audience as $audience => $value){
+                   if($audience_count < count($target_audience_selected) && $value == $target_audience_selected[$audience_count]){
+                        $output .= '<label>'.$value.'<input name="'.$audience.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'" checked="checked"></label>';
+                        $audience_count++;
+                   }else{
+                    $output .= '<label>'.$value.'<input name="'.$audience.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
+                   }
+                }
+                $output .= '</div>';
+            $output .= '</div>';
+            //  Content Pillar Checkbox options
+            $output .= '<div class="attachement-group">';
+                $output .= '<p class="attachment-div-title" id="content-pillars">Content Pillar</p>';
+                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                foreach($content_pillars as $content => $value){
+                    if($content_pillars_count < count($content_pillars_selected) && $value == $content_pillars_selected[$content_pillars_count]){
+                        $output .= '<label>'.$value.'<input name="'.$content.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'" checked="checked"></label>';
+                        $content_pillars_count++;
+                   }else{
+                    $output .= '<label>'.$value.'<input name="'.$content.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
+                   }
+                }
+                $output .= '</div>';
+            $output .= '</div>';        
+            // Content Format Checkbox options
+            $output .= '<div class="attachement-group">';
+                $output .= '<p class="attachment-div-title" id="content-format">Content Format</p>';
+                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                foreach($content_format as $content => $value){
+                    if($content_format_count < count($content_format_selected) && $value == $content_format_selected[$content_format_count]){
+                        $output .= '<label>'.$value.'<input name="'.$content.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'" checked="checked"></label>';
+                        $content_format_count++;
+                   }else{
+                        $output .= '<label>'.$value.'<input name="'.$content.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
+                   }   
+                }
+                $output .= '</div>';
+            $output .= '</div>';        
+            // Journey Stage Checkbox options
+            $output .= '<div class="attachement-group">';
+                $output .= '<p class="attachment-div-title">Journey Stage</p>';
+                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                foreach($journey_stage as $journery => $value){
+                    if($journey_stage_count < count($journey_stage_selected) && $value == $journey_stage_selected[$journey_stage_count]){
+                        $output .= '<label>'.$value.'<input name="'.$journery.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'" checked="checked"></label>';
+                        $journey_stage_count++;
+                   }else{
+                        $output .= '<label>'.$value.'<input name="'.$journery.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
+                   }   
+                }
+                $output .= '</div>';
+            $output .= '</div>';        
+            //  Project Stage Checkbox options
+            $output .= '<div class="attachement-group">';
+                $output .= '<p class="attachment-div-title" id="project-stage">Project Stage</p>';
+                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                foreach($project_stage as $project => $value){
+                    if($project_stage_count < count($project_stage_selected) && $value == $project_stage_selected[$project_stage_count]){
+                        $output .= '<label>'.$value.'<input name="'.$project.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'" checked="checked"></label>';
+                        $project_stage_count++;
+                   }else{
+                        $output .= '<label>'.$value.'<input name="'.$project.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
+                   }  
+                }
+                $output .= '</div>';
+            $output .= '</div>';   
+            //  
+        $output .= '</div>';
+    $output .= '</div>';
+    echo $output;
+
+  }
+  add_action('save_post_article','save_attachments');
+  function save_attachments($post_id){
+    if(defined('DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+    $target_audience = [
+        'general_public' => 'General public',
+        'influencers' => 'Inlfuencers',
+        'national_contractor' => 'National Contractor',
+        'private_contractor' => 'Private Contractor',
+        'sbc' => 'SBC',
+        'spc' => 'SPC',
+        'specifiers' => 'Specifiers',
+    ];
+    $content_pillars = [
+        'news_innovation' => 'News & Innovation',
+        'buhay_contractor' => 'Buhay Contractor',
         'contruction_tips' => 'Construction Tips',
         'health_tips' => 'Health & Tips',
         'professional_learning' => 'Professional Learning',
     ];
+    $content_format = [
+        'article' => 'Article',
+        'ifographic' => 'Infographic',
+        'listicle' => 'Listicle',
+        'quiz' => 'Quiz',
+        'survey' => 'Survey',
+        'video' => 'Video',
+        'webinar' => 'Webinar',
+    ];
     $journey_stage = [
-        'toggle_all' => 'Toggle All',
         'bottom_funnel' => 'Bottom of the Funnel',
         'middle_funnel' => 'Middle of the Funnel',
         'top_funnel' => 'Top of the Funnel',
@@ -1076,87 +1299,45 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
         'scoping' => 'Scoping',
         'turnover' => 'Turnover',
     ];
-
-    $output = '';
-    $output .= '<div class="article-attachement-container">';
-        $output .= '<div id="attachment-td">';
-            // Target Audience Checkbox options
-            $output .= '<div class="attachement-group">';
-                $output .= '<p class="attachment-div-title">Target Audience</p>';
-                $output .= '<div  class="attachment-checklist" id="target-audience">';
-                foreach($target_audience as $audience => $value){
-                    $output .= '<label>'.$value.'<input name="'.$audience.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
-                }
-                $output .= '</div>';
-            $output .= '</div>';
-            //  Content Pillar Checkbox options
-            $output .= '<div class="attachement-group">';
-                $output .= '<p class="attachment-div-title" id="content-pillars">Content Pillar</p>';
-                $output .= '<div  class="attachment-checklist" id="target-audience">';
-                foreach($content_pillars as $content => $value){
-                    $output .= '<label>'.$value.'<input name="'.$content.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
-                }
-                $output .= '</div>';
-            $output .= '</div>';        
-            // Content Format Checkbox options
-            $output .= '<div class="attachement-group">';
-                $output .= '<p class="attachment-div-title" id="content-format">Content Format</p>';
-                $output .= '<div  class="attachment-checklist" id="target-audience">';
-                foreach($content_format as $content => $value){
-                    $output .= '<label>'.$value.'<input name="'.$content.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
-                }
-                $output .= '</div>';
-            $output .= '</div>';        
-            // Journey Stage Checkbox options
-            $output .= '<div class="attachement-group">';
-                $output .= '<p class="attachment-div-title">Journey Stage</p>';
-                $output .= '<div  class="attachment-checklist" id="target-audience">';
-                foreach($journey_stage as $journery => $value){
-                    $output .= '<label>'.$value.'<input name="'.$journery.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
-                }
-                $output .= '</div>';
-            $output .= '</div>';        
-            //  Project Stage Checkbox options
-            $output .= '<div class="attachement-group">';
-                $output .= '<p class="attachment-div-title" id="project-stage">Project Stage</p>';
-                $output .= '<div  class="attachment-checklist" id="target-audience">';
-                foreach($project_stage as $project => $value){
-                    $output .= '<label>'.$value.'<input name="'.$project.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'"></label>';
-                }
-                $output .= '</div>';
-            $output .= '</div>';   
-            //  
-        $output .= '</div>';
-    $output .= '</div>';
-    echo $output;
-
-  }
-  add_action('save_post_article','save_attachments');
-  function save_attachments($post){
-    if(defined('DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
-    global $wpdb;
-
-  }
-//remove wp-admin
-  function redirect_to_nonexistent_page()
-  {
-    $new_login =  'signin';
-    if (strpos($_SERVER['REQUEST_URI'], $new_login) === false) {
-      wp_safe_redirect(home_url('NonExistentPage'), 302);
-      exit();
+    $target_audience_array = [];
+    $content_pillars_array = [];
+    $content_format_array = [];
+    $journey_stage_array = [];
+    $project_stage_array = [];
+    // target_audience
+    foreach($target_audience as $target_audience_key => $target_audience_value){
+        if(isset($_POST[$target_audience_key])){
+            $target_audience_array[] = $_POST[$target_audience_key];
+        }
     }
-  }
-  add_action('login_head', 'redirect_to_nonexistent_page');
-  
-  function redirect_to_actual_login()
-  {
-  
-    $new_login =  'signin';
-    if (parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY) == $new_login && ($_GET['redirect'] !== false)) {
-      wp_safe_redirect(home_url("wp-login.php?$new_login&redirect=false"));
-      exit();
+    // content_pillars
+    foreach($content_pillars as $content_pillars_key => $content_pillars_value){
+        if(isset($_POST[$content_pillars_key])){
+            $content_pillars_array[] = $_POST[$content_pillars_key];
+        }
     }
+    // content_format
+    foreach($content_format as $content_format_key => $content_format_value){
+        if(isset($_POST[$content_format_key])){
+            $content_format_array[] = $_POST[$content_format_key];
+        }
+    }
+    // journey_stage
+    foreach($journey_stage as $journey_stage_key => $journey_stage_value){
+        if(isset($_POST[$journey_stage_key])){
+            $journey_stage_array[] = $_POST[$journey_stage_key];
+        }
+    }
+    // project_stage
+    foreach($project_stage as $project_stage_key => $project_stage_value){
+        if(isset($_POST[$project_stage_key])){
+            $project_stage_array[] = $_POST[$project_stage_key];
+        }
+    }
+    // Update Post Meta
+    update_post_meta($post_id,'target_Audience',serialize($target_audience_array));
+    update_post_meta($post_id,'content_pillars',serialize($content_pillars_array));
+    update_post_meta($post_id,'content_format',serialize($content_format_array));
+    update_post_meta($post_id,'journey_stage',serialize($journey_stage_array));
+    update_post_meta($post_id,'project_stage',serialize($project_stage_array));
   }
-  add_action('init', 'redirect_to_actual_login');
-
- 

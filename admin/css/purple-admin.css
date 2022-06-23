@@ -2,6 +2,45 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+.worflow-inputs-checklist{
+    margin-top: 7px;
+}
+ .add-dynamic-workflow{
+    float: right;
+ }
+ .add-checklist{
+    color: #1267c8;
+    padding-left: 5px;
+ }
+ .add-dynamic-workflow{
+    font-size: 1.2rem;
+    color: #1267c8;
+ }
+.workflow-checklist{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+#workflow-container{
+    padding: 20px;
+}
+ .workflow-title-column{
+    width: 210px;
+    font-weight: bold;
+ }
+ .workflow-group .input-column input[type="text"],
+ .workflow-group .input-column textarea{
+    width: 100%;
+ }
+ .workflow-group .input-column{
+    width: 100%;
+ }
+ .workflow-group{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+ }
  .attachement-group::before{
     padding: 0px;
  }

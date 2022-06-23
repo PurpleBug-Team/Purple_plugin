@@ -125,15 +125,18 @@
           
           if($activepost->post_type =='article'){
 
-            $labels = array('Target_Audience','Content_Pillar','content_format','journey_stage','Project_Stage');
+            $labels = array('target_Audience','content_pillars','content_format','journey_stage','project_stage');
             foreach($labels as $label){
-              $data = get_post_meta($activepost->ID,$label,true);
-              if(empty( $data)) continue;
+              $data = get_post_meta($activepost->ID,$label);
+              if(empty( $data[0])) continue;
               $rep = str_replace("_"," ",$label);
               echo '<span class="ndl-Labels-type">'.ucfirst($rep).'</span>'; 
               
               foreach($data as $datas){
-                echo '<span class="ndl-Labels-item"><div class="ndl-Pill ndl-Pill--medium "><span class="ndl-Pill-title ">'.$datas.'</span></div></span>';
+                $items = unserialize($datas);
+                foreach($items as $item){
+                    echo '<span class="ndl-Labels-item"><div class="ndl-Pill ndl-Pill--medium "><span class="ndl-Pill-title ">'.$item.'</span></div></span>';
+                }
               }
   
             }

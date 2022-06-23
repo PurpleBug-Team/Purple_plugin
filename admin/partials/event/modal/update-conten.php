@@ -126,9 +126,9 @@
           
           if($activepost->post_type =='article'){
 
-            $labels = array('Target_Audience','Content_Pillar','content_format','journey_stage','Project_Stage');
+            $labels = array('target_Audience','content_pillars','content_format','journey_stage','project_stage');
             foreach($labels as $label){
-              $data = get_post_meta($activepost->ID,$label,true);
+              $data = get_post_meta($activepost->ID,$label);
               if(empty( $data)) continue;
               $rep = str_replace("_"," ",$label);
               echo '<span class="ndl-Labels-type">'.ucfirst($rep).'</span>'; 

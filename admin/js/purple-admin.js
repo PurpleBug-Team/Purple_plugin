@@ -1,4 +1,14 @@
 jQuery(document).ready(function( $ ) {
+	let input_count = jQuery('#checklist-total').val();
+	jQuery('.add-checklist').on('click',function(){
+		
+		var output = '';
+		output += '<input type="text" name="checklist_'+input_count+'" placeholder="Checklist Title '+input_count+'" class="worflow-inputs-checklist">';
+		jQuery('.workflow-checklist').append(output);
+		input_count++;
+		jQuery('#checklist-total').val(input_count)
+	})
+
 	var target_checkbox = jQuery('.attachment-checklist').find('input[type="checkbox"]')
 	jQuery(target_checkbox).on('click',function(){
 		var target_options = jQuery(this).parent().parent().attr('id');
@@ -955,7 +965,7 @@ function for_lib_script(id){
     });
  
 }
-
+  
 function update_or_delte() {
 	jQuery('.card-actiom button.delete').click(function () {
     var id = jQuery(this).attr('actiondata');

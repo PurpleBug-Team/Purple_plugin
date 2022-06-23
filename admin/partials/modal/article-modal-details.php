@@ -14,14 +14,16 @@
  	 $guid = explode('_wpnonce=',wp_nonce_url($get_attacment[0]->guid, 'action' ));
 
  	 $content_format = get_post_meta($get_attacment[0]->ID,'content_format',true);
+	
+	 
 
  	 $journey_stage = get_post_meta($get_attacment[0]->ID,'journey_stage',true); 
 
- 	 $project_page = get_post_meta($get_attacment[0]->ID,'Project_Stage',true); 
+ 	 $project_page = get_post_meta($get_attacment[0]->ID,'project_stage',true); 
 
- 	 $Target_Audience2 = get_post_meta($get_attacment[0]->ID,'Target_Audience',true); 
+ 	 $Target_Audience2 = get_post_meta($get_attacment[0]->ID,'target_audience',true); 
 
- 	 $content_pillar = get_post_meta($get_attacment[0]->ID,'Content_Pillar',true); 
+ 	 $content_pillar = get_post_meta($get_attacment[0]->ID,'content_pillar',true); 
 
  	 $user_ = get_userdata( $get_attacment[0]->post_author );
 
