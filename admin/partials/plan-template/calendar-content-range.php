@@ -410,7 +410,9 @@ function calendar_v(start,end){
                          
                         },
                         success : function( response ) {
-                          jQuery('.workflow_roles').html(response);
+                          console.log(response);
+                          return
+                          // jQuery('.workflow_roles').html(response);
 
                             jQuery('.ndl-AvatarPicker span.nc-icon').click(function(){
 

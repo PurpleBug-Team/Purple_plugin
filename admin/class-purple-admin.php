@@ -1215,32 +1215,29 @@ class Purple_Admin {
 
 	public function get_workflow(){
 		global $wp_roles,$wpdb;
-		
 		$roles = $wp_roles->roles; 
 		$current_user = wp_get_current_user();
- 
-
-		$user_Q = "SELECT ID,un_meta.meta_value as first_name,un_meta2.meta_value as last_name,user_nicename as user_nicename  FROM `".$wpdb->prefix."users` as users 
-left join ".$wpdb->prefix."usermeta as un_meta on( users.id=un_meta.user_id ) and (un_meta.meta_key='first_name')
-left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) and (un_meta2.meta_key='last_name')";
-
+ 		$user_Q = "SELECT ID,un_meta.meta_value as first_name,un_meta2.meta_value as last_name,user_nicename as user_nicename  FROM `".$wpdb->prefix."users` as users 
+		left join ".$wpdb->prefix."usermeta as un_meta on( users.id=un_meta.user_id ) and (un_meta.meta_key='first_name')
+		left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) and (un_meta2.meta_key='last_name')";
 		$users = $wpdb->get_results( $user_Q );
-
-
 		if(!empty($users)){
 			foreach($users as $user){
-		      
 			    $fullname = $user->first_name.' '.$user->last_name;
-			    
 				$w_use[] = array($user->ID,$user->user_nicename);
 			}
 		}
+		$query = get_post( $_GET['workflow'] );
+		$total_created_workflows = get_post_meta($query->ID,'created_workflows')[0];
+
         
-			$query = get_post( $_GET['workflow'] );
-  
-			if( have_rows('create_workflow', $query->ID) ){
+		
+		for($workflow_counter = 0; $workflow_counter < $total_created_workflows; $workflow_counter++){
+		// wp_send_json_success($total_created_workflows);
+		// die();
+			// if( have_rows('create_workflow', $query->ID) ){
 				$index = 1;
-				while( have_rows('create_workflow', $query->ID) ) { the_row();
+				// while( have_rows('create_workflow', $query->ID) ) { the_row();
 					
 					?>
 					<div class="tsk-WorkflowForm-step ">
@@ -1281,7 +1278,7 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 					         </div>
 					         <div class="tsk-WorkflowForm-meta">
 					            <header class="ndl-Header ndl-Header--subsection tsk-WorkflowForm-label">
-					               <h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined"><?php echo get_sub_field('workflow_title');?></h1>
+					               <h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined"><?php echo get_post_meta($query->ID,'workflow_title_1')[0];?></h1>
 					            </header>
 					            <p class="ndl-Text role-<?php echo $index; ?> ndl-Text--secondary tsk-WorkflowForm-target">Unassigned</p>
 					         </div>
@@ -1298,9 +1295,6 @@ left join ".$wpdb->prefix."usermeta as un_meta2 on( users.id=un_meta2.user_id ) 
 					<?php 
 					$index++;
 				}
-			}
-
-		die();
 	}
 	public function get_cal_range(){
 			//echo 'Hello World';

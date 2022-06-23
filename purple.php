@@ -1048,7 +1048,7 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
     
     $output = '';
     $output = '<i class="fa fa-plus-circle add-dynamic-workflow" aria-hidden="true" ></i>';
-    $output .= '<div id="workflow-container">';
+    $output .= '<div class="workflow-container">';
         $output .= '<div class="workflow-group">';
             $output .= '<div class="workflow-title-column">Workflow Title</div>';
             $output .= "<div class='input-column'><input name='workflow-title' type='text' placeholder='Workflow Title' value='$workflow_title'></div>";
@@ -1076,10 +1076,6 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
   }
   add_action('save_post_workflow','save_workflows');
   function save_workflows(){
-    // echo '<pre>';
-    // print_r($_POST);
-    // echo '</pre>';
-    // die();
     global $post;
     $total_checklist = $_POST['total-checklist'];
     $workflow_title = $_POST['workflow-title'];
@@ -1090,6 +1086,7 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
         $checklist_value[] = $_POST['checklist_'.$checklist];
     }
     // Update Post meta
+    update_post_meta($post->ID,'created_workflows',1);
     update_post_meta($post->ID,'workflow_title_1',$workflow_title);
     update_post_meta($post->ID,'workflow_description_1',$workflow_description);
     update_post_meta($post->ID,'workflow_checklists',serialize($checklist_value));

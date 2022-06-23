@@ -370,103 +370,146 @@ $type = get_post_meta($plan_id,'type');
       <div class="workflow-header"><header class="ndl-Header ndl-Header--subsection header-title "><h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined">Content Workflow</h1></header> </div>
 
         <?php 
-        if( have_rows('create_workflow', $work_data->ID) ){
+        $total_created_workflows = get_post_meta($work_data->ID,'created_workflows')[0];
+        for($workflow_counter = 0; $workflow_counter < $total_created_workflows; $workflow_counter++){
           $index = 1;
-          while( have_rows('create_workflow', $work_data->ID) ) { the_row();
+          $role = get_post_meta( $_GET['id'],'Qarticle_role_'.$index.'',true);
+          $current_user=get_current_user_id();
+          $user_data = wp_get_current_user();
+          if($current_user == $role){
+              $data_id= $index;
+          }else if( $user_data->roles[0] =='administrator' || $user_data->roles[0]  == 'client-admin'){
+              $data_id= $index;
+          }else{
+              $data_id= 0;
+          }
+          $full_name = get_user_meta($role,'first_name',true).' '.get_user_meta($role,'last_name',true);
+          $words = explode(' ', $full_name );
+          $acronym = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
+          $approve = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? 'disabled':'';
+          $approve_avatr = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? '<img src="https://img.icons8.com/officel/80/000000/checked--v1.png"/>':'<span class="avatar-acronym">'.$acronym.'</span>';
+          //Notify User for the Updates
+          $assigned_email = get_userdata($role);
+          $email = $assigned_email->data->user_email;
+                  if( get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
+                        $wf = get_sub_field('workflow_title');
+                          $wf_slug = str_replace(' ', '_', $wf);
+                          $from = 'noreply@studioid.com';
+                          $to = $email;
+                          $subject = $wf." Workflow Updates";
+                          $headers = "From: ".$from. "\r\n" ."Reply-To: " . $email . "\r\n";
+                          $message .= '<p>Your Task has been updated!</p>';
+                          $message .= 'Visit our page '.get_bloginfo( 'url' ).'';
+            
+                          $email_status = get_post_meta($_GET['id'],$wf_slug );
+                          if($email_status == ''|| $email_status == null){
+                            $sent = wp_mail($to, $subject,strip_tags($message), $headers);
+                            if($sent){
+                              update_post_meta($_GET['id'],$wf_slug ,1);
+                              //  create logs
+                              $post_data =[
+                                  'post_title' => 'Workflow Update',
+                                  'post_status' => 'publish',
+                                  'post_type' => 'workflowlog'
+                              ];
+                              $Workflow_post_id = wp_insert_post($post_data);
+                              update_post_meta($Workflow_post_id,'employee_name',$email);
+                            }
+                          }
+                        }
+          //EO Notify user
+          $get_current_db_checklists = get_post_meta($work_data->ID,'workflow_checklists');
+          $total_checklists = unserialize($get_current_db_checklists[0]);
+          echo '<div class="step-header steps-'.$index.'">';
+            echo '<div class="step-index">'.$index.'</div>';
+            echo '<div class="ndl-Avatar-wrapper ">'.$approve_avatr.'</div>';
+            echo '<div class="step-detail">';
+              echo '<div class="header-top"><header class="ndl-Header ndl-Header--subsection step-title"><h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined">'.get_post_meta($work_data->ID,'workflow_title_1')[0].'</h1></header><a class="view-detail" data="'.$data_id.'" >View Details</a></div>';
+              echo '<div class="assignee">'.$full_name.'</div>';
+              echo '<div class="tsk-DueDatePicker"><div class="due-date"><span>Step due&nbsp;</span><span class="date">'.get_post_meta( $_GET['id'],'Qarticle_due_date_'.$index.'',true).'</span></div></div>';
+          // loop here
+          $plan_id = $_GET['id'];
+          echo '<div class="checklis" style="display:none;">';
+          echo '<ul class="checklist-data-'.$index.'">';
+          foreach($total_checklists as $checklist){
+              echo '<li><input data-id="'.$plan_id.'"  '.$approve.' '.$is.' type="checkbox" value="'.$checklist.'" class="progress">'.$checklist.'</li>';  
+          }
+          echo '</ul>';
+          echo '<div class="workflowdetails">'.get_sub_field('workflow_description').'</div>';
+          echo '<div class="list-button"><button act="undo" id="Undo" class="button button-act-'.$data_id.'" >Undo</button><button value="Approved" act="approve" id="Approved" '.$approve.' class="button button-act-'.$data_id.'">Approved</button></div></div>';
+          echo '</div>'; 
+          echo '</div>'; 
+         }//EO created workflow loop
+         
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//         if( have_rows('create_workflow', $work_data->ID) ){
+//           $index = 1;
+//           while( have_rows('create_workflow', $work_data->ID) ) { the_row();
 
-            $role = get_post_meta( $_GET['id'],'Qarticle_role_'.$index.'',true);
-            $current_user=get_current_user_id();
-            $user_data = wp_get_current_user();
-            if($current_user == $role){
-                $data_id= $index;
-            }else if( $user_data->roles[0] =='administrator' || $user_data->roles[0]  == 'client-admin'){
-                $data_id= $index;
-            }else{
-                $data_id= 0;
-            }
+//             $role = get_post_meta( $_GET['id'],'Qarticle_role_'.$index.'',true);
+//             $current_user=get_current_user_id();
+//             $user_data = wp_get_current_user();
+//             if($current_user == $role){
+//                 $data_id= $index;
+//             }else if( $user_data->roles[0] =='administrator' || $user_data->roles[0]  == 'client-admin'){
+//                 $data_id= $index;
+//             }else{
+//                 $data_id= 0;
+//             }
 
 
-            $full_name = get_user_meta($role,'first_name',true).' '.get_user_meta($role,'last_name',true);
+//             $full_name = get_user_meta($role,'first_name',true).' '.get_user_meta($role,'last_name',true);
             
           
-            $words = explode(' ', $full_name );
-            $acronym = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
-            $approve = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? 'disabled':'';
-            $approve_avatr = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? '<img src="https://img.icons8.com/officel/80/000000/checked--v1.png"/>':'<span class="avatar-acronym">'.$acronym.'</span>';
+//             $words = explode(' ', $full_name );
+//             $acronym = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
+//             $approve = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? 'disabled':'';
+//             $approve_avatr = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? '<img src="https://img.icons8.com/officel/80/000000/checked--v1.png"/>':'<span class="avatar-acronym">'.$acronym.'</span>';
             
- //Notify User for the Updates
- $assigned_email = get_userdata($role);
- $email = $assigned_email->data->user_email;
-        if( get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
-               $wf = get_sub_field('workflow_title');
-                 $wf_slug = str_replace(' ', '_', $wf);
-                 $from = 'noreply@studioid.com';
-                 $to = $email;
-                 $subject = $wf." Workflow Updates";
-                 $headers = "From: ".$from. "\r\n" ."Reply-To: " . $email . "\r\n";
-                 $message .= '<p>Your Task has been updated!</p>';
-                 $message .= 'Visit our page '.get_bloginfo( 'url' ).'';
+//  //Notify User for the Updates
+//  $assigned_email = get_userdata($role);
+//  $email = $assigned_email->data->user_email;
+//         if( get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
+//                $wf = get_sub_field('workflow_title');
+//                  $wf_slug = str_replace(' ', '_', $wf);
+//                  $from = 'noreply@studioid.com';
+//                  $to = $email;
+//                  $subject = $wf." Workflow Updates";
+//                  $headers = "From: ".$from. "\r\n" ."Reply-To: " . $email . "\r\n";
+//                  $message .= '<p>Your Task has been updated!</p>';
+//                  $message .= 'Visit our page '.get_bloginfo( 'url' ).'';
    
-                 $email_status = get_post_meta($_GET['id'],$wf_slug );
-                 if($email_status == ''|| $email_status == null){
-                   $sent = wp_mail($to, $subject,strip_tags($message), $headers);
-                   if($sent){
-                     update_post_meta($_GET['id'],$wf_slug ,1);
-                    //  create logs
-                    $post_data =[
-                        'post_title' => 'Workflow Update',
-                        'post_status' => 'publish',
-                        'post_type' => 'workflowlog'
-                    ];
-                    $Workflow_post_id = wp_insert_post($post_data);
-                    update_post_meta($Workflow_post_id,'employee_name',$email);
-                   }
-                 }
-               }
- //EO Notify user
-            echo '<div class="step-header steps-'.$index.'">';
-              echo '<div class="step-index">'.$index.'</div>';
-              echo '<div class="ndl-Avatar-wrapper ">'.$approve_avatr.'</div>';
-              echo '<div class="step-detail">';
-
-                echo '<div class="header-top"><header class="ndl-Header ndl-Header--subsection step-title"><h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined">'.get_sub_field('workflow_title').'</h1></header><a class="view-detail" data="'.$data_id.'" >View Details</a></div>';
-               
-                  echo '<div class="assignee">'.$full_name.'</div>';
-                  echo '<div class="tsk-DueDatePicker"><div class="due-date"><span>Step due&nbsp;</span><span class="date">'.get_post_meta( $_GET['id'],'Qarticle_due_date_'.$index.'',true).'</span></div></div>';
-                  if( have_rows('create_checklist', $work_data->ID) ){
-                     echo '<div class="checklis" style="display:none;"><ul class="checklist-data-'.$index.'">';
-                       while( have_rows('create_checklist', $work_data->ID) ) { the_row();
-
-                          $check_l = get_post_meta( $_GET['id'],'checklist_marks_'.$index.'',true) !='' ?get_post_meta( $_GET['id'],'checklist_marks_'.$index.'',true): array();
-                        $total_checkbox[] = $index;
-                          $is = in_array(get_sub_field('checklist_title'),$check_l)? 'checked':'';
-                          if($is == 'checked'){
-                            $total_done_checkbox[] = $is;
-                          }
-                          $plan_id = $_GET['id'];
-                       echo '<li><input data-id="'.$plan_id.'"  '.$approve.' '.$is.' type="checkbox" value="'.get_sub_field('checklist_title').'" class="progress">'.get_sub_field('checklist_title').'</li>';
-                      }
-                     echo '</ul>';
-                        echo '<div class="workflowdetails">'.get_sub_field('workflow_description').'</div>';
-                    echo '<div class="list-button"><button act="undo" id="Undo" class="button button-act-'.$data_id.'" >Undo</button><button value="Approved" act="approve" id="Approved" '.$approve.' class="button button-act-'.$data_id.'">Approved</button></div></div>';
-               
-                }
-                 
-                 echo '</div>'; 
-            echo '</div>';   
-            $index++;
-          }
-        }  
-         $plan_id = $_GET['id'];
-         $user_data = get_userdata($current_user);
-         $user_email = $user_data->data->user_email;
-         $display_name = $user_data->data->display_name;
-        ?> 
+//                  $email_status = get_post_meta($_GET['id'],$wf_slug );
+//                  if($email_status == ''|| $email_status == null){
+//                    $sent = wp_mail($to, $subject,strip_tags($message), $headers);
+//                    if($sent){
+//                      update_post_meta($_GET['id'],$wf_slug ,1);
+//                     //  create logs
+//                     $post_data =[
+//                         'post_title' => 'Workflow Update',
+//                         'post_status' => 'publish',
+//                         'post_type' => 'workflowlog'
+//                     ];
+//                     $Workflow_post_id = wp_insert_post($post_data);
+//                     update_post_meta($Workflow_post_id,'employee_name',$email);
+//                    }
+//                  }
+//                }
+//  //EO Notify user  
+//             $index++;
+//           }
+//         }  
+//////////////////////////////////////////////////////////////////////////////////////////////////
+?> 
       </div>
       <!-- Comment Section -->
       <div id="Comment">
         <div class="inner-conent">
           <?php
+              $plan_id = $_GET['id'];
+              $user_data = get_userdata($current_user);
+              $user_email = $user_data->data->user_email;
+              $display_name = $user_data->data->display_name;
               global $wpdb;
               $queries = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE `post_id` = $plan_id AND `meta_key` = 'comments' ORDER BY `meta_id`");
               foreach($queries as $query){

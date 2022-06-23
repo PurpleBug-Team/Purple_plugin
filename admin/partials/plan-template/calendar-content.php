@@ -519,10 +519,10 @@ input#config-demo {
         }
     }
     $w_tojson = json_encode($w_titlr);
+    
 
 
     
- 
 ?>
 <script class="calendar">
 var date = new Date();
@@ -983,8 +983,8 @@ function calendar_v(start,end){
                  <?php 
                     if(!empty($workflows)){
                         foreach($workflows as $workflow){
-                          
 
+                
                             echo '<option value="'. $workflow->ID.'">'. $workflow->post_title.'</option>';
                         }
                     }
