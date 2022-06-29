@@ -1035,60 +1035,185 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
         'advanced',
         'default'
     );
+    add_meta_box(
+        'Feature Image',
+        'Feature Images',
+        'feature_images_callback',
+        'article',
+        'side',
+        'default'
+    );
   }
   add_action('admin_init','article_custom_meta_box');
+  function feature_images_callback(){
+    global $post;
+    $image_id = get_post_meta($post->ID,'feature_images_gallery')[0];
+    $image_gallery = unserialize($image_id);
+    $output = '';
+    $output .= '<div class="feature_gallery_container" id="feature_gallery_container">';
+        foreach($image_gallery as $image){
+            $output .= '<div class="img-gallery-group"><input type="hidden" name="image_gallery[]" value="'.$image.'"><i class="fas fa-times-circle remove-img-gallery"></i><img src="'.wp_get_attachment_image_src($image)[0].'" ></div>';
+        }
+    $output .= '</div>';
+    // $output .= '<div class="feature_gallery_container"></div>';
+    $output .= '<a href="#" class="misha-upl button button-primary">Add to gallery</a>
+    <a href="#" class="misha-rmv button button-primary" style="display:none">Remove image</a>
+    <input type="hidden" name="feature_images_gallery" value="">';
+    echo $output;
+
+  }
+  //save feature images
+  add_action('save_post_article','save_feature_images',9);
+  function save_feature_images(){
+    global $post;
+    $image_id = get_post_meta($post->ID,'feature_images_gallery')[0];
+    $image_ids = unserialize($image_id);
+    $uploaded_images = $_POST['image_gallery'];
+    $image_gallery = [];
+    if(!empty($image_id)){
+        foreach($uploaded_images as $single_image){
+            if(!in_array($single_image, $image_gallery)){
+                $image_gallery[] =  $single_image;
+            }
+        }
+
+    }
+
+    update_post_meta($post->ID,'feature_images_gallery',serialize($image_gallery));
+  }
   function workflow_callback(){
     global $post;
-    $workflow_title = (get_post_meta($post->ID,'workflow_title_1')[0] != '') ? get_post_meta($post->ID,'workflow_title_1')[0] : '';
-    $workflow_description = (get_post_meta($post->ID,'workflow_description_1')[0] != '') ? get_post_meta($post->ID,'workflow_description_1')[0] : '';
-    
+  
+    $created_workflow_count = get_post_meta($post->ID,'created_workflows')[0];
+    $created_workflow_count = ($created_workflow_count == 0) ? 0: $created_workflow_count;
+    $output = '';
+    $output .= '<div class="workflow-loop">';
+    // $output .= '<i class="fa fa-plus-circle add-dynamic-workflow" aria-hidden="true" data-id="'.$post->ID.'" workflow-count="'.$created_workflow_count.'"></i>';
+    for($created_workflow_number = 0; $created_workflow_number <= $created_workflow_count; $created_workflow_number++){
+    // }
+    $workflow_title = (get_post_meta($post->ID,'workflow_title_'.$created_workflow_number.'')[0] != '') ? get_post_meta($post->ID,'workflow_title_'.$created_workflow_number.'')[0] : '';
+    $workflow_description = (get_post_meta($post->ID,'workflow_description_'.$created_workflow_number.'')[0] != '') ? get_post_meta($post->ID,'workflow_description_'.$created_workflow_number.'')[0] : '';
     $get_current_db_checklists = get_post_meta($post->ID,'workflow_checklists');
     $total_checklists = unserialize($get_current_db_checklists[0]);
     
-    
-    $output = '';
-    $output = '<i class="fa fa-plus-circle add-dynamic-workflow" aria-hidden="true" ></i>';
     $output .= '<div class="workflow-container">';
         $output .= '<div class="workflow-group">';
             $output .= '<div class="workflow-title-column">Workflow Title</div>';
-            $output .= "<div class='input-column'><input name='workflow-title' type='text' placeholder='Workflow Title' value='$workflow_title'></div>";
+            $output .= "<div class='input-column'><input name='workflow_title_$created_workflow_number' type='text' placeholder='Workflow Title' value='$workflow_title'></div>";
         $output .= '</div>';
         $output .= '<div class="workflow-group">';
             $output .= '<div class="workflow-title-column">Workflow Description</div>';
-            $output .= '<div class="input-column"><textarea  name="workflow-description" id="tiny-mce-editor" rows="5">'.$workflow_description.'</textarea></div>';
+            $output .= '<div class="input-column"><textarea  name="workflow_description_'.$created_workflow_number.'" class="tiny-mce-editor" rows="5">'.$workflow_description.'</textarea></div>';
         $output .= '</div>';
         $output .= '<div class="workflow-group">';
             $output .= '<div class="workflow-title-column">Workflow Checklist<i class="fa fa-plus-circle add-checklist" aria-hidden="true"></i></label></div>';
             $output .= '<div class="input-column">';
-                $output .= '<div class="workflow-checklist" id="workflow-checklist">';
+                $output .= '<div class="workflow-checklist workflow_checklists_0">';
                         $output .= '<input type="hidden" value="'.count( $total_checklists).'" id="checklist-total" name="total-checklist">';
-                        foreach($total_checklists as $checklist_number => $checklist_value){
-                            $name = 'checklist_'.$checklist_number;
-                            $output .= "<input type='text' name='$name' placeholder='Checklist Title' class='worflow-inputs-checklist' value='$checklist_value'>";
+                        if(empty($total_checklists) ){
+                            $output .= "<input type='text' name='checklist_0' placeholder='Checklist Title' class='worflow-inputs-checklist' value=''>";
+                        }else{
+                            foreach($total_checklists as $checklist_number => $checklist_value){
+                                $name = 'checklist_'.$checklist_number;
+                                $output .= "<input type='text' name='$name' placeholder='Checklist Title' class='worflow-inputs-checklist' value='$checklist_value'>";
+                            }
                         }
                 $output .= '</div>';
             $output .= '</div>';
         $output .= '</div>';
         $output .= '</div>';
     $output .= '</div>';
+    // $output .= '<i class="fa fa-plus-circle add-dynamic-workflow" aria-hidden="true" ></i>';
+    }
    
+    $output .= '</div>';
     echo $output;
+    ?>
+    <script type="text/javascript">
+        jQuery(document).ready( function($) {
+        let wf_index = 0;
+        let checklist_index = 0;
+
+        function add_workflow_content(){
+        var output = '';
+            output += '<div class="workflow-container">';
+                output += '<div class="workflow-group">';
+                    output += '<div class="workflow-title-column">Workflow Title</div>';
+                    output += `<div class="input-column"><input name="workflow_title_${wf_index}" type="text" placeholder="Workflow Title" value=""></div>`;
+                output += '</div>'
+                output += '<div class="workflow-group">';
+                    output += '<div class="workflow-title-column">Workflow Description</div>';
+                    output += `<div class="input-column"><textarea  name="workflow_description_${wf_index}" class="tiny-mce-editor" rows="5"></textarea></div>`;
+                output += '</div>'
+                output += '<div class="workflow-group">'
+                    output += '<div class="workflow-title-column">Workflow Checklist<i class="fa fa-plus-circle add-checklist_1" aria-hidden="true"></i></label></div>'
+                    output += '<div class="input-column">';
+                        output += `<div class="workflow-checklist workflow-checklists_${wf_index}">`;
+                            // output += `<input type="text" name="checklist_workflow_${wf_index}" placeholder="Checklist Title" class="worflow-inputs-checklist" value="">`;
+                        output += '</div>';
+                    output += '</div>';
+                output += '</div>';
+            output += '</div>';
+            $('.workflow-loop').append(output);
+        }
+            // add_workflow_content()
+            let sum = 1
+            $('.add-dynamic-workflow').on('click',function(){
+                var post_id = $(this).attr('data-id')
+                var workflow_count = $(this).attr('workflow-count')
+               
+                workflow_count = (parseInt(workflow_count) + parseInt(sum));
+                sum++
+
+                update_created_workflows(post_id,workflow_count);
+                wf_index++;
+                add_workflow_content()
+            })
+            function update_created_workflows(post_id,workflow_count){
+                var workflow_id = post_id;
+                var created_workflow = 2;
+                    jQuery.ajax({
+                    type : "POST",
+                    url : ajaxurl,
+                    data : {action: "update_created_workflow_count",workflow_id:workflow_id,workflow_count:workflow_count},
+                    success: function(response) {
+                        // alert('Email log deleted Successfuly')
+                        console.log(response);
+                        // location.reload()
+                    }
+                });
+            }
+        });     
+    </script>
+        <?php
   }
-  add_action('save_post_workflow','save_workflows');
+  add_action('save_post_workflow','save_workflows',10);
   function save_workflows(){
     global $post;
+    // Get $_POST worflows
+    $workflow_titles = [];
+    $workflow_descriptions = [];
+    $created_workflow_count = get_post_meta($post->ID,'created_workflows')[0];
+    for($created_workflow_number = 0; $created_workflow_number <= $created_workflow_count; $created_workflow_number++){
+        $workflow_titles[] = $_POST['workflow_title_'.$created_workflow_number.''];
+        $workflow_descriptions[] = $_POST['workflow_description_'.$created_workflow_number.''];
+    }
+
     $total_checklist = $_POST['total-checklist'];
-    $workflow_title = $_POST['workflow-title'];
-    $workflow_description = $_POST['workflow-description'];
 
     $checklist_value = [];
     for($checklist = 0; $checklist < $total_checklist; $checklist++){
         $checklist_value[] = $_POST['checklist_'.$checklist];
     }
-    // Update Post meta
-    update_post_meta($post->ID,'created_workflows',1);
-    update_post_meta($post->ID,'workflow_title_1',$workflow_title);
-    update_post_meta($post->ID,'workflow_description_1',$workflow_description);
+  
+    foreach($workflow_titles as $wf_title_key => $workflow_title_value ){
+        update_post_meta($post->ID,'workflow_title_'.$wf_title_key.'',$workflow_title_value);
+    }
+    // pdate Descriptions
+    foreach($workflow_descriptions as $wf_des_key => $wf_des_value ){
+        update_post_meta($post->ID,'workflow_description_'.$wf_des_key.'',$wf_des_value);
+    }
+    update_post_meta($post->ID,'created_workflows',0);
     update_post_meta($post->ID,'workflow_checklists',serialize($checklist_value));
   }
   function article_attachment_callback(){

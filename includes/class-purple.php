@@ -276,6 +276,9 @@ class Purple {
 		// Post per page
 	    $this->loader->add_action( 'wp_ajax_update_post_per_table', $plugin_admin, 'update_post_per_table' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_update_post_per_table', $plugin_admin, 'update_post_per_table' );
+		// Update created Workflow
+	    $this->loader->add_action( 'wp_ajax_update_created_workflow_count', $plugin_admin, 'update_created_workflow_count' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_update_created_workflow_count', $plugin_admin, 'update_created_workflow_count' );
 	    
 
 

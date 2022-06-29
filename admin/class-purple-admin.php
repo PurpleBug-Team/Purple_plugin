@@ -1229,10 +1229,11 @@ class Purple_Admin {
 		}
 		$query = get_post( $_GET['workflow'] );
 		$total_created_workflows = get_post_meta($query->ID,'created_workflows')[0];
+		
 
         
 		
-		for($workflow_counter = 0; $workflow_counter < $total_created_workflows; $workflow_counter++){
+		for($workflow_counter = 0; $workflow_counter <= $total_created_workflows; $workflow_counter++){
 		// wp_send_json_success($total_created_workflows);
 		// die();
 			// if( have_rows('create_workflow', $query->ID) ){
@@ -1278,7 +1279,10 @@ class Purple_Admin {
 					         </div>
 					         <div class="tsk-WorkflowForm-meta">
 					            <header class="ndl-Header ndl-Header--subsection tsk-WorkflowForm-label">
-					               <h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined"><?php echo get_post_meta($query->ID,'workflow_title_1')[0];?></h1>
+									<?php 
+									$workflow_title = 'workflow_title_'.$workflow_counter;
+									?>
+					               <h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined"><?php echo get_post_meta($query->ID,$workflow_title)[0];?></h1>
 					            </header>
 					            <p class="ndl-Text role-<?php echo $index; ?> ndl-Text--secondary tsk-WorkflowForm-target">Unassigned</p>
 					         </div>
@@ -1436,6 +1440,12 @@ class Purple_Admin {
 				update_option($key,$value);
 			}
 			wp_send_json_success('success');
+		}
+		public function update_created_workflow_count(){
+			$post_id = $_POST['workflow_id'];
+			// $workflow_count = $_POST['workflow_count'];
+			// update_post_meta($post_id,'created_workflows',$workflow_count);
+			wp_send_json_success($workflow_count);
 		}
 		
 		

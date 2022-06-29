@@ -1,7 +1,44 @@
 jQuery(document).ready(function( $ ) {
+
+	//////////////////////////////////////////////////////
+	jQuery('body').on( 'click', '.misha-upl', function(e){
+		e.preventDefault();
+		var container = jQuery('#feature_gallery_container'),
+		custom_uploader = wp.media({
+			title: 'Insert image',
+			library : {
+				// uploadedTo : wp.media.view.settings.post.id, // attach to the current post?
+				type : 'image'
+			},
+			button: {
+				text: 'Select' // button label text
+			},
+			multiple: 'add'
+		}).on('select', function() { // it also has "open" and "close" events
+			var attachment = custom_uploader.state().get('selection').toJSON();
+			var name;
+			jQuery.each(attachment,function(i,j){
+				name = 'image_gallery_'+i;
+				jQuery(container).append('<div class="img-gallery-group"><input type="hidden" name="image_gallery[]" value="'+j.id+'"><i class="fas fa-times-circle remove-img-gallery"></i><img src="' + j.url + '" data-id="' + i + '"></div>');
+			})
+			
+		}).open();
+	
+	});
+	jQuery('.remove-img-gallery').on('click',function(){
+		console.log(jQuery(this).parent().remove());
+	})
+
+	// on remove button click
+	jQuery('body').on('click', '.misha-rmv', function(e){
+		e.preventDefault();
+		var button = jQuery(this);
+		button.next().val(''); // emptying the hidden field
+		button.hide().prev().html('Upload image');
+	});
+	//////////////////////////////////////////////////////
 	let input_count = jQuery('#checklist-total').val();
 	jQuery('.add-checklist').on('click',function(){
-		
 		var output = '';
 		output += '<input type="text" name="checklist_'+input_count+'" placeholder="Checklist Title '+input_count+'" class="worflow-inputs-checklist">';
 		jQuery('.workflow-checklist').append(output);
@@ -99,10 +136,10 @@ jQuery(document).ready(function( $ ) {
 			if(change_password){
 				// password must be atleast 8 characters
 				if ( new_password.length < 8 ) {
-					$('.validate-password').addClass('disabled');
+					jQuery('.validate-password').addClass('disabled');
 					return false;
 				} else {
-					$('.validate-password').removeClass('disabled');
+					jQuery('.validate-password').removeClass('disabled');
 				}
 			}
 			update_user_data(user_id,new_username,new_email,new_role,new_password);
@@ -256,6 +293,7 @@ jQuery(document).ready(function( $ ) {
 		var checked = 0;
 		var total_checkbox = jQuery('.progress').length;
 		var plan_id = jQuery('.progress').attr('data-id');
+
 		jQuery('.progress').each(function(i,j){
 			if(jQuery(j).is(':checked')){
 				checked++;

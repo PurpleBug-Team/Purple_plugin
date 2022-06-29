@@ -371,7 +371,7 @@ $type = get_post_meta($plan_id,'type');
 
         <?php 
         $total_created_workflows = get_post_meta($work_data->ID,'created_workflows')[0];
-        for($workflow_counter = 0; $workflow_counter < $total_created_workflows; $workflow_counter++){
+        for($workflow_counter = 0; $workflow_counter <= $total_created_workflows; $workflow_counter++){
           $index = 1;
           $role = get_post_meta( $_GET['id'],'Qarticle_role_'.$index.'',true);
           $current_user=get_current_user_id();
