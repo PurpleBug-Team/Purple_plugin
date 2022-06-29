@@ -1,5 +1,9 @@
 jQuery(document).ready(function( $ ) {
-
+	jQuery('.remove-dynamic-workflow').on('click',function(){
+		console.log();
+		var wf_container = jQuery(this).attr('data-id');
+		jQuery('#'+wf_container).remove()
+	})
 	//////////////////////////////////////////////////////
 	jQuery('body').on( 'click', '.misha-upl', function(e){
 		e.preventDefault();
@@ -40,8 +44,11 @@ jQuery(document).ready(function( $ ) {
 	let input_count = jQuery('#checklist-total').val();
 	jQuery('.add-checklist').on('click',function(){
 		var output = '';
-		output += '<input type="text" name="checklist_'+input_count+'" placeholder="Checklist Title '+input_count+'" class="worflow-inputs-checklist">';
-		jQuery('.workflow-checklist').append(output);
+		var key = jQuery(this).attr('data-key')
+		output += `<input type="text" name="checklists${key}[]" placeholder="Checklist Title" class="worflow-inputs-checklist">`;
+		var target = 'workflow_checklists'+key;
+		jQuery('.'+target).append(output);
+		console.log(target);
 		input_count++;
 		jQuery('#checklist-total').val(input_count)
 	})

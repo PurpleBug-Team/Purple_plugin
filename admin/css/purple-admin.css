@@ -2,6 +2,10 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+ i.remove-dynamic-workflow{
+    float: right;
+    font-size: 1.2rem;
+ }
  i.remove-img-gallery:hover{
     transform: scale(1.5);
     color: red;
@@ -43,6 +47,7 @@
 }
 .workflow-container{
     padding: 20px;
+    border-bottom: 1px solid #eee;
 }
  .workflow-title-column{
     width: 210px;

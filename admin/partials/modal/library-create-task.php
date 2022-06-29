@@ -104,8 +104,6 @@
                  <?php 
                     if(!empty($workflows)){
                         foreach($workflows as $workflow){
-                          
-
                             echo '<option value="'. $workflow->ID.'">'. $workflow->post_title.'</option>';
                         }
                     }

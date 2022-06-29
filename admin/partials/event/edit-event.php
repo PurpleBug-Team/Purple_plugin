@@ -370,9 +370,24 @@ $type = get_post_meta($plan_id,'type');
       <div class="workflow-header"><header class="ndl-Header ndl-Header--subsection header-title "><h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined">Content Workflow</h1></header> </div>
 
         <?php 
-        $total_created_workflows = get_post_meta($work_data->ID,'created_workflows')[0];
-        for($workflow_counter = 0; $workflow_counter <= $total_created_workflows; $workflow_counter++){
+
+        // $total_created_workflows = get_post_meta($work_data->ID,'created_workflows')[0];
+
+        $created_workflow_count = get_post_meta($work_data->ID,'created_workflows')[0];
+        $created_workflow_count = ($created_workflow_count == 0) ? 0: $created_workflow_count;
+        // titles
+        $workflow_titles = get_post_meta($work_data->ID,'workflow_titles')[0];
+        $workflow_titles = unserialize($workflow_titles);
+        // Descritpions
+        $workflow_descriptions = get_post_meta($work_data->ID,'workflow_descriptions')[0];
+        $workflow_descriptions = unserialize($workflow_descriptions);
+
+        // for($workflow_counter = 0; $workflow_counter <= $total_created_workflows; $workflow_counter++){
           $index = 1;
+        foreach($workflow_titles as $key => $workflow_title){
+          $checklist_name = 'checklists'.$key;
+          $db_checklists = unserialize(get_post_meta($work_data->ID,$checklist_name)[0]);
+          // $index = 1;
           $role = get_post_meta( $_GET['id'],'Qarticle_role_'.$index.'',true);
           $current_user=get_current_user_id();
           $user_data = wp_get_current_user();
@@ -424,21 +439,22 @@ $type = get_post_meta($plan_id,'type');
             echo '<div class="step-index">'.$index.'</div>';
             echo '<div class="ndl-Avatar-wrapper ">'.$approve_avatr.'</div>';
             echo '<div class="step-detail">';
-              echo '<div class="header-top"><header class="ndl-Header ndl-Header--subsection step-title"><h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined">'.get_post_meta($work_data->ID,'workflow_title_1')[0].'</h1></header><a class="view-detail" data="'.$data_id.'" >View Details</a></div>';
+              echo '<div class="header-top"><header class="ndl-Header ndl-Header--subsection step-title"><h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined">'.$workflow_title.'</h1></header><a class="view-detail" data="'.$data_id.'" >View Details</a></div>';
               echo '<div class="assignee">'.$full_name.'</div>';
               echo '<div class="tsk-DueDatePicker"><div class="due-date"><span>Step due&nbsp;</span><span class="date">'.get_post_meta( $_GET['id'],'Qarticle_due_date_'.$index.'',true).'</span></div></div>';
           // loop here
           $plan_id = $_GET['id'];
           echo '<div class="checklis" style="display:none;">';
           echo '<ul class="checklist-data-'.$index.'">';
-          foreach($total_checklists as $checklist){
+          foreach($db_checklists as $checklist){
               echo '<li><input data-id="'.$plan_id.'"  '.$approve.' '.$is.' type="checkbox" value="'.$checklist.'" class="progress">'.$checklist.'</li>';  
           }
           echo '</ul>';
-          echo '<div class="workflowdetails">'.get_sub_field('workflow_description').'</div>';
+          echo '<div class="workflowdetails">'.$workflow_descriptions[$key].'</div>';
           echo '<div class="list-button"><button act="undo" id="Undo" class="button button-act-'.$data_id.'" >Undo</button><button value="Approved" act="approve" id="Approved" '.$approve.' class="button button-act-'.$data_id.'">Approved</button></div></div>';
           echo '</div>'; 
           echo '</div>'; 
+          $index++;
          }//EO created workflow loop
          
 /////////////////////////////////////////////////////////////////////////////////////////////////////////

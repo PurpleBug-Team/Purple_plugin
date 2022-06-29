@@ -1229,20 +1229,28 @@ class Purple_Admin {
 		}
 		$query = get_post( $_GET['workflow'] );
 		$total_created_workflows = get_post_meta($query->ID,'created_workflows')[0];
+		// titles
+		$workflow_titles = get_post_meta($query->ID,'workflow_titles')[0];
+		$workflow_titles = unserialize($workflow_titles);
+		// Descritpions
+		$workflow_descriptions = get_post_meta($query->ID,'workflow_descriptions')[0];
+		$workflow_descriptions = unserialize($workflow_descriptions);
+		// List workflows
 		
 
         
 		
-		for($workflow_counter = 0; $workflow_counter <= $total_created_workflows; $workflow_counter++){
+		// for($workflow_counter = 0; $workflow_counter < $total_created_workflows; $workflow_counter++){
+		foreach($workflow_titles as $key => $workflow_title){
 		// wp_send_json_success($total_created_workflows);
 		// die();
 			// if( have_rows('create_workflow', $query->ID) ){
-				$index = 1;
+				$key = $key+1;
 				// while( have_rows('create_workflow', $query->ID) ) { the_row();
 					
 					?>
 					<div class="tsk-WorkflowForm-step ">
-					   <p class="ndl-Text ndl-Text--body tsk-WorkflowForm-count"><?php echo $index;?></p>
+					   <p class="ndl-Text ndl-Text--body tsk-WorkflowForm-count"><?php echo $key;?></p>
 					   <div class="tsk-WorkflowForm-assignee">
 					      <div class="tsk-WorkflowForm-substep">
 					         <div class="ndl-AvatarPicker ndl-AvatarPicker--medium tsk-WorkflowForm-selector">
@@ -1250,7 +1258,7 @@ class Purple_Admin {
 					               <div class="ndl-AvatarPickerToggle ndl-AvatarPickerToggle--medium">
 					                  <div class="ndl-AvatarPickerToggle-button">
 					                     <div class="ndl-AvatarPickerToggle-placeholder">
-					                        <span data="<?php echo $index; ?>" class="nc-icon ndl-Icon   ndl-AvatarPickerToggle-placeholderIcon ">
+					                        <span data="<?php echo $key; ?>" class="nc-icon ndl-Icon   ndl-AvatarPickerToggle-placeholderIcon ">
 					                           <i class="nc-icon-wrapper">
 					                              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16">
 					                                 <g transform="translate(0, 0)">
@@ -1263,8 +1271,8 @@ class Purple_Admin {
 					                  </div>
 					               </div>
 					            </div>
-					            <div class="assign-role assign-<?php echo $index; ?>" style="display:none;">
-					               <select name="assign" class="assign-<?php echo $index;?>" >
+					            <div class="assign-role assign-<?php echo $key; ?>" style="display:none;">
+					               <select name="assign" class="assign-<?php echo $key;?>" >
 					                 <option value="<?php echo $current_user->data->ID; ?>"><?php echo $current_user->roles[0]; ?></option>
 					                  <?php 
 					          			  unset($w_use[0]);
@@ -1280,19 +1288,19 @@ class Purple_Admin {
 					         <div class="tsk-WorkflowForm-meta">
 					            <header class="ndl-Header ndl-Header--subsection tsk-WorkflowForm-label">
 									<?php 
-									$workflow_title = 'workflow_title_'.$workflow_counter;
+								
 									?>
-					               <h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined"><?php echo get_post_meta($query->ID,$workflow_title)[0];?></h1>
+					               <h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined"><?php echo $workflow_title;?></h1>
 					            </header>
-					            <p class="ndl-Text role-<?php echo $index; ?> ndl-Text--secondary tsk-WorkflowForm-target">Unassigned</p>
+					            <p class="ndl-Text role-<?php echo $key; ?> ndl-Text--secondary tsk-WorkflowForm-target">Unassigned</p>
 					         </div>
 					      </div>
 					   </div>
-					   <div data="<?php echo $index; ?>" class="tsk-WorkflowForm-dueDate dueDate-<?php echo $index; ?>">
+					   <div data="<?php echo $key; ?>" class="tsk-WorkflowForm-dueDate dueDate-<?php echo $key; ?>">
 					      <div class="--formattedValue">
-					         <button class="ndl-Button ndl-Button--inline ndl-Button--small " data="<?php echo $index; ?>" type="button"><span class="ndl-Button-label">Assign Due Date</span></button> 
-					         <div class="datepicker-<?php echo $index; ?>"></div>
-					         <input type="hidden" name="Qarticle_role_<?php echo $index; ?>" id="Qarticle_role_<?php echo $index; ?>" > <input name="Qarticle_due_date_<?php echo $index; ?>" type="hidden" id="Qarticle_due_date_<?php echo $index; ?>" >
+					         <button class="ndl-Button ndl-Button--inline ndl-Button--small " data="<?php echo $key; ?>" type="button"><span class="ndl-Button-label">Assign Due Date</span></button> 
+					         <div class="datepicker-<?php echo $key; ?>"></div>
+					         <input type="hidden" name="Qarticle_role_<?php echo $key; ?>" id="Qarticle_role_<?php echo $key; ?>" > <input name="Qarticle_due_date_<?php echo $index; ?>" type="hidden" id="Qarticle_due_date_<?php echo $index; ?>" >
 					      </div>
 					   </div>
 					</div>
