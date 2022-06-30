@@ -236,15 +236,15 @@ $type = get_post_meta($plan_id,'type');
 <div class="view-plan"> 
 <div class="tabs">
   <ul>
-    <li><a href="#brief">Brief</a></li>
+    <!-- <li><a href="#brief">Brief</a></li> -->
     <li><a href="#content">Content</a></li>
-    <li><a href="#publish">Publishing</a></li>
-    <li><a href="#history">History</a></li>
+    <!-- <li><a href="#publish">Publishing</a></li> -->
+    <!-- <li><a href="#history">History</a></li> -->
   </ul>
-  <div id="brief">
+  <!-- <div id="brief">
     <header class="ndl-Header ndl-Header--section wr-BriefEmptyState-headerContainer"><h1 class="ndl-HeaderTitle ndl-HeaderTitle--section ndl-HeaderTitle--medium undefined">Add a Creative Brief</h1><p class="ndl-Text ndl-Text--body ndl-HeaderSubHeading ndl-HeaderSubHeading--section undefined">Build your task strategy here, i.e. Key objectives, Audiences, Pillars.</p></header>
     <div class="wr-BriefEmptyState-box"><div class="ndl-Dropdown btn dropdown"><button class="ndl-Button ndl-Button--default ndl-Button--medium    ndl-Dropdown-button" type="button"><span class="ndl-Button-label">Select Brief</span></button></div><span class="wr-BriefEmptyState-separator">or</span><button class="btn ndl-Button ndl-Button--default ndl-Button--medium    " type="button"><span class="ndl-Button-label">Write Brief</span></button></div>
-  </div>
+  </div> -->
   <div id="content">
   	<div class="inner-conent">
        <div class="content-navigation-thumbnails"> 
@@ -290,18 +290,16 @@ $type = get_post_meta($plan_id,'type');
        </div>
     </div>
   </div>
-  <div id="publish">
-
+  <!-- <div id="publish">
   <h2>Checkbox nested in label</h2>
-
-  </div>
-  <div id="history">
+  </div> -->
+  <!-- <div id="history">
     <p>History section</p>
-  </div>
+  </div> -->
 </div>
 <div class="right-pane">
 
-  <?php
+  <!-- < ?php
      if( have_rows('create_workflow') ){
           $progess = 0;
           $approved=array();
@@ -324,7 +322,7 @@ $type = get_post_meta($plan_id,'type');
            }
          }        
      }       
-   ?>
+   ?> -->
   <div class="head-progress">
         <?php
           $end = get_post_meta($_GET['id'],'task_end_date',true);
