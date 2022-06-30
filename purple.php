@@ -852,42 +852,42 @@ function rudr_mailchimp_curl_connect( $url, $request_type, $api_key, $data = arr
 }
  
 
-add_action('wp_head',function(){
+// add_action('wp_head',function(){
     
  
  
  
-    $email = 'porrasjohnricardo530@gmail.com';
-    $status = 'subscribed'; // "subscribed" or "unsubscribed" or "cleaned" or "pending"
-    $list_id = 'f79596a756'; // where to get it read above
-    $api_key = '88d55255a904443bf9c64d39fd89bce4-us20'; // where to get it read above
-    $merge_fields = array('FNAME' => 'Misha','LNAME' => 'Rudrastyh');
+//     $email = 'porrasjohnricardo530@gmail.com';
+//     $status = 'subscribed'; // "subscribed" or "unsubscribed" or "cleaned" or "pending"
+//     $list_id = 'f79596a756'; // where to get it read above
+//     $api_key = '88d55255a904443bf9c64d39fd89bce4-us20'; // where to get it read above
+//     $merge_fields = array('FNAME' => 'Misha','LNAME' => 'Rudrastyh');
      
-   // $data = rudr_mailchimp_subscriber_status($email, $status, $list_id, $api_key, $merge_fields );
+//    // $data = rudr_mailchimp_subscriber_status($email, $status, $list_id, $api_key, $merge_fields );
      
-    // Query String Perameters are here
-    // for more reference please vizit http://developer.mailchimp.com/documentation/mailchimp/reference/lists/
+//     // Query String Perameters are here
+//     // for more reference please vizit http://developer.mailchimp.com/documentation/mailchimp/reference/lists/
   
-    $data = array(
-	'list_id' => 'f79596a756','count'=>'999',	'email' => 'porrasjohnricardo530@gmail.com'
-    );
-    $url = 'https://' . substr($api_key,strpos($api_key,'-')+1) . '.api.mailchimp.com/3.0/campaigns/';
-    $result = json_decode( rudr_mailchimp_curl_connect( $url, 'GET', $api_key, $data) );
+//     $data = array(
+// 	'list_id' => 'f79596a756','count'=>'999',	'email' => 'porrasjohnricardo530@gmail.com'
+//     );
+//     $url = 'https://' . substr($api_key,strpos($api_key,'-')+1) . '.api.mailchimp.com/3.0/campaigns/';
+//     $result = json_decode( rudr_mailchimp_curl_connect( $url, 'GET', $api_key, $data) );
 
-    //print_r($result);
+//     //print_r($result);
 
-    if( !empty($result->lists) ) {
-    	echo '';
-    	foreach( $result->lists as $list ){
-    		echo '' . $list->name . ' (' . $list->stats->member_count . ')';
-    		// you can also use $list->date_created, $list->stats->unsubscribe_count, $list->stats->cleaned_count or vizit MailChimp API Reference for more parameters (link is above)
-    	}
-    	echo '';
-    } elseif ( is_int( $result->status ) ) { // full error glossary is here http://developer.mailchimp.com/documentation/mailchimp/guides/error-glossary/
-    	echo '' . $result->title . ': ' . $result->detail;
-    }
+//     if( !empty($result->lists) ) {
+//     	echo '';
+//     	foreach( $result->lists as $list ){
+//     		echo '' . $list->name . ' (' . $list->stats->member_count . ')';
+//     		// you can also use $list->date_created, $list->stats->unsubscribe_count, $list->stats->cleaned_count or vizit MailChimp API Reference for more parameters (link is above)
+//     	}
+//     	echo '';
+//     } elseif ( is_int( $result->status ) ) { // full error glossary is here http://developer.mailchimp.com/documentation/mailchimp/guides/error-glossary/
+//     	echo '' . $result->title . ': ' . $result->detail;
+//     }
  
-});
+// });
 
 
 function jba_disable_editor_fullscreen_by_default() {
@@ -1007,11 +1007,7 @@ add_action('wp_logout','track_users_logout');
 
 // redirect dashboard to custom dashboard
 add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $user ) {
-
-    // if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) && $user->has_cap( 'update_core' ) )
-   
-    return $redirect_to = esc_url( '/wp-admin/admin.php?page=index' );
-  
+    return $redirect_to = esc_url( '/wp-admin/edit.php?post_type=post' );
   }, 10, 3 );
 
 
