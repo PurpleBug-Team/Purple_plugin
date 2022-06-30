@@ -405,7 +405,7 @@ $type = get_post_meta($plan_id,'type');
           $assigned_email = get_userdata($role);
           $email = $assigned_email->data->user_email;
                   if( get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
-                        $wf = get_sub_field('workflow_title');
+                        $wf = $workflow_title;
                           $wf_slug = str_replace(' ', '_', $wf);
                           $from = 'noreply@studioid.com';
                           $to = $email;
@@ -444,9 +444,11 @@ $type = get_post_meta($plan_id,'type');
           $plan_id = $_GET['id'];
           echo '<div class="checklis" style="display:none;">';
           echo '<ul class="checklist-data-'.$index.'">';
-          foreach($db_checklists as $checklist){
-              echo '<li><input data-id="'.$plan_id.'"  '.$approve.' '.$is.' type="checkbox" value="'.$checklist.'" class="progress">'.$checklist.'</li>';  
-          }
+          if(!empty($db_checklists)):
+            foreach($db_checklists as $checklist){
+                echo '<li><input data-id="'.$plan_id.'"  '.$approve.' '.$is.' type="checkbox" value="'.$checklist.'" class="progress">'.$checklist.'</li>';  
+            }
+          endif;
           echo '</ul>';
           echo '<div class="workflowdetails">'.$workflow_descriptions[$key].'</div>';
           echo '<div class="list-button"><button act="undo" id="Undo" class="button button-act-'.$data_id.'" >Undo</button><button value="Approved" act="approve" id="Approved" '.$approve.' class="button button-act-'.$data_id.'">Approved</button></div></div>';
