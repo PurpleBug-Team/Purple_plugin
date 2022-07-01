@@ -225,7 +225,7 @@ class Purple_Admin {
 		remove_menu_page( 'edit-comments.php' );
 		remove_menu_page( 'edit.php?post_type=workflowlog' );
 		remove_all_actions('admin_notices');
-
+		
     }
 	// edit client admin menu
 	public function client_admin_menu() {
@@ -252,8 +252,8 @@ class Purple_Admin {
 					remove_menu_page( 'index.php' ); 
 					remove_menu_page( 'edit-comments.php' ); 
 					remove_menu_page( 'edit.php?post_type=acf-field-group' ); 
-					remove_menu_page( 'users.php' ); 
-					
+					remove_menu_page( 'users.php' ); 		
+
 					
 		}
     }
@@ -1389,6 +1389,7 @@ class Purple_Admin {
 
 		$user_id = register_new_user( $username, $email );
 		$user = new WP_User( $user_id  );
+		if($role == 'client-admin') $user->remove_role( 'subscriber' );
 		$user->set_role( $role );
 		echo json_encode($user_id);
 	

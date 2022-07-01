@@ -1312,7 +1312,7 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
             // Target Audience Checkbox options
             $output .= '<div class="attachement-group">';
                 $output .= '<p class="attachment-div-title">Target Audience</p>';
-                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                $output .= '<div  class="attachment-checklist" id="target_audience">';
                 foreach($target_audience as $audience => $value){
                    if($audience_count < count($target_audience_selected) && $value == $target_audience_selected[$audience_count]){
                         $output .= '<label>'.$value.'<input name="'.$audience.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'" checked="checked"></label>';
@@ -1326,7 +1326,7 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
             //  Content Pillar Checkbox options
             $output .= '<div class="attachement-group">';
                 $output .= '<p class="attachment-div-title" id="content-pillars">Content Pillar</p>';
-                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                $output .= '<div  class="attachment-checklist" id="content_pillar">';
                 foreach($content_pillars as $content => $value){
                     if($content_pillars_count < count($content_pillars_selected) && $value == $content_pillars_selected[$content_pillars_count]){
                         $output .= '<label>'.$value.'<input name="'.$content.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'" checked="checked"></label>';
@@ -1340,7 +1340,7 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
             // Content Format Checkbox options
             $output .= '<div class="attachement-group">';
                 $output .= '<p class="attachment-div-title" id="content-format">Content Format</p>';
-                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                $output .= '<div  class="attachment-checklist" id="content_format">';
                 foreach($content_format as $content => $value){
                     if($content_format_count < count($content_format_selected) && $value == $content_format_selected[$content_format_count]){
                         $output .= '<label>'.$value.'<input name="'.$content.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'" checked="checked"></label>';
@@ -1354,7 +1354,7 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
             // Journey Stage Checkbox options
             $output .= '<div class="attachement-group">';
                 $output .= '<p class="attachment-div-title">Journey Stage</p>';
-                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                $output .= '<div  class="attachment-checklist" id="journey_stage">';
                 foreach($journey_stage as $journery => $value){
                     if($journey_stage_count < count($journey_stage_selected) && $value == $journey_stage_selected[$journey_stage_count]){
                         $output .= '<label>'.$value.'<input name="'.$journery.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'" checked="checked"></label>';
@@ -1368,7 +1368,7 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
             //  Project Stage Checkbox options
             $output .= '<div class="attachement-group">';
                 $output .= '<p class="attachment-div-title" id="project-stage">Project Stage</p>';
-                $output .= '<div  class="attachment-checklist" id="target-audience">';
+                $output .= '<div  class="attachment-checklist" id="project_stage">';
                 foreach($project_stage as $project => $value){
                     if($project_stage_count < count($project_stage_selected) && $value == $project_stage_selected[$project_stage_count]){
                         $output .= '<label>'.$value.'<input name="'.$project.'" type="checkbox" class="attachment-checkbox-toggle" value="'.$value.'" checked="checked"></label>';

@@ -52,20 +52,21 @@ jQuery(document).ready(function( $ ) {
 		input_count++;
 		jQuery('#checklist-total').val(input_count)
 	})
-
+	let toggle_all = false
 	var target_checkbox = jQuery('.attachment-checklist').find('input[type="checkbox"]')
 	jQuery(target_checkbox).on('click',function(){
+
 		var target_options = jQuery(this).parent().parent().attr('id');
 		var checkboxes = jQuery('#'+target_options).find('input[type="checkbox"]');
 		var this_value = jQuery(this).val();
-		var toggle_all = false
-		// if(this_value == 'all' && toggle_all == false){
-		// 	toggle_all = true
-		// 	jQuery('#'+target_options).find('input[type="checkbox"]').prop('checked',true);
-		// }else{
-		// 	toggle_all = false
-		// 	jQuery('#'+target_options).find('input[type="checkbox"]').prop('checked',false);
-		// }
+
+		if(jQuery(this).prop('checked') === true){
+			jQuery(this).prop('checked',true)
+		}else{
+			jQuery(this).prop('checked',false)
+		}
+		
+	
 	})
 	jQuery('#post_per_table').on('change',function(){
 		var post_per_table = jQuery('#post_per_table').val();
