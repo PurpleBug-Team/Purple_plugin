@@ -186,10 +186,15 @@
                                 <?php }elseif( 'article' == get_post_type($attachment->ID)) {
 
                                     $image_ids = get_post_meta($attachment->ID,'upload_image',true);
+                                    echo '<pre>';
+                                    print_r(wp_get_attachment_url(get_the_post_thumbnail_url($attachment->ID)));
+                                    echo '</pre>';
                                     if(!empty($image_ids[0])){
                                         $feat_image_url = wp_get_attachment_url( $image_ids[0] );
                                     }else{
-                                        $feat_image_url = wp_get_attachment_url(get_post_thumbnail_id($attachment->ID));
+                                        // $feat_image_url = wp_get_attachment_url(get_post_thumbnail_url($attachment->ID));
+                                        $feat_image_url = get_the_post_thumbnail_url($attachment->ID);
+                                      
                                     }
                         
                                     ?>

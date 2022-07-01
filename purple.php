@@ -1047,9 +1047,11 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
     $image_gallery = unserialize($image_id);
     $output = '';
     $output .= '<div class="feature_gallery_container" id="feature_gallery_container">';
+    if(!empty($image_gallery)):
         foreach($image_gallery as $image){
             $output .= '<div class="img-gallery-group"><input type="hidden" name="image_gallery[]" value="'.$image.'"><i class="fas fa-times-circle remove-img-gallery"></i><img src="'.wp_get_attachment_image_src($image)[0].'" ></div>';
         }
+    endif;
     $output .= '</div>';
     // $output .= '<div class="feature_gallery_container"></div>';
     $output .= '<a href="#" class="misha-upl button button-primary">Add to gallery</a>
