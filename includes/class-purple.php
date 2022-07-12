@@ -279,6 +279,9 @@ class Purple {
 		// Update created Workflow
 	    $this->loader->add_action( 'wp_ajax_update_created_workflow_count', $plugin_admin, 'update_created_workflow_count' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_update_created_workflow_count', $plugin_admin, 'update_created_workflow_count' );
+		// Update created Workflow
+	    $this->loader->add_action( 'wp_ajax_library_search', $plugin_admin, 'library_search' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_library_search', $plugin_admin, 'library_search' );
 	    
 
 

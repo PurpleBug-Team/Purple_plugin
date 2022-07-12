@@ -386,35 +386,72 @@ jQuery(document).ready(function($){
 	//create_folder();
 	view_switcher();
 	lib_detail_list();
+	let search_tag = 'Campaigns'
 
  jQuery('.search-field .open-drop').click(function () {
     jQuery('#drop-down').css('display','block');
      var availableTags = [
-			      "All",
+			    //   "All",
 			      "Campaigns",
-			      "Events",
-			      "Tasks",
+			    //   "Events",
+			    //   "Tasks",
 			      "Library",
-			      "Work Requests",
-			      "Pitch Requests",
+			    //   "Work Requests",
+			    //   "Pitch Requests",
 			    
 			    ];
 			  
 				jQuery( "#tags" ).autocomplete({
 			      source: availableTags,
-			      minLength: 0
+			      minLength: 0,
+				  select : showResult,
 			    }).focus(function(){
 			        $(this).autocomplete("search", "");
 			    });
+				function showResult(event, ui){
+					$('#selected_tag_value').text(ui.item.value)
+					search_tag = ui.item.label
+				}
 			      jQuery("#tags ").focus();
 				  jQuery('.search2 input.ndl-Input-input').css('width','500px');
-    			  jQuery('.search2 input.ndl-Input-input').attr('placeholder','Search Campaigns, Events, Tasks, Library, Work Requests and Pitch Requests');
+    			  jQuery('.search2 input.ndl-Input-input').attr('placeholder','Search Campaigns, Events, Tasks, Library');
 		});	
+//////////////////////////////////////////////////////////////////
+function custom_search_tags(e){
+	var search_data = $('.search2 input[type="text"]').val()
+	if(search_tag === 'Library'){
+		ajax_search('library_search',search_data,'library')
+	}else if(search_tag === 'Campaigns'){
+		ajax_search('library_search',search_data,'campaigns')
+	}
+}
+// dynamic
+function ajax_search(action,search_value,section){
+	jQuery.ajax({
+		type : "POST",
+		url : ajaxurl,
+		data : {action: action,search_value:search_value,section:section},
+		success: function(response) {
+			var url = response.data;
+			location.replace(url)
+		}
+	 });
+}
+jQuery('.cstm_search').click(function () {
+	custom_search_tags()
+	// console.log('something');
+});
+jQuery('.ndl-Input-field input[type="text"]').keypress(function (event) {
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	if(keycode == '13'){
+		custom_search_tags() 
+	  }
+});
 
-
+//////////////////////////////////////////////////////////////////
    jQuery("#tags ").on('blur',function(){
 		jQuery("#drop-down").hide();
-		jQuery('.search2 input.ndl-Input-input').css('width','232px');
+		// jQuery('.search2 input.ndl-Input-input').css('width','232px');
 		jQuery('.search2 input.ndl-Input-input').attr('placeholder','');
 	});
 	jQuery('.search2 input.ndl-Input-input').on('blur',function(){
@@ -423,9 +460,8 @@ jQuery(document).ready(function($){
 	});
 
 	jQuery('.search2 input.ndl-Input-input').click(function () {
-		console.log(this);
-		jQuery(this).css('width','500px');
-		jQuery(this).attr('placeholder','Search Campaigns, Events, Tasks, Library, Work Requests and Pitch Requests');
+		// jQuery(this).css('width','500px');	
+		jQuery(this).attr('placeholder','Search Campaigns, Events, Tasks, Library');
 	});
 
 	jQuery(".panel .close-container button").on('click',function(){ 

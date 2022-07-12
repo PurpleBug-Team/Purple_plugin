@@ -2,6 +2,9 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+ li#wp-admin-bar-comments{
+    display: none !important;
+ }
  #wpwrap #wpcontent{
     width: 88% !important;
  }
@@ -150,7 +153,7 @@
  .comments{
 	/* margin-bottom:10px; */
 	/* border-bottom: 1px solid; */
-    display: flex;
+    /* display: flex; */
     flex-direction: row;
     justify-content: flex-start;
     /* align-items: center; */
@@ -682,7 +685,8 @@ button.ndl-Button.ndl-Button--primary.ndl-Button--medium.action-panel-button {ba
 
 .search-field .open-drop {
  border: solid 1px #ccccdc;
- width: 57px;
+ /* width: 57px; */
+ width: auto;
  height: 32px;
  color: #666670;
  border-top-right-radius: 0;
@@ -953,7 +957,7 @@ span#footer-thankyou {
 .attachments-browser .uploader-inline, .attachments-browser.has-load-more .attachments-wrapper, .attachments-browser:not(.has-load-more) .attachments {
     top: 70px !important;
 }
-.media-sidebar{width:460px !important}
+/* .media-sidebar{width:460px !important} */
 .load-more-wrapper,
 .attachments-browser .media-toolbar,
 button#menu-item-browse{/* display:none; */}

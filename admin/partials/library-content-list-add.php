@@ -8,12 +8,10 @@
 	    //The user has the "author" role
 	    	$go = "and post_author=".$user_id."";
 		}
+	 $Query = "SELECT * FROM `".$wpdb->prefix."posts` where post_type='attachment' ".$go." and post_status='inherit' ".$search ." ORDER BY `ID` DESC LIMIT ".$offset.", ".$items_per_page." ";
+	 $get_attacments = $wpdb->get_results( $Query );
+     
 
-
-
-	 $Query = "SELECT * FROM `".$wpdb->prefix."posts` where post_type='attachment' ".$go." and post_status='inherit' ORDER BY `ID` DESC";
-
-	 $get_attacment = $wpdb->get_results( $Query );
 
 
 

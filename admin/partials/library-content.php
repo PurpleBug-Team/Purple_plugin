@@ -102,7 +102,7 @@
 <div class="library-LibraryPage">
     			<header class="ndl-Header ndl-Header--page library-LibraryPage-title">
         		<div class="head-sticky">
-                <h1 class="ndl-HeaderTitle ndl-HeaderTitle--page ndl-HeaderTitle--medium undefined">Library</h1>
+                <h1 class="ndl-HeaderTitle ndl-HeaderTitle--page ndl-HeaderTitle--medium undefined">Grid</h1>
 
         				<div class="header-filter">
           				<div class="header-left">
@@ -110,7 +110,7 @@
                    <form action="<?php echo site_url(); ?>/wp-admin/admin.php?page=library" id="search-lib" method="GET">  
                     <div class="form-field serch-field">
           					<input class="ndl-Input-input " name="s" type="text" placeholder="Search Library" value="<?php echo  isset($_GET['s']) && $_GET['s'] != '' ? $_GET['s']:''; ?>">
-                      <span class="nc-icon ndl-Icon   ndl-Input-icon nc-click-hover"><i class="nc-icon-wrapper"><svg viewBox="0 0 16 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><desc>Created with Sketch.</desc><defs></defs><g id="UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="16" transform="translate(-217.000000, -399.000000)" fill="#444444"><path d="M229.7,410.3 C230.6,409.1 231.1,407.7 231.1,406.1 C231.1,402.2 228,399 224.1,399 C220.2,399 217,402.2 217,406.1 C217,410 220.2,413.2 224.1,413.2 C225.7,413.2 227.2,412.7 228.3,411.8 L231.3,414.8 C231.5,415 231.8,415.1 232,415.1 C232.2,415.1 232.5,415 232.7,414.8 C233.1,414.4 233.1,413.8 232.7,413.4 L229.7,410.3 L229.7,410.3 Z M224.1,411.1 C221.3,411.1 219,408.9 219,406.1 C219,403.3 221.3,401 224.1,401 C226.9,401 229.2,403.3 229.2,406.1 C229.2,408.9 226.9,411.1 224.1,411.1 L224.1,411.1 Z" id="Fill-191"></path></g></g></svg></i></span>
+                      <span class="nc-icon ndl-Icon   ndl-Input-icon nc-click-hover "><i class="nc-icon-wrapper cstm_search"><svg viewBox="0 0 16 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><desc>Created with Sketch.</desc><defs></defs><g id="UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="16" transform="translate(-217.000000, -399.000000)" fill="#444444"><path d="M229.7,410.3 C230.6,409.1 231.1,407.7 231.1,406.1 C231.1,402.2 228,399 224.1,399 C220.2,399 217,402.2 217,406.1 C217,410 220.2,413.2 224.1,413.2 C225.7,413.2 227.2,412.7 228.3,411.8 L231.3,414.8 C231.5,415 231.8,415.1 232,415.1 C232.2,415.1 232.5,415 232.7,414.8 C233.1,414.4 233.1,413.8 232.7,413.4 L229.7,410.3 L229.7,410.3 Z M224.1,411.1 C221.3,411.1 219,408.9 219,406.1 C219,403.3 221.3,401 224.1,401 C226.9,401 229.2,403.3 229.2,406.1 C229.2,408.9 226.9,411.1 224.1,411.1 L224.1,411.1 Z" id="Fill-191"></path></g></g></svg></i></span>
                     <input type="hidden" name="page" value="library" type="text">
                     
                   </div>

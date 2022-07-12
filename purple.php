@@ -1477,5 +1477,14 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
     wp_redirect(admin_url('/admin.php?page=index'));
 }
 add_action('load-index.php','dashboard_redirect');
+function test(){
+    global $wpdb;
+   $sql = ("");
+echo '<pre>';
+print_r($wpdb->get_results("SELECT * FROM $wpdb->posts WHERE `post_title` LIKE '%prac%'"));
+echo '</pre>';
+die();
+}
+// add_action('admin_init','test');
 
 

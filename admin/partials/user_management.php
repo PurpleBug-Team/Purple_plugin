@@ -92,7 +92,7 @@ if( is_user_logged_in() ) {
    $user_roles = $user_meta->roles;
    $output = '';
    $output .= '<tr>';
-   $output .= '<td>'.$id.'</td>';
+   $output .= '<td>'.$user->ID.'</td>';
    $output .= '<td>'.$user->user_login.'</td>';
    $output .= '<td>';
    foreach($user_roles as $role){

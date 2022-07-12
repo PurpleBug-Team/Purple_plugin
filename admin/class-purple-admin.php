@@ -1456,6 +1456,17 @@ class Purple_Admin {
 			// update_post_meta($post_id,'created_workflows',$workflow_count);
 			wp_send_json_success($workflow_count);
 		}
+		// 
+		public function library_search(){
+			$search_value = $_POST['search_value'];
+			$section = $_POST['section'];
+			if($section == 'library'){
+				$url = site_url()."/wp-admin/admin.php?s=$search_value&page=library";
+			}else if( $section == 'campaigns'){
+				$url = site_url()."/wp-admin/edit-tags.php?taxonomy=campaign&post_type=event-task&s=$search_value";
+			}
+			wp_send_json_success($url);
+		}
 		
 		
 		
