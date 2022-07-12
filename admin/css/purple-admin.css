@@ -2,6 +2,9 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+ #wpwrap #wpcontent{
+    width: 88% !important;
+ }
  i.remove-dynamic-workflow{
     float: right;
     font-size: 1.2rem;

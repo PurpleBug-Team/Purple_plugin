@@ -26,7 +26,7 @@ $total_plans = count($plans);
 $forms_args = array(
     'orderby' => 'date',
     'order'   => 'DESC',
-    'post_type' => 'sfba_subscribe_form',
+    'post_type' => 'workflowlog',
      'posts_per_page' => -1
     );
 $forms = get_posts($forms_args);
@@ -76,19 +76,19 @@ $post_per_table  = get_option('post_per_table','5');
             </a>
         </div>
         <div class="dashboard-cards col-4">
-            <a href="/wp-admin/edit.php?post_type=sfba_subscribe_form" class="dashboard-page-links">
+            <a href="/wp-admin/admin.php?page=email-logs" class="dashboard-page-links">
                 <div class="dashboard-card-body">
                     <div class="dashboard-content">
                         <h2><?=$total_forms;?></h2>
                     </div>
                     <div class="item-icon_des">
-                        <span class="wp-menu-image dashicons-before dashicons-email-alt" aria-hidden="true">No. of Forms</span>
+                        <span class="wp-menu-image dashicons-before dashicons-email-alt" aria-hidden="true">No. of Workflow Emails</span>
                     </div>
                 </div>
             </a>
         </div>
         <div class="dashboard-cards col-4">
-            <a href="/wp-admin/profile.php" class="dashboard-page-links">
+            <a href="/wp-admin/admin.php?page=library" class="dashboard-page-links">
                 <div class="dashboard-card-body">
                     <div class="dashboard-content">
                         <h2><?=$total_media_files;?></h2>

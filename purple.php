@@ -1007,7 +1007,7 @@ add_action('wp_logout','track_users_logout');
 
 // redirect dashboard to custom dashboard
 add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $user ) {
-    return $redirect_to = esc_url( '/wp-admin/edit.php?post_type=post' );
+    return $redirect_to = esc_url( '/wp-admin/admin.php?page=index' );
   }, 10, 3 );
 
 
@@ -1473,5 +1473,9 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
     update_post_meta($post_id,'journey_stage',serialize($journey_stage_array));
     update_post_meta($post_id,'project_stage',serialize($project_stage_array));
   }
+  function dashboard_redirect(){
+    wp_redirect(admin_url('/admin.php?page=index'));
+}
+add_action('load-index.php','dashboard_redirect');
 
 
