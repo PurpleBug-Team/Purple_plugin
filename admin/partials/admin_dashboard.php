@@ -1,6 +1,6 @@
 <?php
 $article_args = array(
-    'numberposts'      => 5,
+    'numberposts'      => -1,
     'category'         => 0,
     'orderby'          => 'date',
     'order'            => 'DESC',

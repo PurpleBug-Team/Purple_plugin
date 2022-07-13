@@ -2,6 +2,9 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+ .remove-wf-checklist{
+    margin-top: 7px;
+ }
  li#wp-admin-bar-comments{
     display: none !important;
  }
@@ -9,8 +12,9 @@
     width: 88% !important;
  }
  i.remove-dynamic-workflow{
-    float: right;
     font-size: 1.2rem;
+    position: absolute;
+    right: 12px;
  }
  i.remove-img-gallery:hover{
     transform: scale(1.5);
@@ -34,9 +38,11 @@
  }
 .worflow-inputs-checklist{
     margin-top: 7px;
+    width: 98% !important;
 }
  .add-dynamic-workflow{
     float: right;
+    font-size: 1.2rem !important;
  }
  .add-checklist{
     color: #1267c8;
@@ -71,6 +77,7 @@
     align-items: center;
     width: 100%;
     padding: 10px;
+    margin-top: 20px;
  }
  .attachement-group::before{
     padding: 0px;

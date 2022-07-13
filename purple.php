@@ -1119,7 +1119,7 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
                     if(!empty($db_checklists)):
                         foreach($db_checklists as $checklist){
                             $checklists =  'checklists'.$key.'[]';
-                            $output .= "<input type='text' name='$checklists' placeholder='Checklist Title' class='worflow-inputs-checklist' value='$checklist'>";
+                            $output .= "<i class='fa fa-minus-circle remove-wf-checklist' aria-hidden='true' ></i><input type='text' name='$checklists' placeholder='Checklist Title' class='worflow-inputs-checklist' value='$checklist'>";
                         }
                     endif;
                     $output .= '</div>';
