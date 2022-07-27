@@ -563,6 +563,7 @@ jQuery('#config-demo').daterangepicker({
     "endDate": date,
     "drops": "auto"
 }, function(start, end, label) {
+    console.log(start);
     calendar_v(start.format('YYYY-MM-DD'),end.format('YYYY-MM-DD'));
 });
 

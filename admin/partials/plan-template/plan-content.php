@@ -142,7 +142,7 @@ span.button-action .btn {
 }
 table#list-data tbody tr td {
     background: #fff;
-    padding: 12px  10px;
+    padding: 20px  10px;
     color: #474759;
     font-weight: 600;
     border: solid 1px #f7f7f7;

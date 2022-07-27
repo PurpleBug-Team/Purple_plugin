@@ -306,7 +306,16 @@ jQuery(document).ready(function( $ ) {
 		var checked = 0;
 		var total_checkbox = jQuery('.progress').length;
 		var plan_id = jQuery('.progress').attr('data-id');
-
+		var checklist_index = $(this).attr('checklist-number');
+		var checklist_position = $(this).attr('checklist-position');
+		var meta = checklist_position + '_' + checklist_index;
+		var checked_status = $(this).attr('checked');
+		if(checked_status == undefined || checked_status == ''){
+			checked_status = false
+		}else{
+			checked_status = true
+		}
+		
 		jQuery('.progress').each(function(i,j){
 			if(jQuery(j).is(':checked')){
 				checked++;
@@ -318,9 +327,8 @@ jQuery(document).ready(function( $ ) {
 		jQuery.ajax({
 			type : "POST",
 			url : ajaxurl,
-			data : {action: "update_progress",percentage:total_percentage,plan_id:plan_id},
+			data : {action: "update_progress",percentage:total_percentage,plan_id:plan_id,meta:meta,checked_status:checked_status},
 			success: function(response) {
-			console.log('success');
 			}
 		 });
 		

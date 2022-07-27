@@ -2,6 +2,12 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+ .wp-media-buttons{
+    padding: 0px 10px;
+ }
+ .wp-editor-wrap{
+    z-index: 1;
+ }
  .remove-wf-checklist{
     margin-top: 7px;
  }

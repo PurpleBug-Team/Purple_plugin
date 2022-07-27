@@ -1342,10 +1342,20 @@ class Purple_Admin {
 	public function update_progress(){
 		$percentage = $_POST['percentage'];
 		$plan_id = $_POST['plan_id'];
-
+		// $checklist_index = $_POST['checklist_index'];
+		// $checklist_position = $_POST['checklist_position'];
+		$meta = $_POST['meta'];
+		$checked_status = $_POST['checked_status'];
+		// get_post_meta($plan_id,'checklist_index')
+		if($checked_status == 'true'){
+			update_post_meta($plan_id,$meta,0);
+		}else{
+			update_post_meta($plan_id,$meta,1);
+		}
 		update_post_meta($plan_id,'total_percentage',$percentage);
-		return 'success';
+		wp_send_json_success('success');
 	}
+	
 	public function edit_comment(){
 		include_once("wp-config.php");
 		include_once("wp-includes/wp-db.php");
