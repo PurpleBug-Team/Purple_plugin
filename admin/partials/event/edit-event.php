@@ -448,7 +448,12 @@ $type = get_post_meta($plan_id,'type');
           $checklist_index = 0;
           if(!empty($db_checklists)):
             foreach($db_checklists as $checklist){
+              if(get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
+                $is = 'checked';
+                $mark = 'data-checked';
+              }else{
                 (get_post_meta($plan_id,$index.'_'.$checklist_index)[0] == 1) ? $is = 'checked' : $is = '';
+              }
                 echo '<li><input data-id="'.$plan_id.'"  '.$approve.' '.$is.' type="checkbox" value="'.$checklist.'" class="progress" checklist-number="'.$checklist_index.'" checklist-position="'.$index.'">'.$checklist.'</li>';  
                 $checklist_index ++;
               }
@@ -460,66 +465,6 @@ $type = get_post_meta($plan_id,'type');
           echo '</div>'; 
           $index++;
          }//EO created workflow loop
-         
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-//         if( have_rows('create_workflow', $work_data->ID) ){
-//           $index = 1;
-//           while( have_rows('create_workflow', $work_data->ID) ) { the_row();
-
-//             $role = get_post_meta( $_GET['id'],'Qarticle_role_'.$index.'',true);
-//             $current_user=get_current_user_id();
-//             $user_data = wp_get_current_user();
-//             if($current_user == $role){
-//                 $data_id= $index;
-//             }else if( $user_data->roles[0] =='administrator' || $user_data->roles[0]  == 'client-admin'){
-//                 $data_id= $index;
-//             }else{
-//                 $data_id= 0;
-//             }
-
-
-//             $full_name = get_user_meta($role,'first_name',true).' '.get_user_meta($role,'last_name',true);
-            
-          
-//             $words = explode(' ', $full_name );
-//             $acronym = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
-//             $approve = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? 'disabled':'';
-//             $approve_avatr = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? '<img src="https://img.icons8.com/officel/80/000000/checked--v1.png"/>':'<span class="avatar-acronym">'.$acronym.'</span>';
-            
-//  //Notify User for the Updates
-//  $assigned_email = get_userdata($role);
-//  $email = $assigned_email->data->user_email;
-//         if( get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
-//                $wf = get_sub_field('workflow_title');
-//                  $wf_slug = str_replace(' ', '_', $wf);
-//                  $from = 'noreply@studioid.com';
-//                  $to = $email;
-//                  $subject = $wf." Workflow Updates";
-//                  $headers = "From: ".$from. "\r\n" ."Reply-To: " . $email . "\r\n";
-//                  $message .= '<p>Your Task has been updated!</p>';
-//                  $message .= 'Visit our page '.get_bloginfo( 'url' ).'';
-   
-//                  $email_status = get_post_meta($_GET['id'],$wf_slug );
-//                  if($email_status == ''|| $email_status == null){
-//                    $sent = wp_mail($to, $subject,strip_tags($message), $headers);
-//                    if($sent){
-//                      update_post_meta($_GET['id'],$wf_slug ,1);
-//                     //  create logs
-//                     $post_data =[
-//                         'post_title' => 'Workflow Update',
-//                         'post_status' => 'publish',
-//                         'post_type' => 'workflowlog'
-//                     ];
-//                     $Workflow_post_id = wp_insert_post($post_data);
-//                     update_post_meta($Workflow_post_id,'employee_name',$email);
-//                    }
-//                  }
-//                }
-//  //EO Notify user  
-//             $index++;
-//           }
-//         }  
-//////////////////////////////////////////////////////////////////////////////////////////////////
 ?> 
       </div>
       <!-- Comment Section -->

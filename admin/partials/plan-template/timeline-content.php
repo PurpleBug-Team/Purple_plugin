@@ -424,9 +424,11 @@ input#config-demo {
     color: #191932;
     cursor: pointer;
     display: inline-flex;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
+    width: 215px;
+    text-align:center;
 }
 </style>
 <?php 
