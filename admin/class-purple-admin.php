@@ -1470,10 +1470,26 @@ class Purple_Admin {
 		public function library_search(){
 			$search_value = $_POST['search_value'];
 			$section = $_POST['section'];
-			if($section == 'library'){
-				$url = site_url()."/wp-admin/admin.php?s=$search_value&page=library";
-			}else if( $section == 'campaigns'){
-				$url = site_url()."/wp-admin/edit-tags.php?taxonomy=campaign&post_type=event-task&s=$search_value";
+			switch ( $section ) {
+				case 'library':
+					$url = site_url()."/wp-admin/admin.php?s=$search_value&page=library";
+					break;
+				case 'campaigns':
+					$url = site_url()."/wp-admin/edit-tags.php?taxonomy=campaign&post_type=event-task&s=$search_value";
+					break;
+				case 'articles':
+					$url = site_url()."/wp-admin/edit.php?s=$search_value&post_status=all&post_type=article&action=-1&m=0&cat=0&paged=1&action2=-1";
+					break;
+				case 'pages':
+					$url = site_url()."/wp-admin/edit.php?s=$search_value&post_status=all&post_type=page&action=-1&m=0&paged=1&action2=-1";
+					break;
+				case 'plugins':
+					$url = site_url()."/wp-admin/plugins.php?s=$search_value&plugin_status=all";
+					break;
+				
+				default:
+					$url = site_url()."/wp-admin";
+					break;
 			}
 			wp_send_json_success($url);
 		}

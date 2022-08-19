@@ -404,15 +404,12 @@ jQuery(document).ready(function($){
  jQuery('.search-field .open-drop').click(function () {
     jQuery('#drop-down').css('display','block');
      var availableTags = [
-			    //   "All",
-			      "Campaigns",
-			    //   "Events",
-			    //   "Tasks",
-			      "Library",
-			    //   "Work Requests",
-			    //   "Pitch Requests",
-			    
-			    ];
+			"Articles",
+			"Campaigns",
+			"Library",
+			"Pages",
+			"Plugins",
+		];
 			  
 				jQuery( "#tags" ).autocomplete({
 			      source: availableTags,
@@ -427,7 +424,7 @@ jQuery(document).ready(function($){
 				}
 			      jQuery("#tags ").focus();
 				  jQuery('.search2 input.ndl-Input-input').css('width','500px');
-    			  jQuery('.search2 input.ndl-Input-input').attr('placeholder','Search Campaigns, Events, Tasks, Library');
+    			  jQuery('.search2 input.ndl-Input-input').attr('placeholder','Search '+ search_tag );
 		});	
 //////////////////////////////////////////////////////////////////
 function custom_search_tags(e){
@@ -436,6 +433,12 @@ function custom_search_tags(e){
 		ajax_search('library_search',search_data,'library')
 	}else if(search_tag === 'Campaigns'){
 		ajax_search('library_search',search_data,'campaigns')
+	}else if(search_tag === 'Articles'){
+		ajax_search('library_search',search_data,'articles')
+	}else if(search_tag === 'Pages'){
+		ajax_search('library_search',search_data,'pages')
+	}else if(search_tag === 'Plugins'){
+		ajax_search('library_search',search_data,'plugins')
 	}
 }
 // dynamic
@@ -474,7 +477,7 @@ jQuery('.ndl-Input-field input[type="text"]').keypress(function (event) {
 
 	jQuery('.search2 input.ndl-Input-input').click(function () {
 		// jQuery(this).css('width','500px');	
-		jQuery(this).attr('placeholder','Search Campaigns, Events, Tasks, Library');
+		jQuery(this).attr('placeholder','Search '+ search_tag );
 	});
 
 	jQuery(".panel .close-container button").on('click',function(){ 

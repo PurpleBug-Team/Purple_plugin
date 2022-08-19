@@ -19,7 +19,7 @@
 				    	</a>	
 				    </div>
 				    <div class="search-field">
-				    	<button  class="open-drop ndl-Button ndl-Button--default ndl-Button--medium    ndl-Dropdown-button" type="button"><span class="ndl-Button-label" id="selected_tag_value">Campaigns</span><span class="nc-icon ndl-Icon   ndl-Button-chevron "><i class="nc-icon-wrapper"><svg class="nc-icon glyph" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16"><g transform="translate(0, 0)"><polygon fill="#444444" points="8,12.6 0.3,4.9 1.7,3.4 8,9.7 14.3,3.4 15.7,4.9 "></polygon></g></svg></i></span></button>
+				    	<button  class="open-drop ndl-Button ndl-Button--default ndl-Button--medium    ndl-Dropdown-button" type="button"><span class="ndl-Button-label" id="selected_tag_value">Articles</span><span class="nc-icon ndl-Icon   ndl-Button-chevron "><i class="nc-icon-wrapper"><svg class="nc-icon glyph" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16"><g transform="translate(0, 0)"><polygon fill="#444444" points="8,12.6 0.3,4.9 1.7,3.4 8,9.7 14.3,3.4 15.7,4.9 "></polygon></g></svg></i></span></button>
 				    	<div id="drop-down"  class="ui-widget" style="display:none">
 						  <div class="search-field-drop">
 						  <input id="tags" placeholder="Search...">
