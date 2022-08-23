@@ -446,15 +446,16 @@ $type = get_post_meta($plan_id,'type');
           echo '<div class="checklis" style="display:none;">';
           echo '<ul class="checklist-data-'.$index.'">';
           $checklist_index = 0;
+          $mark = 0;
           if(!empty($db_checklists)):
             foreach($db_checklists as $checklist){
               if(get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
                 $is = 'checked';
-                $mark = 'data-checked';
+                $mark = 1;
               }else{
                 (get_post_meta($plan_id,$index.'_'.$checklist_index)[0] == 1) ? $is = 'checked' : $is = '';
               }
-                echo '<li><input data-id="'.$plan_id.'"  '.$approve.' '.$is.' type="checkbox" value="'.$checklist.'" class="progress" checklist-number="'.$checklist_index.'" checklist-position="'.$index.'">'.$checklist.'</li>';  
+                echo '<li><input is-completed="'.$mark.'" data-id="'.$plan_id.'"  '.$approve.' '.$is.' type="checkbox" value="'.$checklist.'" class="progress" checklist-number="'.$checklist_index.'" checklist-position="'.$index.'">'.$checklist.'</li>';  
                 $checklist_index ++;
               }
           endif;

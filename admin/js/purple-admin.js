@@ -1,4 +1,46 @@
 jQuery(document).ready(function( $ ) {
+	  // update progress percentage
+	  var checked_a = 0;
+	  var total_percentage_a;
+	  var plan_id_to_change;
+	  var total_chcbx = 0;
+	  jQuery('.progress').each( function( index, value ) {
+		total_chcbx++;
+		var is_mark = jQuery(this).attr('is-completed')
+		plan_id_to_change = jQuery('.progress').attr('data-id');
+		var checklist_index = $(this).attr('checklist-number');
+		var checklist_position = $(this).attr('checklist-position');
+		var meta = checklist_position + '_' + checklist_index;
+		if(jQuery(value).is(':checked')){
+			checked_a++;
+		}
+		if(is_mark == 1){
+			// update checkbox
+			jQuery.ajax({
+				type : "POST",
+				url : ajaxurl,
+				data : {action: "update_single_progress",plan_id:plan_id_to_change,meta:meta},
+				success: function(response) {
+				}
+			 });
+		}
+		
+		});
+
+		if(checked_a != 0){
+			var percentage = checked_a / total_chcbx * 100;
+			var total_percentage = percentage.toFixed(2)
+			console.log(plan_id_to_change);
+			jQuery.ajax({
+				type : "POST",
+				url : ajaxurl,
+				data : {action: "update_single_progress_by_percentage",plan_id:plan_id_to_change,total_percentage:total_percentage},
+				success: function(response) {
+				}
+			 });
+		}
+		
+	////////////////////////////////////////////////////
 	jQuery('.remove-wf-checklist').on('click',function(){
 		$(this).next().remove()
 		$(this).remove()
@@ -309,6 +351,7 @@ jQuery(document).ready(function( $ ) {
 		var checklist_index = $(this).attr('checklist-number');
 		var checklist_position = $(this).attr('checklist-position');
 		var meta = checklist_position + '_' + checklist_index;
+		console.log(meta);
 		var checked_status = $(this).attr('checked');
 		if(checked_status == undefined || checked_status == ''){
 			checked_status = false
@@ -323,6 +366,9 @@ jQuery(document).ready(function( $ ) {
 		})
 		var percentage = checked / total_checkbox * 100;
 		var total_percentage = percentage.toFixed(2)
+		update_progress_plan(total_percentage,plan_id,meta,checked_status)
+	})
+	function update_progress_plan(total_percentage,plan_id,meta,checked_status){
 		// update progress
 		jQuery.ajax({
 			type : "POST",
@@ -331,8 +377,7 @@ jQuery(document).ready(function( $ ) {
 			success: function(response) {
 			}
 		 });
-		
-	})
+	}
 	// add comments
 	 jQuery('#submit-comment').on('click',function(e){
 	   e.preventDefault();

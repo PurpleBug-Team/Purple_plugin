@@ -248,6 +248,12 @@ class Purple {
 		// progess
 	    $this->loader->add_action( 'wp_ajax_update_progress', $plugin_admin, 'update_progress' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_update_progress', $plugin_admin, 'update_progress' );
+		// progess
+	    $this->loader->add_action( 'wp_ajax_update_single_progress', $plugin_admin, 'update_single_progress' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_update_single_progress', $plugin_admin, 'update_single_progress' );
+
+	    $this->loader->add_action( 'wp_ajax_update_single_progress_by_percentage', $plugin_admin, 'update_single_progress_by_percentage' );
+	    $this->loader->add_action( 'wp_ajax_nopriv_update_single_progress_by_percentage', $plugin_admin, 'update_single_progress_by_percentage' );
 		// edit comments
 	    $this->loader->add_action( 'wp_ajax_edit_comment', $plugin_admin, 'edit_comment' );
 	    $this->loader->add_action( 'wp_ajax_nopriv_edit_comment', $plugin_admin, 'edit_comment' );

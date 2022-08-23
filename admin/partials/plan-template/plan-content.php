@@ -29,10 +29,13 @@
         // //   $total_workflow = (get_field('create_workflow',$Campaign)!='') ?  count(get_field('create_workflow',$Campaign)):'';
          $status = get_post_meta($plan->ID,'total_percentage');
          $stats = '';
-         $stats = '<div class="progress_border" style="width: 150px;">';
+         $stats = '<div class="progress_border" style="overflow:hidden">';
          if($status[0] > 0){
-                $stats .= "<div class='stats completed'  style='width:$status[0]%;'>";
+            ($status[0] == 100) ? $width = '-webkit-fill-available' : $width = $status[0];
+            $stats .= "<div class='progress-contianer'>";
+                $stats .= "<div   class='stats completed'  style='width:$width%;'>";
                 $stats .= $status[0].'%';
+            $stats .= '</div>';
             }else{
                 $stats .= '<span class="stats not" >Not Yet Started</span>';
             }
@@ -118,7 +121,7 @@ function data_function(id){
     text-transform: uppercase;
     font-size: 10px;
     font-weight: 600;
-    border-radius: 4px;
+    /* border-radius: 4px; */
     padding: 3px 8px;
     color: #fff;
     background: #07bb00 !important;

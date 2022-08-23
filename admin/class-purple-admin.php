@@ -1355,6 +1355,20 @@ class Purple_Admin {
 		update_post_meta($plan_id,'total_percentage',$percentage);
 		wp_send_json_success('success');
 	}
+	// 
+	public function update_single_progress(){
+		$plan_id = $_POST['plan_id'];
+		$meta = $_POST['meta'];
+		update_post_meta($plan_id,$meta,1);
+		wp_send_json_success('success');
+	}
+	// 
+	public function update_single_progress_by_percentage(){
+		$plan_id = $_POST['plan_id'];
+		$total_percentage = $_POST['total_percentage'];
+		update_post_meta($plan_id,'total_percentage',$total_percentage);
+		wp_send_json_success('success');
+	}
 	
 	public function edit_comment(){
 		include_once("wp-config.php");
