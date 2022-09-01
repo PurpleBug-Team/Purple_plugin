@@ -202,288 +202,6 @@ jQuery('.content-article').click(function (){
   });
 
 </script>
- 
-
-<?php 
-global $wp_roles;
-$roles = $wp_roles->roles; 
-$current_user = wp_get_current_user();
-$post = get_post($_GET['id']);
-$Workflow = get_post_meta($_GET['id'],'workflow_id');
-$work_data = get_post($Workflow[0]);								
-$post = get_post($_GET['id']);
- 
-$post_id = $post->ID;
-$attachment_id =get_post_meta($post_id,'attachment_id',true);
-$slice = explode(',',$attachment_id);
-$activepost = get_post($slice[0]);
-  echo '<div id="loading"><div class="sticky"></div> <img class="load-image" src="'.esc_url( plugins_url( "/images/f", __FILE__ )).'"></div>';
-?> 
-
-<p>TSK-<?php echo $_GET['id'];?></p>
-<p class="ndl-Text ndl-Text--body ndl-InlineEditDisplayMode-text"><?php echo $post->post_title; ?></p>
-<?php
-$plan_id = $_GET['id'];
-$type = get_post_meta($plan_id,'type');
-// if($type[0] == 'EVENT'){
-//  echo '<pre>';
-//  print_r($type);
-//  echo '</pre>';
-//  die();
-// }
-
-?>
-<div class="view-plan"> 
-<div class="tabs">
-  <ul>
-    <li><a href="#content">Content</a></li>
-  </ul>
-
-  <div id="content">
-  	<div class="inner-conent">
-       <div class="content-navigation-thumbnails"> 
-     	 <?php 
-       $user = wp_get_current_user();
-
-		if( $activepost != ''){   
-        if ( in_array( 'administrator', (array) $user->roles ) || in_array( 'client-admin', (array) $user->roles ) ) {
-            ?>
-            <div class="ndl-Dropdown add-content">
-                <button class="add-article content-article ndl-Button ndl-Button--secondaryAlt ndl-Button--medium ndl-Dropdown-button ndl-Button--iconOnly" type="button">
-                    <span class="nc-icon ndl-Icon ndl-Button-icon">
-                        <i class="nc-icon-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16">
-                                <g transform="translate(0, 0)"><path fill="#444444" d="M15,7H9V1c0-0.6-0.4-1-1-1S7,0.4,7,1v6H1C0.4,7,0,7.4,0,8s0.4,1,1,1h6v6c0,0.6,0.4,1,1,1s1-0.4,1-1V9h6 c0.6,0,1-0.4,1-1S15.6,7,15,7z"></path></g>
-                            </svg>
-                        </i>
-                    </span>
-                </button>
-            </div>
-        <?php  } } ?>    
-            <?php 
-            $index = 0;
-             echo '<input type="hidden" value="'.$_GET['id'].'" id="task_id">';
-             echo '<input type="hidden" value="'.$attachment_id.'" id="selected-post">';
-         
-         if(!empty(array_filter($slice)) ){
-              foreach($slice as $slices){
-                $active = $index ==0 ?'active':'';
-                $attachment = get_post($slices);
-                $imageids = get_post_thumbnail_id($attachment->ID);
-                $imageurl = wp_get_attachment_url($imageids); ?>
-                <div data="<?php echo $attachment->ID;?>" class="per-thumbnail primary <?php echo $active;?> grid-cl-v3-article-fill"><img width="40" height="30"  class="thumbnail-image" src="<?php echo $imageurl;?>"></div>
-                <?php 
-                $index++;
-              }
-         } ?>
-         </div>
-      <div class="the-content-article">
-        <?php   
-        include( plugin_dir_path( __FILE__ ) . 'tabconent/conent.php' ); 
-        ?>
-       </div>
-    </div>
-  </div>
-</div>
-<div class="right-pane">
-  <div class="head-progress">
-        <?php
-          $end = get_post_meta($_GET['id'],'task_end_date',true);
-          $list = get_post_meta($_GET['id'],'checklist_marks_1',true);
-           
-          if($list !=''){
-            $total_ = $total;
-          }else{
-            $total_ = 0;
-          }
-          $publish = get_post_meta($_GET['id'],'publish_date_'.$total_workflow,true);
-          if($publish !='' && $total_ == 100){
-            echo '<span class="ndl-Badge ndl-Badge--success  workflow-state-wrapper">Completed</span>';
-          }elseif(strtotime($publish) >= strtotime('now') ){
-            echo '<span class="ndl-Badge ndl-Badge--error  workflow-state-wrapper" style="backgroud:red;color:#fff;">Overdue</span>'; 
-          }else{
-            echo '<span class="ndl-Badge ndl-Badge--progress  workflow-state-wrapper">Progress</span>';
-          }  
-          
-          if($publish !='' && $total_ == 100){
-            echo '<span class="Completed -date date"><strong>Completed on: </strong>'.date("M d", strtotime($publish)).'</span>';
-          }elseif(strtotime($publish) >= strtotime('now') ){
-               echo '<span class="due-date date"><strong>Due date: </strong>'.date("M d,Y", strtotime($end)).'</span>';
-          }else{ 
-            echo '<span class="due-date date"><strong>Due date: </strong>'.date("M d,Y", strtotime($end)).'</span>';
-          }
-           
-         ?>
-        <progress id="file" value="<?php echo $total_;?>" max="100"> <?php echo $total_;?>% </progress>
-        <?php 
-          $start = get_post_meta($_GET['id'],'task_start_date',true);
-          echo '<span class="start-date date"><strong>Start date: </strong>'.date("M d,Y", strtotime($start)).'</span>'; 
-        ?>
-  </div>
-	<div class="content-tab-pane">
-      <ul>
-        <li><a href="#Workflow">Workflow</a></li>
-        <li><a href="#Comment">Comment</a></li>
-       
-      </ul>
-      
-      <div id="Workflow">
-      <div class="workflow-header"><header class="ndl-Header ndl-Header--subsection header-title "><h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined">Content Workflow</h1></header> </div>
-
-        <?php 
-
-        // $total_created_workflows = get_post_meta($work_data->ID,'created_workflows')[0];
-
-        $created_workflow_count = get_post_meta($work_data->ID,'created_workflows')[0];
-        $created_workflow_count = ($created_workflow_count == 0) ? 0: $created_workflow_count;
-        // titles
-        $workflow_titles = get_post_meta($work_data->ID,'workflow_titles')[0];
-        $workflow_titles = unserialize($workflow_titles);
-        // Descritpions
-        $workflow_descriptions = get_post_meta($work_data->ID,'workflow_descriptions')[0];
-        $workflow_descriptions = unserialize($workflow_descriptions);
-
-        // for($workflow_counter = 0; $workflow_counter <= $total_created_workflows; $workflow_counter++){
-          $index = 1;
-    if($workflow_titles){
-        foreach($workflow_titles as $key => $workflow_title){
-          $checklist_name = 'checklists'.$key;
-          $db_checklists = unserialize(get_post_meta($work_data->ID,$checklist_name)[0]);
-          // $index = 1;
-          $role = get_post_meta( $_GET['id'],'Qarticle_role_'.$index.'',true);
-          $current_user=get_current_user_id();
-          $user_data = wp_get_current_user();
-          if($current_user == $role){
-              $data_id= $index;
-          }else if( $user_data->roles[0] =='administrator' || $user_data->roles[0]  == 'client-admin'){
-              $data_id= $index;
-          }else{
-              $data_id= 0;
-          }
-          $full_name = get_user_meta($role,'first_name',true).' '.get_user_meta($role,'last_name',true);
-          $words = explode(' ', $full_name );
-          $acronym = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
-          $approve = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? 'disabled':'';
-          $approve_avatr = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? '<img src="https://img.icons8.com/officel/80/000000/checked--v1.png"/>':'<span class="avatar-acronym">'.$acronym.'</span>';
-          $approve_btn_text = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? 'Approved':'Approve';
-          //Notify User for the Updates
-          $assigned_email = get_userdata($role);
-          $email = $assigned_email->data->user_email;
-                  if( get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
-                        $wf = $workflow_title;
-                          $wf_slug = str_replace(' ', '_', $wf);
-                          $from = 'noreply@studioid.com';
-                          $to = $email;
-                          $subject = $wf." Workflow Updates";
-                          $headers = "From: ".$from. "\r\n" ."Reply-To: " . $email . "\r\n";
-                          $message .= '<p>Your Task has been updated!</p>';
-                          $message .= 'Visit our page '.get_bloginfo( 'url' ).'';
-            
-                          $email_status = get_post_meta($_GET['id'],$wf_slug );
-                          if($email_status == ''|| $email_status == null){
-                            $sent = wp_mail($to, $subject,strip_tags($message), $headers);
-                            if($sent){
-                              update_post_meta($_GET['id'],$wf_slug ,1);
-                              //  create logs
-                              $post_data =[
-                                  'post_title' => 'Workflow Update',
-                                  'post_status' => 'publish',
-                                  'post_type' => 'workflowlog'
-                              ];
-                              $Workflow_post_id = wp_insert_post($post_data);
-                              update_post_meta($Workflow_post_id,'employee_name',$email);
-                            }
-                          }
-                        }
-          //EO Notify user
-          $get_current_db_checklists = get_post_meta($work_data->ID,'workflow_checklists');
-          $total_checklists = unserialize($get_current_db_checklists[0]);
-          echo '<div class="step-header steps-'.$index.'">';
-            echo '<div class="step-index">'.$index.'</div>';
-            echo '<div class="ndl-Avatar-wrapper ">'.$approve_avatr.'</div>';
-            echo '<div class="step-detail">';
-              echo '<div class="header-top"><header class="ndl-Header ndl-Header--subsection step-title"><h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined">'.$workflow_title.'</h1></header><a class="view-detail" data="'.$data_id.'" >View Details</a></div>';
-              echo '<div class="assignee">'.$full_name.'</div>';
-              echo '<div class="tsk-DueDatePicker"><div class="due-date"><span>Step due&nbsp;</span><span class="date">'.get_post_meta( $_GET['id'],'Qarticle_due_date_'.$index.'',true).'</span></div></div>';
-          // loop here
-          $plan_id = $_GET['id'];
-          echo '<div class="checklis" style="display:none;">';
-          echo '<ul class="checklist-data-'.$index.'">';
-          $checklist_index = 0;
-          $mark = 0;
-          if(!empty($db_checklists)):
-            foreach($db_checklists as $checklist){
-              if(get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
-                $is = 'checked';
-                $mark = 1;
-              }else{
-                (get_post_meta($plan_id,$index.'_'.$checklist_index)[0] == 1) ? $is = 'checked' : $is = '';
-              }
-                echo '<li><input is-completed="'.$mark.'" data-id="'.$plan_id.'"  '.$approve.' '.$is.' type="checkbox" value="'.$checklist.'" class="progress" checklist-number="'.$checklist_index.'" checklist-position="'.$index.'">'.$checklist.'</li>';  
-                $checklist_index ++;
-              }
-          endif;
-          echo '</ul>';
-          echo '<div class="workflowdetails">'.$workflow_descriptions[$key].'</div>';
-          echo '<div class="list-button"><button act="undo" id="Undo" class="button button-act-'.$data_id.'" >Undo</button><button value="Approved" act="approve" id="Approved" '.$approve.' class="button button-act-'.$data_id.'">'.$approve_btn_text.'</button></div></div>';
-          echo '</div>'; 
-          echo '</div>'; 
-          $index++;
-         }//EO created workflow loop
-
-  }
-?> 
-      </div>
-      <!-- Comment Section -->
-      <div id="Comment">
-        <div class="inner-conent">
-          <?php
-              $plan_id = $_GET['id'];
-              $user_data = get_userdata($current_user);
-              $user_email = $user_data->data->user_email;
-              $display_name = $user_data->data->display_name;
-              global $wpdb;
-              $queries = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE `post_id` = $plan_id AND `meta_key` = 'comments' ORDER BY `meta_id`");
-              foreach($queries as $query){
-                $data =$query->meta_value;
-                $comments = unserialize(unserialize($data ));
-                foreach($comments as $key => $value){
-                  $user_avatar = get_avatar($key);
-                  $usr_data = get_userdata($key);
-                  if($key != $current_user){
-                    echo '<div class="comments-reverse"><p class="user-mail">'.$user_avatar.' </p>';
-                    echo '<p class="user-comment" style="background: #bdbdbd6e;"><span class="usr_email">'.$usr_data->data->user_email.'</span><br>'.$value.'</p>';
-                    echo '</div>';
-                    }
-                    else{
-                    echo '<div class="comments"><p class="user-mail">'.$user_avatar.' </p>';
-                    // echo '<p class="user-comment"><span class="usr_email">'.$usr_data->data->user_email.'</span><br>'.$value.'</p>';
-                    echo '<div class="user-comment"><span class="usr_email">'.$usr_data->data->user_email.'</span>
-                    <span>
-                      <i class="nc-icon-wrapper edit-icon-wrapper">
-                        <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16"><g transform="translate(0, 0)"><path fill="#444444" d="M1,16h3c0.3,0,0.5-0.1,0.7-0.3l11-11c0.4-0.4,0.4-1,0-1.4l-3-3c-0.4-0.4-1-0.4-1.4,0l-11,11 C0.1,11.5,0,11.7,0,12v3C0,15.6,0.4,16,1,16z M2,12.4l10-10L13.6,4l-10,10H2V12.4z"></path></g></svg>
-                      </i>
-                    </span>
-                    <span>
-                      <svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  class="delete-icon" id="'.$query->meta_id.'" viewBox="0 0 16 16" width="16px" height="16px"><path d="M 6.496094 1 C 5.675781 1 5 1.675781 5 2.496094 L 5 3 L 2 3 L 2 4 L 3 4 L 3 12.5 C 3 13.328125 3.671875 14 4.5 14 L 10.5 14 C 11.328125 14 12 13.328125 12 12.5 L 12 4 L 13 4 L 13 3 L 10 3 L 10 2.496094 C 10 1.675781 9.324219 1 8.503906 1 Z M 6.496094 2 L 8.503906 2 C 8.785156 2 9 2.214844 9 2.496094 L 9 3 L 6 3 L 6 2.496094 C 6 2.214844 6.214844 2 6.496094 2 Z M 5 5 L 6 5 L 6 12 L 5 12 Z M 7 5 L 8 5 L 8 12 L 7 12 Z M 9 5 L 10 5 L 10 12 L 9 12 Z"/></svg>
-                    </span>
-                    <br><span class="comment-value wf-comments" cols="30" rows="5"  >'.$value.'</span><br><button  user-id="'.$key.'" id="'.$query->meta_id.'" class="update-btn">Update</button></div>';
-                    echo '</div>';
-                    }
-                }
-
-              }
-          ?>
-            <form action="" method="post" id="comment-form">
-            <input type="hidden" value="<?php echo $current_user; ?>" name="commentor-id" id="commentor-id" data-plan="<?php  echo $plan_id;?>" user-data="<?php echo $current_user; ?>">
-           <textarea name="wf-comments" class="wf-comments"  id="wf-comments" cols="30" rows="5"></textarea>
-           <button class="comment-btn" id="submit-comment">submit</button>
-          </form>
-        </div>
-      </div>
-    </div>
-</div>
-</div>
 <style>
 .right-pane span.ndl-Badge {
     position: absolute;
@@ -824,4 +542,296 @@ div#loading img.load-image {
     overflow:hidden;
 }
 </style>
+
+<?php 
+global $wp_roles;
+$roles = $wp_roles->roles; 
+$current_user = wp_get_current_user();
+$post = get_post($_GET['id']);
+$Workflow = get_post_meta($_GET['id'],'workflow_id');
+$work_data = get_post($Workflow[0]);								
+$post = get_post($_GET['id']);
+ 
+$post_id = $post->ID;
+$attachment_id =get_post_meta($post_id,'attachment_id',true);
+$slice = explode(',',$attachment_id);
+$activepost = get_post($slice[0]);
+  echo '<div id="loading"><div class="sticky"></div> <img class="load-image" src="'.esc_url( plugins_url( "/images/f", __FILE__ )).'"></div>';
+?> 
+
+<p>TSK-<?php echo $_GET['id'];?></p>
+<p class="ndl-Text ndl-Text--body ndl-InlineEditDisplayMode-text"><?php echo $post->post_title; ?></p>
+<?php
+$plan_id = $_GET['id'];
+$type = get_post_meta($plan_id,'type');
+// if($type[0] == 'EVENT'){
+//  echo '<pre>';
+//  print_r($type);
+//  echo '</pre>';
+//  die();
+// }
+
+?>
+<div class="view-plan"> 
+<div class="tabs">
+  <ul>
+    <li><a href="#content">Content</a></li>
+  </ul>
+
+  <div id="content">
+  	<div class="inner-conent">
+       <div class="content-navigation-thumbnails"> 
+     	 <?php 
+       $user = wp_get_current_user();
+
+		if( $activepost != ''){   
+        if ( in_array( 'administrator', (array) $user->roles ) || in_array( 'client-admin', (array) $user->roles ) ) {
+            ?>
+            <div class="ndl-Dropdown add-content">
+                <button class="add-article content-article ndl-Button ndl-Button--secondaryAlt ndl-Button--medium ndl-Dropdown-button ndl-Button--iconOnly" type="button">
+                    <span class="nc-icon ndl-Icon ndl-Button-icon">
+                        <i class="nc-icon-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16">
+                                <g transform="translate(0, 0)"><path fill="#444444" d="M15,7H9V1c0-0.6-0.4-1-1-1S7,0.4,7,1v6H1C0.4,7,0,7.4,0,8s0.4,1,1,1h6v6c0,0.6,0.4,1,1,1s1-0.4,1-1V9h6 c0.6,0,1-0.4,1-1S15.6,7,15,7z"></path></g>
+                            </svg>
+                        </i>
+                    </span>
+                </button>
+            </div>
+        <?php  } } ?>    
+            <?php 
+            $index = 0;
+             echo '<input type="hidden" value="'.$_GET['id'].'" id="task_id">';
+             echo '<input type="hidden" value="'.$attachment_id.'" id="selected-post">';
+         
+         if(!empty(array_filter($slice)) ){
+              foreach($slice as $slices){
+                $active = $index ==0 ?'active':'';
+                $attachment = get_post($slices);
+                $imageids = get_post_thumbnail_id($attachment->ID);
+                $imageurl = wp_get_attachment_url($imageids); ?>
+                <div data="<?php echo $attachment->ID;?>" class="per-thumbnail primary <?php echo $active;?> grid-cl-v3-article-fill"><img width="40" height="30"  class="thumbnail-image" src="<?php echo $imageurl;?>"></div>
+                <?php 
+                $index++;
+              }
+         } ?>
+         </div>
+      <div class="the-content-article">
+        <?php   
+        include( plugin_dir_path( __FILE__ ) . 'tabconent/conent.php' ); 
+        ?>
+       </div>
+    </div>
+  </div>
+</div>
+<div class="right-pane">
+  <div class="head-progress">
+        <?php
+          $end = get_post_meta($_GET['id'],'task_end_date',true);
+          $list = get_post_meta($_GET['id'],'checklist_marks_1',true);
+           
+          if($list !=''){
+            $total_ = $total;
+          }else{
+            $total_ = 0;
+          }
+          $publish = get_post_meta($_GET['id'],'publish_date_'.$total_workflow,true);
+          if($publish !='' && $total_ == 100){
+            echo '<span class="ndl-Badge ndl-Badge--success  workflow-state-wrapper">Completed</span>';
+          }elseif(strtotime($publish) >= strtotime('now') ){
+            echo '<span class="ndl-Badge ndl-Badge--error  workflow-state-wrapper" style="backgroud:red;color:#fff;">Overdue</span>'; 
+          }else{
+            echo '<span class="ndl-Badge ndl-Badge--progress  workflow-state-wrapper">Progress</span>';
+          }  
+          
+          if($publish !='' && $total_ == 100){
+            echo '<span class="Completed -date date"><strong>Completed on: </strong>'.date("M d", strtotime($publish)).'</span>';
+          }elseif(strtotime($publish) >= strtotime('now') ){
+               echo '<span class="due-date date"><strong>Due date: </strong>'.date("M d,Y", strtotime($end)).'</span>';
+          }else{ 
+            echo '<span class="due-date date"><strong>Due date: </strong>'.date("M d,Y", strtotime($end)).'</span>';
+          }
+           
+         ?>
+        <progress id="file" value="<?php echo $total_;?>" max="100"> <?php echo $total_;?>% </progress>
+        <?php 
+          $start = get_post_meta($_GET['id'],'task_start_date',true);
+          echo '<span class="start-date date"><strong>Start date: </strong>'.date("M d,Y", strtotime($start)).'</span>'; 
+        ?>
+  </div>
+	<div class="content-tab-pane">
+      <ul>
+        <?php
+        if($type[0] == 'EVENT'){ ?>
+        <li><a href="#Comment">Comment</a></li>
+        <?php
+        }else{ ?>
+        <li><a href="#Workflow">Workflow</a></li>
+        <li><a href="#Comment">Comment</a></li>
+        <?php
+        }
+        ?>
+       
+      </ul>
+      
+      <div id="Workflow">
+      <div class="workflow-header"><header class="ndl-Header ndl-Header--subsection header-title "><h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined">Content Workflow</h1></header> </div>
+
+        <?php 
+
+        // $total_created_workflows = get_post_meta($work_data->ID,'created_workflows')[0];
+
+        $created_workflow_count = get_post_meta($work_data->ID,'created_workflows')[0];
+        $created_workflow_count = ($created_workflow_count == 0) ? 0: $created_workflow_count;
+        // titles
+        $workflow_titles = get_post_meta($work_data->ID,'workflow_titles')[0];
+        $workflow_titles = unserialize($workflow_titles);
+        // Descritpions
+        $workflow_descriptions = get_post_meta($work_data->ID,'workflow_descriptions')[0];
+        $workflow_descriptions = unserialize($workflow_descriptions);
+
+        // for($workflow_counter = 0; $workflow_counter <= $total_created_workflows; $workflow_counter++){
+          $index = 1;
+    if($workflow_titles){
+        foreach($workflow_titles as $key => $workflow_title){
+          $checklist_name = 'checklists'.$key;
+          $db_checklists = unserialize(get_post_meta($work_data->ID,$checklist_name)[0]);
+          // $index = 1;
+          $role = get_post_meta( $_GET['id'],'Qarticle_role_'.$index.'',true);
+          $current_user=get_current_user_id();
+          $user_data = wp_get_current_user();
+          if($current_user == $role){
+              $data_id= $index;
+          }else if( $user_data->roles[0] =='administrator' || $user_data->roles[0]  == 'client-admin'){
+              $data_id= $index;
+          }else{
+              $data_id= 0;
+          }
+          $full_name = get_user_meta($role,'first_name',true).' '.get_user_meta($role,'last_name',true);
+          $words = explode(' ', $full_name );
+          $acronym = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
+          $approve = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? 'disabled':'';
+          $approve_avatr = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? '<img src="https://img.icons8.com/officel/80/000000/checked--v1.png"/>':'<span class="avatar-acronym">'.$acronym.'</span>';
+          $approve_btn_text = (get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1)? 'Approved':'Approve';
+          //Notify User for the Updates
+          $assigned_email = get_userdata($role);
+          $email = $assigned_email->data->user_email;
+                  if( get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
+                        $wf = $workflow_title;
+                          $wf_slug = str_replace(' ', '_', $wf);
+                          $from = 'noreply@studioid.com';
+                          $to = $email;
+                          $subject = $wf." Workflow Updates";
+                          $headers = "From: ".$from. "\r\n" ."Reply-To: " . $email . "\r\n";
+                          $message .= '<p>Your Task has been updated!</p>';
+                          $message .= 'Visit our page '.get_bloginfo( 'url' ).'';
+            
+                          $email_status = get_post_meta($_GET['id'],$wf_slug );
+                          if($email_status == ''|| $email_status == null){
+                            $sent = wp_mail($to, $subject,strip_tags($message), $headers);
+                            if($sent){
+                              update_post_meta($_GET['id'],$wf_slug ,1);
+                              //  create logs
+                              $post_data =[
+                                  'post_title' => 'Workflow Update',
+                                  'post_status' => 'publish',
+                                  'post_type' => 'workflowlog'
+                              ];
+                              $Workflow_post_id = wp_insert_post($post_data);
+                              update_post_meta($Workflow_post_id,'employee_name',$email);
+                            }
+                          }
+                        }
+          //EO Notify user
+          $get_current_db_checklists = get_post_meta($work_data->ID,'workflow_checklists');
+          $total_checklists = unserialize($get_current_db_checklists[0]);
+          echo '<div class="step-header steps-'.$index.'">';
+            echo '<div class="step-index">'.$index.'</div>';
+            echo '<div class="ndl-Avatar-wrapper ">'.$approve_avatr.'</div>';
+            echo '<div class="step-detail">';
+              echo '<div class="header-top"><header class="ndl-Header ndl-Header--subsection step-title"><h1 class="ndl-HeaderTitle ndl-HeaderTitle--subsection ndl-HeaderTitle--medium undefined">'.$workflow_title.'</h1></header><a class="view-detail" data="'.$data_id.'" >View Details</a></div>';
+              echo '<div class="assignee">'.$full_name.'</div>';
+              echo '<div class="tsk-DueDatePicker"><div class="due-date"><span>Step due&nbsp;</span><span class="date">'.get_post_meta( $_GET['id'],'Qarticle_due_date_'.$index.'',true).'</span></div></div>';
+          // loop here
+          $plan_id = $_GET['id'];
+          echo '<div class="checklis" style="display:none;">';
+          echo '<ul class="checklist-data-'.$index.'">';
+          $checklist_index = 0;
+          $mark = 0;
+          if(!empty($db_checklists)):
+            foreach($db_checklists as $checklist){
+              if(get_post_meta($_GET['id'],'approve_'.$index.'',true) == 1){
+                $is = 'checked';
+                $mark = 1;
+              }else{
+                (get_post_meta($plan_id,$index.'_'.$checklist_index)[0] == 1) ? $is = 'checked' : $is = '';
+              }
+                echo '<li><input is-completed="'.$mark.'" data-id="'.$plan_id.'"  '.$approve.' '.$is.' type="checkbox" value="'.$checklist.'" class="progress" checklist-number="'.$checklist_index.'" checklist-position="'.$index.'">'.$checklist.'</li>';  
+                $checklist_index ++;
+              }
+          endif;
+          echo '</ul>';
+          echo '<div class="workflowdetails">'.$workflow_descriptions[$key].'</div>';
+          echo '<div class="list-button"><button act="undo" id="Undo" class="button button-act-'.$data_id.'" >Undo</button><button value="Approved" act="approve" id="Approved" '.$approve.' class="button button-act-'.$data_id.'">'.$approve_btn_text.'</button></div></div>';
+          echo '</div>'; 
+          echo '</div>'; 
+          $index++;
+         }//EO created workflow loop
+
+  }
+?> 
+      </div>
+      <!-- Comment Section -->
+      <div id="Comment">
+        <div class="inner-conent">
+          <?php
+              $plan_id = $_GET['id'];
+              $current_user = wp_get_current_user();
+              $current_user=get_current_user_id();
+              $user_data = get_userdata($current_user);
+              $user_email = $user_data->data->user_email;
+              $display_name = $user_data->data->display_name;
+              global $wpdb;
+              $queries = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE `post_id` = $plan_id AND `meta_key` = 'comments' ORDER BY `meta_id`");
+              foreach($queries as $query){
+                $data =$query->meta_value;
+                $comments = unserialize(unserialize($data ));
+                foreach($comments as $key => $value){
+                  $user_avatar = get_avatar($key);
+                  $usr_data = get_userdata($key);
+                  if($key != $current_user){
+                    echo '<div class="comments-reverse"><p class="user-mail">'.$user_avatar.' </p>';
+                    echo '<p class="user-comment" style="background: #bdbdbd6e;"><span class="usr_email">'.$usr_data->data->user_email.'</span><br>'.$value.'</p>';
+                    echo '</div>';
+                    }
+                    else{
+                    echo '<div class="comments"><p class="user-mail">'.$user_avatar.' </p>';
+                    // echo '<p class="user-comment"><span class="usr_email">'.$usr_data->data->user_email.'</span><br>'.$value.'</p>';
+                    echo '<div class="user-comment"><span class="usr_email">'.$usr_data->data->user_email.'</span>
+                    <span>
+                      <i class="nc-icon-wrapper edit-icon-wrapper">
+                        <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16"><g transform="translate(0, 0)"><path fill="#444444" d="M1,16h3c0.3,0,0.5-0.1,0.7-0.3l11-11c0.4-0.4,0.4-1,0-1.4l-3-3c-0.4-0.4-1-0.4-1.4,0l-11,11 C0.1,11.5,0,11.7,0,12v3C0,15.6,0.4,16,1,16z M2,12.4l10-10L13.6,4l-10,10H2V12.4z"></path></g></svg>
+                      </i>
+                    </span>
+                    <span>
+                      <svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  class="delete-icon" id="'.$query->meta_id.'" viewBox="0 0 16 16" width="16px" height="16px"><path d="M 6.496094 1 C 5.675781 1 5 1.675781 5 2.496094 L 5 3 L 2 3 L 2 4 L 3 4 L 3 12.5 C 3 13.328125 3.671875 14 4.5 14 L 10.5 14 C 11.328125 14 12 13.328125 12 12.5 L 12 4 L 13 4 L 13 3 L 10 3 L 10 2.496094 C 10 1.675781 9.324219 1 8.503906 1 Z M 6.496094 2 L 8.503906 2 C 8.785156 2 9 2.214844 9 2.496094 L 9 3 L 6 3 L 6 2.496094 C 6 2.214844 6.214844 2 6.496094 2 Z M 5 5 L 6 5 L 6 12 L 5 12 Z M 7 5 L 8 5 L 8 12 L 7 12 Z M 9 5 L 10 5 L 10 12 L 9 12 Z"/></svg>
+                    </span>
+                    <br><span class="comment-value wf-comments" cols="30" rows="5"  >'.$value.'</span><br><button  user-id="'.$key.'" id="'.$query->meta_id.'" class="update-btn">Update</button></div>';
+                    echo '</div>';
+                    }
+                }
+
+              }
+          ?>
+            <form action="" method="post" id="comment-form">
+            <input type="hidden" value="<?php echo $current_user; ?>" name="commentor-id" id="commentor-id" data-plan="<?php  echo $plan_id;?>" user-data="<?php echo $current_user; ?>">
+           <textarea name="wf-comments" class="wf-comments"  id="wf-comments" cols="30" rows="5"></textarea>
+           <button class="comment-btn" id="submit-comment">submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+
 
