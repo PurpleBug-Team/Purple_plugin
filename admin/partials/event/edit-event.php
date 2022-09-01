@@ -236,15 +236,9 @@ $type = get_post_meta($plan_id,'type');
 <div class="view-plan"> 
 <div class="tabs">
   <ul>
-    <!-- <li><a href="#brief">Brief</a></li> -->
     <li><a href="#content">Content</a></li>
-    <!-- <li><a href="#publish">Publishing</a></li> -->
-    <!-- <li><a href="#history">History</a></li> -->
   </ul>
-  <!-- <div id="brief">
-    <header class="ndl-Header ndl-Header--section wr-BriefEmptyState-headerContainer"><h1 class="ndl-HeaderTitle ndl-HeaderTitle--section ndl-HeaderTitle--medium undefined">Add a Creative Brief</h1><p class="ndl-Text ndl-Text--body ndl-HeaderSubHeading ndl-HeaderSubHeading--section undefined">Build your task strategy here, i.e. Key objectives, Audiences, Pillars.</p></header>
-    <div class="wr-BriefEmptyState-box"><div class="ndl-Dropdown btn dropdown"><button class="ndl-Button ndl-Button--default ndl-Button--medium    ndl-Dropdown-button" type="button"><span class="ndl-Button-label">Select Brief</span></button></div><span class="wr-BriefEmptyState-separator">or</span><button class="btn ndl-Button ndl-Button--default ndl-Button--medium    " type="button"><span class="ndl-Button-label">Write Brief</span></button></div>
-  </div> -->
+
   <div id="content">
   	<div class="inner-conent">
        <div class="content-navigation-thumbnails"> 
@@ -290,39 +284,8 @@ $type = get_post_meta($plan_id,'type');
        </div>
     </div>
   </div>
-  <!-- <div id="publish">
-  <h2>Checkbox nested in label</h2>
-  </div> -->
-  <!-- <div id="history">
-    <p>History section</p>
-  </div> -->
 </div>
 <div class="right-pane">
-
-  <!-- < ?php
-     if( have_rows('create_workflow') ){
-          $progess = 0;
-          $approved=array();
-          $index = 1;
-          $index2 = 0;
-          
-          while( have_rows('create_workflow', $work_data->ID) ) { the_row();
-              $approved[]= get_post_meta($_GET['id'],'approve_'.$index,true) !='' ? intval(get_post_meta($_GET['id'],'approve_'.$index,true)):0;
-              $index++;
-           }
-           $total_approved = array_sum($approved);
-           $total_workflow =  count(get_field('create_workflow', $work_data->ID));
-
-         if($total_approved != 0){
-           if(intval($total_approved)==$total_workflow){
-              $total = '100';
-           }else{
-              $cal = $total_approved/$total_workflow;
-              $total = $cal*100;
-           }
-         }        
-     }       
-   ?> -->
   <div class="head-progress">
         <?php
           $end = get_post_meta($_GET['id'],'task_end_date',true);
@@ -382,6 +345,7 @@ $type = get_post_meta($plan_id,'type');
 
         // for($workflow_counter = 0; $workflow_counter <= $total_created_workflows; $workflow_counter++){
           $index = 1;
+    if($workflow_titles){
         foreach($workflow_titles as $key => $workflow_title){
           $checklist_name = 'checklists'.$key;
           $db_checklists = unserialize(get_post_meta($work_data->ID,$checklist_name)[0]);
@@ -466,6 +430,8 @@ $type = get_post_meta($plan_id,'type');
           echo '</div>'; 
           $index++;
          }//EO created workflow loop
+
+  }
 ?> 
       </div>
       <!-- Comment Section -->
