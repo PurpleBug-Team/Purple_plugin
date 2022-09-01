@@ -37,7 +37,7 @@
                 $stats .= $status[0].'%';
             $stats .= '</div>';
             }else{
-                $stats .= '<span class="stats not" >Not Yet Started</span>';
+                $stats .= '<span class="stats not" >0%</span>';
             }
             $stats .= "</div>";
          $stats .= "</div>";
@@ -125,6 +125,8 @@ function data_function(id){
     padding: 3px 8px;
     color: #fff;
     background: #07bb00 !important;
+    min-width: 100px;
+    max-width: 100px;
 }
 div#list-data_wrapper {
     margin-right: 20px;
@@ -194,8 +196,10 @@ span.stats {
     font-size: 10px;
     font-weight: 600;
     background: #f5f7fa;
-    border-radius: 4px;
+    /*border-radius: 4px;*/
     padding: 3px 8px;
+    min-width: 100px;
+    max-width: 100px;
 }
 td.sorting_1 button.btn {
     background: transparent;

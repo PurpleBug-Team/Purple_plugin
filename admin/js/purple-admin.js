@@ -1,4 +1,9 @@
 jQuery(document).ready(function( $ ) {
+	// 
+	// ndl-CharacterCount
+	jQuery('.task-title-count').keyup(function(){
+		console.log(jQuery(this).val().length);
+	})
 	  // update progress percentage
 	  var checked_a = 0;
 	  var total_percentage_a;
