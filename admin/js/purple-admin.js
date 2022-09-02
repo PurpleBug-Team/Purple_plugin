@@ -293,6 +293,7 @@ jQuery(document).ready(function( $ ) {
 			console.log(response);
 			alert('user added successfully');
 			location.reload();
+			// console.log(response);
 			}
 		 });
 	})
@@ -444,22 +445,28 @@ jQuery(document).ready(function( $ ) {
 
 jQuery(document).ready(function($){
 	//lib_details();
-
+console.log(search_values);
 	//wp_medi_loader();
 	//create_folder();
 	view_switcher();
 	lib_detail_list();
-	let search_tag = 'Campaigns'
+	let search_tag = 'Articles'
 
  jQuery('.search-field .open-drop').click(function () {
     jQuery('#drop-down').css('display','block');
+	if(search_values[0] === "administrator"){
      var availableTags = [
 			"Articles",
 			"Campaigns",
 			"Library",
 			"Pages",
-			"Plugins",
-		];
+			"Plugins",];
+	}else{
+		var availableTags = [
+			"Articles",
+			"Campaigns",
+			"Library"];
+	}
 			  
 				jQuery( "#tags" ).autocomplete({
 			      source: availableTags,

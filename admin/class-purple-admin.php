@@ -132,10 +132,11 @@ class Purple_Admin {
 
 
 		//wp_enqueue_script( $this->plugin_name.'repeater', 'https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/0.1.7/jquery.repeater.min.js', array( 'jquery' ), $this->version, false );
-
- 
-
- 
+		$user_id = get_current_user_id();
+		$user_meta = get_userdata($user_id);
+		$user_roles = $user_meta->roles;
+		wp_localize_script( $this->plugin_name ,'search_values',  $user_roles);
+		wp_enqueue_script( $this->plugin_name );
 		wp_enqueue_media();
 	 
 		   
@@ -1408,15 +1409,38 @@ class Purple_Admin {
 	public function add_new_user(){
 		$username = $_POST['username'];
 		$email = $_POST['email'];
-		$password = $_POST['password'];
+		$password = $this->randomPassword();
 		$role = $_POST['role'];
 
-		$user_id = register_new_user( $username, $email );
-		$user = new WP_User( $user_id  );
-		if($role == 'client-admin') $user->remove_role( 'subscriber' );
-		$user->set_role( $role );
-		echo json_encode($user_id);
-	
+		$user_data = array(
+			'user_pass' => $password ,
+			'user_login' => $username,
+			'display_name' => $username,
+			'role' => $role,
+			'user_email' => $email
+			);
+			$user_id = wp_insert_user( $user_data );
+			$message = '';
+			$message .= "You have been successfully registered as ".$role." role. \r\n";
+			$message .= wp_login_url()."\r\n";
+			$message .= "Username: ".$username."\r\n" ;
+			$message .= "Password: ". $password ." \r\nthis is computer generated password. Please change password immediately \r\n";
+			$headers = "From: ".$email. "\r\n" ."Reply-To: " . $email . "\r\n";
+			wp_hash_password( $password );
+			wp_mail($email,'User created',strip_tags($message),$headers);
+			
+		wp_send_json_success($user_id);
+	}
+	// 
+	function randomPassword() {
+		$alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+		$pass = array(); 
+		$alphaLength = strlen($alphabet) - 1; 
+		for ($i = 0; $i < 8; $i++) {
+			$n = rand(0, $alphaLength);
+			$pass[] = $alphabet[$n];
+		}
+		return implode($pass); 
 	}
 	// Edit user data
 	public function edit_user_data(){

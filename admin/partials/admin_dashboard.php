@@ -75,6 +75,12 @@ $post_per_table  = get_option('post_per_table','5');
                 </div>
             </a>
         </div>
+        <?php
+        $user_id = get_current_user_id();
+		$user_meta = get_userdata($user_id);
+		$user_roles = $user_meta->roles;
+        if(!in_array('client-admin',$user_roles)){
+        ?>
         <div class="dashboard-cards col-4">
             <a href="/wp-admin/admin.php?page=email-logs" class="dashboard-page-links">
                 <div class="dashboard-card-body">
@@ -87,6 +93,9 @@ $post_per_table  = get_option('post_per_table','5');
                 </div>
             </a>
         </div>
+        <?php
+        }
+        ?>
         <div class="dashboard-cards col-4">
             <a href="/wp-admin/admin.php?page=library" class="dashboard-page-links">
                 <div class="dashboard-card-body">
