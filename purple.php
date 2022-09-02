@@ -1477,5 +1477,16 @@ add_filter( 'login_redirect', function ( $redirect_to, $requested_redirect_to, $
     wp_redirect(admin_url('/admin.php?page=index'));
 }
 add_action('load-index.php','dashboard_redirect');
+function test(){
+    remove_post_type_support('event-task','‘page-attributes');
+    global $wp;
+    // $event_uri =  $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    $event_uri = $_GET['post_type'];
+    if($event_uri == 'event-task'){
+        wp_redirect('/wp-admin/admin.php?page=index');
+        exit();
+    }
+}
+add_action('admin_init','test');
 
 

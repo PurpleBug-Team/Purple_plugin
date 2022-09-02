@@ -2,7 +2,9 @@ jQuery(document).ready(function( $ ) {
 	// 
 	// ndl-CharacterCount
 	jQuery('.task-title-count').keyup(function(){
-		console.log(jQuery(this).val().length);
+		var count = jQuery(this).val().length
+		jQuery(this).attr({ maxLength : 80 })
+		jQuery('.ndl-CharacterCount').text(count+'/80')
 	})
 	  // update progress percentage
 	  var checked_a = 0;

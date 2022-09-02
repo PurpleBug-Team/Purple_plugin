@@ -551,7 +551,7 @@ function calendar_v(start,end){
             <h1 class="ndl-HeaderTitle ndl-HeaderTitle--section ndl-HeaderTitle--medium undefined"><div class="plan-CreateModal-title">Create New Task</div></h1>
         </header>
         <div class="form-group">
-            <input name="task-title" required id="task-title" class="input-field" maxlength="80" type="text" placeholder="Enter task title here" value="" />
+            <input name="task-title" required id="task-title" class="input-field task-title-count" maxlength="80" type="text" placeholder="Enter task title here" value="" />
             <p class="ndl-Text ndl-Text--secondary ndl-Input-charCount ndl-CharacterCount">0/80</p>
         </div>
         <div class="form-group">
@@ -601,7 +601,7 @@ function calendar_v(start,end){
             <h1 class="ndl-HeaderTitle ndl-HeaderTitle--section ndl-HeaderTitle--medium undefined"><div class="plan-CreateModal-title">Create New Event</div></h1>
         </header>
         <div class="form-group">
-            <input name="task-title" required id="task-title" class="input-field" maxlength="80" type="text" placeholder="Add Event Name" value="" />
+            <input name="task-title" required id="task-title" class="input-field task-title-count" maxlength="80" type="text" placeholder="Add Event Name" value="" />
             <p class="ndl-Text ndl-Text--secondary ndl-Input-charCount ndl-CharacterCount">0/80</p>
         </div>
         <div class="form-group">
