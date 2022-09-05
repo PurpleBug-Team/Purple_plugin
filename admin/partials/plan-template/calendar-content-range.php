@@ -358,6 +358,7 @@ function calendar_v(start,end){
             jQuery("#creat-task-form").submit(function(e) {
                  var form = jQuery(this);
                e.preventDefault();
+             
                
                  jQuery.ajax({
                         type: "POST",

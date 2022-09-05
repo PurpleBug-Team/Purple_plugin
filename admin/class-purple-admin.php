@@ -208,13 +208,13 @@ class Purple_Admin {
             		    'library', 
             		    array($this,'my_library'),'dashicons-book-alt',9
             		);
-            	add_submenu_page(
-            	        'library',
-            	        __( 'Folder', 'textdomain' ),
-            	        __( 'Folder', 'textdomain' ),
-            	        'manage_options',
-            	        'edit-tags.php?taxonomy=attachment_category&post_type=attachment'
-                	);
+            	// add_submenu_page(
+            	//         'library',
+            	//         __( 'Folder', 'textdomain' ),
+            	//         __( 'Folder', 'textdomain' ),
+            	//         'manage_options',
+            	//         'edit-tags.php?taxonomy=attachment_category&post_type=attachment'
+                // 	);
 		}
 		// removed menus on admin and replaced
 		$menu[70][0]='View Profile';

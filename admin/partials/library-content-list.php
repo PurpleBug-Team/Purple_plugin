@@ -44,16 +44,42 @@
    $get_attacment = $wpdb->get_results( $Query );
 
     
-        
-
-     
-
-
-   
-
-
-   
  
+//    if ( !in_array( 'administrator', (array) $user->roles ) ) {
+//     //The user has the "author" role
+//         $go = "and post_author=".$user_id."";
+//     }
+
+
+
+//  if(isset($_GET['s'])){
+//      $terms = ( get_term_by('name',$_GET['s'], 'attachment_category') == '')? array(): get_term_by('name',$_GET['s'], 'attachment_category');
+//  }else{
+//      $terms = get_terms( 'attachment_category', array(
+//       'hide_empty' => false,
+//      ) );
+//  }
+
+
+// $args = array(
+//   'numberposts' => -1,
+//   'post_type'   => 'article',
+//   'post_status' => 'publish',
+//   's'           =>  $_GET['s']
+// );
+ 
+// $latest_article = get_posts( $args ); 
+// if(!empty($terms) || !empty($latest_article) ){
+//     $mer_1 =array_merge($terms,$get_attacment); 
+//     $merg_2 = array_merge($latest_article,$mer_1);
+//     $article = (!empty($latest_article))? $merg_2: $mer_1 ;
+ 
+//      $get_attacment =  $article;
+ 
+//    }else{
+//      $get_attacment =  $get_attacments;
+//    }
+//    if(!isset($_GET['img_id'])){
 ?>
 
 
@@ -162,7 +188,7 @@
 							<div class="library-preview-top-panel">
 								<div class="panel">
                   <div class="panel-button">
-                    <button class="ndl-Button ndl-Button--primary ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Create Task</span></button>
+                    <button class="creat-task create-task ndl-Button ndl-Button--primary ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Create Task</span></button>
                   </div>
 
                   <div class="close-container">
@@ -179,8 +205,8 @@
     			</div>
     		</div>
 
-
- 
+            <div id="create-task-modal" class=" fade bd-example-modal-lg fade">Empty</div>
+ <!-- < ?php } ?> -->
  <script>
 
 
@@ -188,6 +214,7 @@
    view_switcher();
    wp_medi_loader();
    create_folder();
+
 
  </script>
  <style>

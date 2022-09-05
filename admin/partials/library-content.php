@@ -51,7 +51,7 @@
 	    	$go = "and post_author=".$user_id."";
 		}
 
- 	
+
     
      if(isset($_GET['s'])){
          $terms = ( get_term_by('name',$_GET['s'], 'attachment_category') == '')? array(): get_term_by('name',$_GET['s'], 'attachment_category');
@@ -60,7 +60,7 @@
           'hide_empty' => false,
          ) );
      }
-    
+
 
     $args = array(
       'numberposts' => -1,
@@ -72,14 +72,17 @@
     $latest_article = get_posts( $args );  
     
    // print_r( $latest_article);
+  //  echo '<pre>';
+  //  print_r($latest_article);
+  //  echo '</pre>';
    
 
-  if(!empty($terms) || !empty($latest_article) ){
+  if(!empty($terms) ){
    $mer_1 =array_merge($terms,$get_attacments); 
-   $merg_2 = array_merge($latest_article,$mer_1);
-   $article = (!empty($latest_article))? $merg_2: $mer_1 ;
+  //  $merg_2 = array_merge($latest_article,$mer_1);
+  //  $article = (!empty($latest_article))? $merg_2: $mer_1 ;
 
-    $get_attacment =  $article;
+    $get_attacment =  $mer_1 ;
 
   }else{
     $get_attacment =  $get_attacments;
@@ -159,7 +162,12 @@
                             <div class="card-actiom tax-attachment-<?php echo ($attachment->taxonomy =='attachment_category')? $attachment->term_taxonomy_id: $attachment->ID ?>">
                               <label class="grid-view-checkbox  ndl-Checkbox ndl-Checkbox--medium"><div class="ndl-Checkbox-container"> <input class="ndl-Checkbox-input" type="checkbox"><span class="ndl-Checkbox-holder"></span></div>
                               </label>
-                              <button actiondata="<?php echo ($attachment->taxonomy =='attachment_category')? $attachment->term_taxonomy_id: $attachment->ID ?>" class="delete ndl-Button ndl-Button--secondaryAlt ndl-Button--medium    ndl-Dropdown-button ndl-Button--iconOnly" type="button"><span class="nc-icon ndl-Icon   ndl-Button-icon "><i class="nc-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16"><g transform="translate(0, 0)"><circle data-color="color-2" fill="#444444" cx="8" cy="8" r="2"></circle><circle fill="#444444" cx="2" cy="8" r="2"></circle><circle fill="#444444" cx="14" cy="8" r="2"></circle></g></svg></i></span></button>
+                              <button actiondata="<?php echo ($attachment->taxonomy =='attachment_category')? $attachment->term_taxonomy_id: $attachment->ID ?>" class="delete ndl-Button ndl-Button--secondaryAlt ndl-Button--medium    ndl-Dropdown-button ndl-Button--iconOnly" type="button"><span class="nc-icon ndl-Icon   ndl-Button-icon ">
+                                <i class="nc-icon-wrapper">
+                                  <svg  class="open-del-btn" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16"><g transform="translate(0, 0)"><circle data-color="color-2" fill="#444444" cx="8" cy="8" r="2"></circle><circle fill="#444444" cx="2" cy="8" r="2"></circle><circle fill="#444444" cx="14" cy="8" r="2"></circle></g></svg>
+                                  <!-- <svg class="close-del-btn" xmlns="http://www.w3.org/2000/svg" height="329pt" viewBox="0 0 329.26933 329" width="329pt"><path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0"/></svg> -->
+                                </i></span>
+                              </button>
                               <ul class="list-action" id="view-list-<?php echo ($attachment->taxonomy =='attachment_category')? $attachment->term_taxonomy_id: $attachment->ID ?>" >
                                 <li><a href="delete"  data="<?php echo ($attachment->taxonomy =='attachment_category')? $attachment->term_taxonomy_id: $attachment->ID ?>" >delete</a></li>
                               </ul>
@@ -286,7 +294,7 @@
 							<div class="library-preview-top-panel">
 								<div class="panel">
                   <div class="panel-button">
-                    <button class="ndl-Button ndl-Button--primary ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Create Task</span></button>
+                    <button class="creat-task ndl-Button ndl-Button--primary ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Create Task</span></button>
                   </div>
 
 									<div class="close-container">

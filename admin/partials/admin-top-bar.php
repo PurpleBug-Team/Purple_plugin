@@ -38,7 +38,12 @@
 		    			
 		    			<button class="dropdown-toggle small button-create-new" aria-haspopup="true" aria-expanded="false">
 				            <span class="nc-icon ng-isolate-scope" ng-style="iconStyle" name="plus-new">
-							<!-- ngIf: svg --><i class="nc-icon-wrapper ng-binding ng-scope" ng-if="svg" ng-bind-html="svg"><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.84 15.84"><defs></defs><path fill="#444" d="M13.17,7.28H8.56V2.67a.64.64,0,0,0-1.28,0V7.28H2.67a.64.64,0,1,0,0,1.28H7.28v4.61a.64.64,0,0,0,1.28,0V8.56h4.61a.64.64,0,1,0,0-1.28Z"></path></svg></i><!-- end ngIf: svg -->
+							<!-- ngIf: svg -->
+								<i class="nc-icon-wrapper ng-binding ng-scope show-menus" ng-if="svg" ng-bind-html="svg"><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.84 15.84"><defs></defs><path fill="#444" d="M13.17,7.28H8.56V2.67a.64.64,0,0,0-1.28,0V7.28H2.67a.64.64,0,1,0,0,1.28H7.28v4.61a.64.64,0,0,0,1.28,0V8.56h4.61a.64.64,0,1,0,0-1.28Z"></path></svg></i>
+							<!-- end ngIf: svg -->
+							<!-- ngIf: svg -->
+							<i class="nc-icon-wrapper ng-binding ng-scope hide-menus" ng-if="svg" ng-bind-html="svg"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M0 10h24v4h-24z"></path></svg></i>
+							<!-- end ngIf: svg -->
 							</span>
 							<ul class="list-nav-action" style="display:none">
 							  <!-- ngIf: ::currentUser.can('create', 'campaign') -->
@@ -173,11 +178,21 @@
 		    	</div>
 		    </div>
 		<script>
+		  let menu_drawer =  false ;
+		  jQuery('.hide-menus').hide()
 		  jQuery('button.dropdown-toggle.small.button-create-new').click(function () {
+			menu_drawer = !menu_drawer 
+			if(menu_drawer){
              jQuery('ul.list-nav-action').toggleClass('active');
              jQuery('ul.list-nav-action.active').show();
-           
-        
+			 jQuery('.show-menus').hide()
+			 jQuery('.hide-menus').show()
+			}else{
+			 jQuery('ul.list-nav-action').removeClass('active');
+             jQuery('ul.list-nav-action').hide();
+			 jQuery('.show-menus').show()
+			 jQuery('.hide-menus').hide()
+			}
         });
         
          jQuery('div#wpbody').click(function () {

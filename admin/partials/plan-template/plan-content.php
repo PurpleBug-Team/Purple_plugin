@@ -85,9 +85,14 @@
 <script>
   jQuery('#list-data').DataTable( {
         data: <?php  echo json_encode($group);  ?>, 
+        "columnDefs": [
+        { "orderable": false, "targets": [0,1,2,3,4,5,6,7,8,9] },
+        // { "orderable": true, "targets": [1] }
+    ]
     } );
 jQuery(".delete ").click(function(){
     var favorite = [];
+    console.log('something');
      jQuery.each(jQuery(".delete-field:checked"), function(){
         favorite.push(jQuery(this).val());
      });

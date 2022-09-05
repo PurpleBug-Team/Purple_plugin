@@ -1,6 +1,13 @@
 jQuery(document).ready(function( $ ) {
-	// 
+	jQuery('.create-task').on('click',function(){
+		var dat_id=jQuery('.library-preview-bottom-panel').attr('data')
+		// create_task(dat_id)
+		new_create_task(dat_id)
+	
+	})
+	// <svg xmlns="http://www.w3.org/2000/svg" height="329pt" viewBox="0 0 329.26933 329" width="329pt"><path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0"/></svg>
 	// ndl-CharacterCount
+	jQuery('.close-del-btn').hide()
 	jQuery('.task-title-count').keyup(function(){
 		var count = jQuery(this).val().length
 		jQuery(this).attr({ maxLength : 80 })
@@ -915,7 +922,7 @@ function lib_details(){
 
 	  	create_task(attach_id.replace(/[^0-9.]/g, ""));
 
-	  	//console.log('Hello');
+	  	console.log('Hello');
 	 
 	if(jQuery(this).attr('data') == 'taxonomy'){
 		jQuery('.library-preview-top-panel .panel-button').html('<button class="upload-pics ndl-Button ndl-Button--primary ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Upload</span></button><button class="move-pics ndl-Button ndl-Button--default ndl-Button--medium    preview-action-button" type="button"><span class="ndl-Button-label">Move</span></button>');
@@ -1005,55 +1012,58 @@ function lib_details(){
 
 	
 }
+function new_create_task(attach_id){
+	jQuery.ajax({
+		url : ajaxurl, // Here goes our WordPress AJAX endpoint.
+		type : 'GET',
+		data : {action:'create_task',attach_id:attach_id},
+		success : function( response ) {
+			// You can craft something here to handle the message return
+				 jQuery('div#create-task-modal').html(response);	
+				
 
+				 setTimeout(function() {   
+				 jQuery("#create-task-modal").modal({
+					 escapeClose: true,
+					clickClose: false,
+					showClose: false,
+					fadeDuration: 200,
+					  fadeDelay: 0.50
+
+				 }); 
+			 },100); 
+
+			 jQuery("#form-task").submit(function(e) {
+				 var form = jQuery(this);
+			   e.preventDefault();
+			   
+				 jQuery.ajax({
+						type: "POST",
+						url: ajaxurl, 
+					   // contentType: 'application/x-www-form-urlencoded',
+						data : { action:'create_task_event', task:form.serializeArray() }, // serializes the form's elements.
+						success: function(data) {
+						  window.location.assign(""+data+""); 
+						  
+						}
+					});
+					
+				   
+			  });	
+
+
+		},
+		fail : function( err ) {
+			// You can craft something here to handle an error if something goes wrong when doing the AJAX request.
+			alert( "There was an error: " + err );
+		}
+	});  
+}
 function create_task(attach_id){
 	 setTimeout(function() {
 		jQuery('.creat-task').click(function (){
 		     
-	 			jQuery.ajax({
-			        url : ajaxurl, // Here goes our WordPress AJAX endpoint.
-			        type : 'GET',
-			        data : {action:'create_task',attach_id:attach_id},
-			        success : function( response ) {
-			            // You can craft something here to handle the message return
-			     			jQuery('div#create-task-modal').html(response);	
-
-			     			setTimeout(function() {   
-							 jQuery("#create-task-modal").modal({
-						     	escapeClose: true,
-							    clickClose: false,
-							    showClose: false,
-							    fadeDuration: 200,
-						  		fadeDelay: 0.50
-
-						     }); 
-					     },100); 
-
-					     jQuery("#form-task").submit(function(e) {
-			                 var form = jQuery(this);
-			               e.preventDefault();
-			               
-			                 jQuery.ajax({
-			                        type: "POST",
-			                        url: ajaxurl, 
-			                       // contentType: 'application/x-www-form-urlencoded',
-			                        data : { action:'create_task_event', task:form.serializeArray() }, // serializes the form's elements.
-			                        success: function(data) {
-			                          window.location.assign(""+data+""); 
-			                          
-			                        }
-			                    });
-			                    
-			                   
-			              });	
-
-      
-			        },
-			        fail : function( err ) {
-			            // You can craft something here to handle an error if something goes wrong when doing the AJAX request.
-			            alert( "There was an error: " + err );
-			        }
-			    });  
+			new_create_task(attach_id)	;
 			     
 
 		});			 	
@@ -1122,15 +1132,26 @@ function for_lib_script(id){
     });
  
 }
-  
+let constant_id = 0;
+let const_drawer = false
+
 function update_or_delte() {
 	jQuery('.card-actiom button.delete').click(function () {
     var id = jQuery(this).attr('actiondata');
-    jQuery('.card-actiom,.list-action').css('visibility','hdden');
+	constant_id = id;
+	const_drawer = !const_drawer;
+	if(const_drawer){
+		jQuery('.card-actiom.tax-attachment-'+id).css('visibility','visible');
+		jQuery('ul#view-list-'+id).css('visibility','visible'); 
+	}else{
+		jQuery('.card-actiom.tax-attachment-'+id).css('visibility','hidden');
+		jQuery('.card-actiom,.list-action').css('visibility','hidden');
+	}
+    
     jQuery('.card-actiom').attr('checked',false);
-    jQuery('.card-actiom.tax-attachment-'+id).css('visibility','visible');
-    jQuery('.card-actiom.tax-attachment-'+id+'  input.ndl-Checkbox-input' ).attr('checked',true);
-    jQuery('ul#view-list-'+id).css('visibility','visible'); 
+    
+    // jQuery('.card-actiom.tax-attachment-'+id+'  input.ndl-Checkbox-input' ).attr('checked',true);
+   
     var type = jQuery('div#tax-attachment-'+id).attr('data');
 	 jQuery('ul#view-list-'+id+' li a').click(function (event) {
 	            event.preventDefault();

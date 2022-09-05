@@ -10,6 +10,7 @@
 		}
 	 $Query = "SELECT * FROM `".$wpdb->prefix."posts` where post_type='attachment' ".$go." and post_status='inherit' ".$search ." ORDER BY `ID` DESC LIMIT ".$offset.", ".$items_per_page." ";
 	 $get_attacments = $wpdb->get_results( $Query );
+
      
 
 
@@ -54,8 +55,7 @@ function strings_field ($string) {
                     </thead>
                     <tbody>
                          <?php
-                          
-
+                         
                               foreach($get_attacment as $attachment){
                                 $split = explode("/",$attachment->post_mime_type);
 

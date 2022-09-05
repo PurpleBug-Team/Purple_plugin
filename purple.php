@@ -1487,6 +1487,6 @@ function test(){
         exit();
     }
 }
-add_action('admin_init','test');
+// add_action('admin_init','test');
 
 
