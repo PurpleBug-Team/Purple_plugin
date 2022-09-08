@@ -889,7 +889,7 @@ div#wpbody-content {
     width: 440px;
     background: #fff;
     height: 100%;
-    z-index: 99999;
+    z-index: 1;
     transition: 1s;
     box-shadow: 0 1px 3px 0.5px rgb(0 0 0 / 10%);
 }
@@ -1553,6 +1553,7 @@ ul.list-nav-action {
     border: solid 1px #d5d5d5;
     background: #fff;
     border-radius: 2px;
+    z-index: 9;
 }
 ul.list-nav-action li a {
     display: block;

@@ -27,7 +27,7 @@
  	  
 
  	 if($content_format == '' && $journey_stage =='' && $project_page =='' && $Target_Audience2 =='' && $Target_Audience2 =='' ){
- 	 	$add_format = '<div class="asset-labels"><div class="asset-labels-actions"></div><button class="ndl-Button ndl-Button--inline ndl-Button--medium    " type="button"><span class="ndl-Button-label">Add Labels</span></button><p class="ndl-Text ndl-Text--secondary empty-label-message">to search, filter, and analyze performance of your content</p></div>';
+ 	 	// $add_format = '<div class="asset-labels"><div class="asset-labels-actions"></div><button class="ndl-Button ndl-Button--inline ndl-Button--medium    " type="button"><span class="ndl-Button-label">Add Labels</span></button><p class="ndl-Text ndl-Text--secondary empty-label-message">to search, filter, and analyze performance of your content</p></div>';
  	 }
  
  	// print_r($project_pages);
@@ -69,7 +69,7 @@
 			<?php echo $get_attacment[0]->post_content; ?>
 		 </div>
 
-		 <div id="accordion">
+		 <div id="accordion" style="margin-bottom:40px;">
 			  <h3>Image Information</h3>
 			  <div class="image-info">
 			   	<table>
@@ -79,8 +79,8 @@
 			   		<tr><td>Image Size</td><td class="image-size"></td></tr>
 			   	</table>
 			  </div>
-			  <h3>Label</h3>
-			  <div class="labels">
+			  <!-- <h3>Label</h3> -->
+			  <!-- <div class="labels"> -->
 					<?php  if(!empty($content_format)){ ?>
 					<div class="content_format ndl-Labels-container">
 					   <span class="ndl-Labels-type">content format</span>
@@ -190,7 +190,7 @@
 				   <?php echo $add_format ;?>
 				   
 			  </div>
-			  <h3>Usage</h3>
+			  <!-- <h3>Usage</h3> -->
 			  <div>
 			     
 			  </div>

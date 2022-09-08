@@ -1,6 +1,7 @@
 <?php 
   $defaults = array(
         'numberposts'      => -1,
+        'post_status' => 'any',
         'orderby'          => 'date',
         'order'            => 'DESC',
         'post_type'        => 'article',

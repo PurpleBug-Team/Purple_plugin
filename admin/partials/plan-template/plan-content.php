@@ -31,13 +31,15 @@
          $stats = '';
          $stats = '<div class="progress_border" style="overflow:hidden">';
          if($status[0] > 0){
-            ($status[0] == 100) ? $width = '-webkit-fill-available' : $width = $status[0];
+            ($status[0] == 100) ? $width = '100px' : $width = $status[0].'px';
             $stats .= "<div class='progress-contianer'>";
-                $stats .= "<div   class='stats completed'  style='width:$width%;'>";
+                $stats .= "<div   class='stats completed'  style='width:$width;'>";
                 $stats .= $status[0].'%';
             $stats .= '</div>';
             }else{
+                $stats .= "<div   class='stats'  style='width:100px;'>";
                 $stats .= '<span class="stats not" >0%</span>';
+                $stats .= '</div>';
             }
             $stats .= "</div>";
          $stats .= "</div>";
@@ -130,8 +132,8 @@ function data_function(id){
     padding: 3px 8px;
     color: #fff;
     background: #07bb00 !important;
-    min-width: 100px;
-    max-width: 100px;
+    /* min-width: 100px;
+    max-width: 100px; */
 }
 div#list-data_wrapper {
     margin-right: 20px;
@@ -192,7 +194,7 @@ div#list-data_length {
     float: right;
 }
 .not{
-    width: 100%;
+    /* width: 100%; */
 }
 span.stats {
     text-align: center;
@@ -203,8 +205,8 @@ span.stats {
     background: #f5f7fa;
     /*border-radius: 4px;*/
     padding: 3px 8px;
-    min-width: 100px;
-    max-width: 100px;
+    /* min-width: 100px;
+    max-width: 100px; */
 }
 td.sorting_1 button.btn {
     background: transparent;

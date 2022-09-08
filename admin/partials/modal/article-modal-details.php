@@ -31,7 +31,7 @@
        $feat_image_url = wp_get_attachment_url( $image_ids[0] );
 
  	 if($content_format == '' && $journey_stage =='' && $project_page =='' && $Target_Audience2 =='' && $Target_Audience2 =='' ){
- 	 	$add_format = '<div class="asset-labels"><div class="asset-labels-actions"></div><button class="ndl-Button ndl-Button--inline ndl-Button--medium    " type="button"><span class="ndl-Button-label">Add Labels</span></button><p class="ndl-Text ndl-Text--secondary empty-label-message">to search, filter, and analyze performance of your content</p></div>';
+ 	 	// $add_format = '<div class="asset-labels"><div class="asset-labels-actions"></div><button class="ndl-Button ndl-Button--inline ndl-Button--medium    " type="button"><span class="ndl-Button-label">Add Labels</span></button><p class="ndl-Text ndl-Text--secondary empty-label-message">to search, filter, and analyze performance of your content</p></div>';
  	 }
  
  	// print_r($project_pages);
@@ -76,7 +76,7 @@
 		 	<?php echo $get_attacment[0]->post_content;//get_the_content($get_attacment[0]->ID); ?>
 		 </div>
 
-		 <div id="accordion">
+		 <div id="accordion" style="margin-bottom:40px;">
 			  <h3>Image Information</h3>
 			  <div class="image-info">
 			   	<table>

@@ -42,7 +42,7 @@
           <div class="ndl-GridItem ndl-GridItem--alignLeft right-data" data-size="3">
               <div class="tsk-ContentActions">
                   <div class="ndl-Dropdown tsk-ContentActions-articleDownload">
-                      <button class="download-article ndl-Button ndl-Button--secondaryAlt ndl-Button--medium ndl-Dropdown-button ndl-Button--iconOnly" type="button">
+                      <!-- <button class="download-article ndl-Button ndl-Button--secondaryAlt ndl-Button--medium ndl-Dropdown-button ndl-Button--iconOnly" type="button">
                           <span class="nc-icon ndl-Icon ndl-Button-icon">
                               <i class="nc-icon-wrapper">
                                   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16">
@@ -53,9 +53,9 @@
                                   </svg>
                               </i>
                           </span>
-                      </button>
+                      </button> -->
                   </div>
-                  <button class="ndl-Button ndl-Button--secondaryAlt ndl-Button--medium tsk-ContentActions-comment ndl-Button--iconOnly" type="button">
+                  <!-- <button class="ndl-Button ndl-Button--secondaryAlt ndl-Button--medium tsk-ContentActions-comment ndl-Button--iconOnly" type="button">
                       <span class="nc-icon ndl-Icon ndl-Button-icon">
                           <i class="nc-icon-wrapper">
                               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16">
@@ -70,7 +70,7 @@
                               </svg>
                           </i>
                       </span>
-                  </button>
+                  </button> -->
                   <button  href="<?php echo site_url();?>/wp-admin/post.php?post=<?php echo $activepost->ID; ?>&action=edit" class="ndl-Button ndl-Button--secondaryAlt ndl-Button--medium tsk-ContentActions-edit ndl-Button--iconOnly edit-article" type="button">
                       <span class="nc-icon ndl-Icon ndl-Button-icon">
                           <i class="nc-icon-wrapper">
@@ -85,7 +85,7 @@
                  
                   <div class="tsk-ContextMenu tsk-ContextMenu--single">
                       <div class="ndl-Dropdown tsk-ContextMenu-dropdown">
-                          <button  class="ndl-Button ndl-Button--secondaryAlt ndl-Button--small ndl-Dropdown-button ndl-Button--iconOnly" type="button">
+                          <!-- <button  class="ndl-Button ndl-Button--secondaryAlt ndl-Button--small ndl-Dropdown-button ndl-Button--iconOnly" type="button">
                               <span class="nc-icon ndl-Icon ndl-Button-icon">
                                   <i class="nc-icon-wrapper">
                                       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16">
@@ -97,7 +97,7 @@
                                       </svg>
                                   </i>
                               </span>
-                          </button>
+                          </button> -->
                       </div>
                   </div>
               </div>
@@ -291,6 +291,7 @@
     display: flex;
     text-align: right;
     padding-left: 34px;
+    justify-content: flex-end;
 }
 .right-data .tsk-ContentActions button {
     background: transparent;

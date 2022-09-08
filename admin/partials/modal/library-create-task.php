@@ -36,7 +36,7 @@
     <div class="form-task">
     	   <div class="form-group">
 	    	  <input name="task-title" id="task-title" class="input-field task-title-count" maxlength="80" type="text" placeholder="Enter task title here" value="">
-	    	  <p class="ndl-Text ndl-Text--secondary ndl-Input-charCount ndl-CharacterCount ">0/80</p>
+	    	  <!-- <p class="ndl-Text ndl-Text--secondary ndl-Input-charCount ndl-CharacterCount ">1/80</p> -->
 	    	</div>
 	    	<div class="attachment-details">
 	    	   <table>

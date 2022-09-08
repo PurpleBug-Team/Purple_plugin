@@ -631,6 +631,15 @@ function campaign_taxonomy() {
 
 }
 add_action( 'init', 'campaign_taxonomy', 0 );
+add_filter("manage_edit-campaign_columns",'theme_columns');
+function theme_columns($theme_columns){
+    $new_columns=array(
+        'cb'=>'<input type="checkbox" />',
+        'name'=> __('Name'),
+        'description' => __('Description'),);
+        
+    return$new_columns;       
+}
 
 
 // Register Custom Taxonomy
@@ -671,6 +680,7 @@ function libary_taxonomy() {
 
 }
 add_action( 'init', 'libary_taxonomy', 0 );
+
 
 function remove_footer_admin () 
 {

@@ -179,26 +179,27 @@
 		    </div>
 		<script>
 		  let menu_drawer =  false ;
-		  jQuery('.hide-menus').hide()
-		  jQuery('button.dropdown-toggle.small.button-create-new').click(function () {
-			menu_drawer = !menu_drawer 
-			if(menu_drawer){
-             jQuery('ul.list-nav-action').toggleClass('active');
-             jQuery('ul.list-nav-action.active').show();
-			 jQuery('.show-menus').hide()
-			 jQuery('.hide-menus').show()
-			}else{
-			 jQuery('ul.list-nav-action').removeClass('active');
-             jQuery('ul.list-nav-action').hide();
-			 jQuery('.show-menus').show()
-			 jQuery('.hide-menus').hide()
-			}
-        });
+		jQuery('.hide-menus').hide()
+
         
-         jQuery('div#wpbody').click(function () {
+        jQuery('div#wpbody').click(function () {
                jQuery('ul.list-nav-action').hide();
         
             });  
+		jQuery('.button-create-new').mouseover(function(e){
+			jQuery('ul.list-nav-action').toggleClass('active');
+             jQuery('ul.list-nav-action.active').show();
+		})
+		jQuery('.button-create-new ul li').mouseout(function(e){
+			jQuery('ul.list-nav-action').removeClass('active');
+             jQuery('ul.list-nav-action').hide();
+		
+		})
+		// jQuery('.dropdown-toggle').mouseout(function(e){
+			
+		// 	var tar = jQuery(e.target).attr('class')
+		// 	console.log(tar);	
+		// })
 		    
 		</script>   
 		<style>

@@ -17,10 +17,10 @@
   $user_id = get_current_user_id();
    $user = wp_get_current_user();
     
-    if ( !in_array( 'administrator', (array) $user->roles ) ) {
-      //The user has the "author" role
-        $go = "and post_author=".$user_id."";
-    }
+    // if ( !in_array( 'administrator', (array) $user->roles ) ) {
+    //   //The user has the "author" role
+    //     $go = "and post_author=".$user_id."";
+    // }
  
 
   $items_per_page = 30;
