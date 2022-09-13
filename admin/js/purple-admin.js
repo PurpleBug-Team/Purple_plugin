@@ -1,4 +1,12 @@
 jQuery(document).ready(function( $ ) {
+	jQuery(document).on('click',function(e){
+		var target = e.target
+		if(jQuery(target).hasClass('open-del-btn') || jQuery(target).hasClass('delete')){
+			console.log(target);
+		}else{
+			jQuery('.list-action').css('visibility','hidden')
+		}
+	})
 	
 	jQuery('.create-task').on('click',function(){
 		var dat_id=jQuery('.library-preview-bottom-panel').attr('data')

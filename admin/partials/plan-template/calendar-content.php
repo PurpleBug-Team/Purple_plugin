@@ -1032,7 +1032,7 @@ function calendar_v(start,end){
                 Event Description *
                 <div name="event-secription" required class="ndl-TextArea ndl-TextArea--isResizeable ndl-FormControl-field">
                     <textarea class="ndl-TextArea-field" maxlength="250" placeholder="Add details about your event..."></textarea>
-                    <p class="ndl-Text ndl-Text--secondary ndl-TextArea-charCount ndl-CharacterCount">0/250</p>
+                    <!-- <p class="ndl-Text ndl-Text--secondary ndl-TextArea-charCount ndl-CharacterCount">0/250</p> -->
                 </div>
             </label>
         </div>

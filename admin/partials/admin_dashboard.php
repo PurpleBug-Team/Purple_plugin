@@ -189,7 +189,7 @@ $post_per_table  = get_option('post_per_table','5');
                         $t = get_time_lapsed($time);
                     }
                 }else{
-                    $t = 'No records found';
+                    $t = 'Currently Login';
                 }
                 
                 $output .= '<tr>';
@@ -206,8 +206,8 @@ $post_per_table  = get_option('post_per_table','5');
                 <th>User ID</th>
                 <th>Username</th>
                 <th>Status</th>
-                <th>Last login date</th>
-                <th></th>
+                <th>Login date</th>
+                <th>Date last Active</th>
             </tr>
             <?=$output;?>
         </table>

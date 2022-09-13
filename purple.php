@@ -1003,6 +1003,25 @@ function modify_workflow_logs_columns($column_name, $post_ID){
 }
 add_action('manage_workflowlog_posts_custom_column','modify_workflow_logs_columns',10,2);
 
+// add_filter('auth_cookie_expiration', 'my_expiration_filter',99,3);
+// function my_expiration_filter($seconds, $user_id, $remember){
+//     $expiration = 120; //UPDATE HERE;
+//     // $user_id = get_current_user_id();
+//     // update_user_meta($user_id,'last_login_dnt', current_time('y-m-d h:i:s'));
+//     // update_user_meta($user_id,'is_current_login', 0);
+//     // echo '<pre>';
+//     // print_r($user_id);
+//     // echo '</pre>';
+//     // die();
+//     return $expiration;
+// }
+// function logoutUser(){
+//     if ( $_POST["wpsessionexpired"] == 'true' ){ 
+//         wp_logout();
+//         header("refresh:0.5;url=".$_SERVER['REQUEST_URI']."");
+//     }
+// }
+// add_action('init', 'logoutUser');
 //function track user login
 function track_users_login($login_user,$user) {
     update_user_meta($user->ID,'is_current_login', 1);
